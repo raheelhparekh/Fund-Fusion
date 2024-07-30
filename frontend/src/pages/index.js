@@ -1,0 +1,5 @@
+export { default as Login } from './login/Login'
+export { default as ApplicantDashboard } from './applicantDashboard/ApplicantDashboard'
+export { default as ValidatorDashboard } from './validatorDashboard/ValidatorDashboard'
+export { default as ApplicationForm } from './applicationForm/ApplicationForm'
+export { default as ValidatorsReport } from './validatorsReport/ValidatorsReport'
