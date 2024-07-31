@@ -1,0 +1,26 @@
+.login-container {
+  display: flex;
+  width: 70vw;
+  height: 80%;
+  border-radius: 50px;
+}
+.login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+.App {
+  width: 100%;
+  height: 85vh;
+  position: relative;
+}
+.App_bg {
+  width: 100%;
+  height: 85vh;
+  position: absolute;
+  z-index: -1;
+  object-fit: cover;
+  opacity: 0.6;
+}
