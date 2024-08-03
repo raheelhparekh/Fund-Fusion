@@ -1,68 +1,27 @@
 import React from 'react'
+import LeftContainer from '../login/components/leftContainer/LeftContainer'
+import RightContainer from '../login/components/rightContainer/RightContainer'
+import Navbar from './components/navbar/Navbar'
+
 import './Login.css'
-import { useNavigate } from 'react-router-dom'
+import loginPageBg from '/images/campus_bg.jpeg'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-function Login() {
-  const navigate = useNavigate()
-  function handleApplicantLogin(event){
-    event.preventDefault()
-
-    //@Anamay JWT here
-
-
-
-
-    navigate('/applicant')
-  }
-
-  function handleValidatorLogin(event){
-    event.preventDefault()
-
-    //@Anamay JWT here
-
-
-    
-    navigate('/validator')
-
-  }
-
+const Login = () => {
+  
   return (
-  <div className='login--container'>
-    <div className='login--box'>
-      <form onSubmit={handleValidatorLogin}>
-        <div>
-          <label htmlFor='username'>Username</label>
-          <input name='uniqueIdentifier'/>
-        </div>
+    <div className="login-page">
+      <Navbar />
+      <div className='login'>
+        <img src={loginPageBg} className='loginPage_bg' />
 
-        <div>
-          <label htmlFor='password'>Password</label>
-          <input name='password' type='password'/>
+        <div className='login-container'>
+          <LeftContainer />
+          <RightContainer />
         </div>
-
-        <button id='validatorLogin'>Log In As Validator</button>
-      </form>
+      </div>
     </div>
-
-
-    <div className='login--box'>
-      <form onSubmit={handleApplicantLogin}>
-        <div>
-          <label htmlFor='username'>Username</label>
-          <input name='uniqueIdentifier'/>
-        </div>
-
-        <div>
-          <label htmlFor='password'>Password</label>
-          <input name='password' type='password'/>
-        </div>
-
-        <button id='applicantLogin'>Log In As Applicant</button>
-      </form>
-    </div>
-  </div>
   )
 }
-
 
 export default Login
