@@ -1,0 +1,69 @@
+.right-container {
+    background: white;
+    width: 50%;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+}
+.right-container-child {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 100%;
+}
+.right-main-title {
+    font-size: 36px;
+    font-weight: 700;
+    text-align: center;
+}
+.right-login-google {
+    background: #F1F1F1;
+    border: none;
+    border-radius: 8px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    width: 60%;
+}
+.right-container input {
+    background: #EBEBEB;
+    border: none;
+    padding: 5px;
+    width: 100%;
+}
+.right-login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 60%;
+}
+.right-login-form label {
+    display: flex;
+    flex-direction: column;
+}
+.right-login-remember label {
+    flex-direction: row;
+
+}
+.right-login-remember {
+    display: flex;
+    justify-content: space-between;
+}
+#remember-input {
+    width: auto;
+}
+#remember-input input {
+    width: auto;
+}
+.right-login-btn {
+background: #DB3831;
+width: 123px;
+height: 43px;
+border: none;
+border-radius: 20px;
+color: white;
+}

@@ -3,3 +3,5 @@ export { default as ApplicantDashboard } from './applicantDashboard/ApplicantDas
 export { default as ValidatorDashboard } from './validatorDashboard/ValidatorDashboard'
 export { default as ApplicationForm } from './applicationForm/ApplicationForm'
 export { default as ValidatorsReport } from './validatorsReport/ValidatorsReport'
+export { default as About } from './about/About'
+export { default as Policy } from './policy/Policy'

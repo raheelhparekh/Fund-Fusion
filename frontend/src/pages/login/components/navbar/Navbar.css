@@ -49,6 +49,7 @@
 
 .login-nav-link.active {
   font-weight: bold;
+  text-decoration: underline;
 }
 
 .login-trust-logo {

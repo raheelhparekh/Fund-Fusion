@@ -1,7 +1,7 @@
 import React from 'react'
-import './LeftContainer.css'
+import './ApplicantDisplay.css'
 
-const LeftContainer = () => {
+const ApplicantDisplay = ({changeRole}) => {
   return (
     <div className='left-container'>
       <h2 className='left-main-title'>Travel Policy</h2>
@@ -9,9 +9,9 @@ const LeftContainer = () => {
         what matters most: your research.</p>
         <h4 className='left-validator'>Validator?</h4>
         <p className='left-goto'>Go to Sign in</p>
-        <button className='left-click'>Click Here</button>
+        <button onClick={()=>changeRole((prevRole)=>!prevRole)} className='left-click'>Click Here</button>
     </div>
   )
 }
 
-export default LeftContainer
+export default ApplicantDisplay

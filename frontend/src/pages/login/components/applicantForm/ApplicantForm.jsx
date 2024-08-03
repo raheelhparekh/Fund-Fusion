@@ -1,8 +1,8 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import './RightContainer.css'
+import './ApplicantForm.css'
 
-const RightContainer = () => {
+const ApplicantForm = () => {
   const navigate = useNavigate()
 
   function handleApplicantLogin(){
@@ -49,4 +49,4 @@ Login With Google</button>
   )
 }
 
-export default RightContainer
+export default ApplicantForm

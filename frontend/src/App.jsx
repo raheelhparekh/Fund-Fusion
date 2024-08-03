@@ -1,10 +1,15 @@
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
-import {Login,ApplicantDashboard,ValidatorDashboard,ApplicationForm,ValidatorsReport} from './pages'
+import {Login,ApplicantDashboard,ValidatorDashboard,ApplicationForm,ValidatorsReport,About,Policy} from './pages'
 
 import './App.css'
+import Navbar from './pages/login/components/navbar/Navbar'
 
 const router = createBrowserRouter([
-  {path:'/',element: <Login/> },
+  {path:'/',element: <Navbar/>, children:[
+    {path:'',element: <Login/> },
+    {path:'about',element: <About/> },
+    {path:'policy',element: <Policy/>}
+  ]},
   {path:'/applicant',element: <ApplicantDashboard/>},
   {path:'/applicant/form',element: <ApplicationForm/> },
     
