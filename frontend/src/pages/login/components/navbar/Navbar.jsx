@@ -1,6 +1,8 @@
 import React from 'react';
 import './Navbar.css';
 
+//Navlinks to be used later & will be parent route for policy,services and login
+
 const Navbar = () => {
   return (
     <nav className="login-navbar">
@@ -13,13 +15,13 @@ const Navbar = () => {
       <div className="login-navbar-collapse" id="loginNavbarNav">
         <ul className="login-navbar-nav">
           <li className="login-nav-item">
-            <a className="login-nav-link active" href="#">Dashboard</a>
-          </li>
-          <li className="login-nav-item">
             <a className="login-nav-link" href="#">Policy</a>
           </li>
           <li className="login-nav-item">
             <a className="login-nav-link" href="#">Services</a>
+          </li>
+          <li className="login-nav-item">
+            <a className="login-nav-link active" href="#">Login</a>
           </li>
           <li className="login-nav-item">
             <a className="login-nav-link" href="#">
