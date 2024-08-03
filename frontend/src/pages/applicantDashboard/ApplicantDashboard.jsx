@@ -35,8 +35,8 @@ function ApplicantDashboard() {
   ];
 
   const navbarLinks = [
-    { label: "Dashboard", path: "/" },
-    { label: "Login", path: "/login" },
+    { label: "Dashboard", path: "/applicant" },
+    { label: "Login", path: "/" },
   ];
 
   return (
