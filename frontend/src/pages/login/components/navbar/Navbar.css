@@ -1,0 +1,83 @@
+/* login styles for the Navbar */
+.login-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f8f9fa;
+  padding: 10px 20px;
+}
+
+.login-navbar-brand .login-logo {
+  height: 50px;
+}
+
+.login-navbar-toggler {
+  display: none;
+  cursor: pointer;
+}
+
+.login-navbar-toggler-icon {
+  width: 30px;
+  height: 30px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.login-navbar-collapse {
+  display: flex;
+  justify-content: flex-end;
+  flex-grow: 1;
+}
+
+.login-navbar-nav {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.login-nav-item {
+  margin-left: 20px;
+}
+
+.login-nav-link {
+  text-decoration: none;
+  color: #000;
+  font-size: 16px;
+}
+
+.login-nav-link.active {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.login-trust-logo {
+  height: 50px;
+}
+
+@media (max-width: 768px) {
+  .login-navbar-toggler {
+    display: block;
+  }
+
+  .login-navbar-collapse {
+    display: none;
+  }
+
+  .login-navbar-collapse.show {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .login-navbar-nav {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .login-nav-item {
+    margin-left: 0;
+    margin-bottom: 10px;
+  }
+}

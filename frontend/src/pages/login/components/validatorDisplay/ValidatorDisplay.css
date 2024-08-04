@@ -1,0 +1,43 @@
+.left-main-title {
+    font-size: 40px;
+    color: white;
+    text-align: center;
+    font-family: 'Bevan, serif';
+}
+.left-container {
+    background-color: #A83033;
+    width: 50%;
+    padding: 5%;
+    border-top-left-radius: 50px;
+    border-bottom-left-radius: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 100%;
+
+}
+.left-click {
+    width: 181px;
+    height: 56px;
+    border-radius: 20px;
+    border: none;
+    background: white;
+    font-size: 24px;
+}
+.left-para {
+    font-size: 16px;
+    color: white;
+    text-align: center;
+}
+.left-validator {
+    text-align: center;
+    font-size: 36px;
+    color: white;
+}
+.left-goto {
+    color: white;
+    text-align: center;
+    font-size: 20px
+}
