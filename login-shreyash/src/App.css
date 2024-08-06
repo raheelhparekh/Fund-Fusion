@@ -3,6 +3,8 @@
   width: 70vw;
   height: 80%;
   border-radius: 50px;
+  box-shadow: 8px 8px 4px 0px #00000040;
+
 }
 .login {
     display: flex;
