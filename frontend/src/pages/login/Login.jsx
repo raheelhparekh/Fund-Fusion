@@ -1,68 +1,38 @@
-import React from 'react'
+import React, { useState } from 'react'
+import ApplicantDisplay from './components/applicantDisplay/ApplicantDisplay'
+import ApplicantForm from './components/applicantForm/ApplicantForm'
+import ValidatorForm from './components/validatorForm/ValidatorForm'
+import ValidatorDisplay from './components/validatorDisplay/ValidatorDisplay'
+
 import './Login.css'
-import { useNavigate } from 'react-router-dom'
+import loginPageBg from '/images/campus_bg.jpeg'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-function Login() {
-  const navigate = useNavigate()
-  function handleApplicantLogin(event){
-    event.preventDefault()
-
-    //@Anamay JWT here
-
-
-
-
-    navigate('/applicant')
-  }
-
-  function handleValidatorLogin(event){
-    event.preventDefault()
-
-    //@Anamay JWT here
-
-
-    
-    navigate('/validator')
-
-  }
-
+const Login = () => {
+  const [isApplicant,setIsApplicant] = useState(true);
   return (
-  <div className='login--container'>
-    <div className='login--box'>
-      <form onSubmit={handleValidatorLogin}>
-        <div>
-          <label htmlFor='username'>Username</label>
-          <input name='uniqueIdentifier'/>
-        </div>
+    <div className="login-page">
+      <div className='login'>
+        <img src={loginPageBg} className='loginPage_bg' />
 
-        <div>
-          <label htmlFor='password'>Password</label>
-          <input name='password' type='password'/>
-        </div>
+        <div className='login-container'>
 
-        <button id='validatorLogin'>Log In As Validator</button>
-      </form>
+          {isApplicant ?
+          <>
+            <ApplicantDisplay  changeRole={setIsApplicant}/>
+            <ApplicantForm/>
+          </>
+          :
+          <>
+            <ValidatorForm/>
+            <ValidatorDisplay changeRole={setIsApplicant}/>
+          </>
+          }
+
+        </div>
+      </div>
     </div>
-
-
-    <div className='login--box'>
-      <form onSubmit={handleApplicantLogin}>
-        <div>
-          <label htmlFor='username'>Username</label>
-          <input name='uniqueIdentifier'/>
-        </div>
-
-        <div>
-          <label htmlFor='password'>Password</label>
-          <input name='password' type='password'/>
-        </div>
-
-        <button id='applicantLogin'>Log In As Applicant</button>
-      </form>
-    </div>
-  </div>
   )
 }
-
 
 export default Login
