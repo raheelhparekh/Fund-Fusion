@@ -11,7 +11,7 @@ import {applicationData} from './data/applicationData';
 
 function App() {
   const [studentData, setStudentData] = useState({
-    name: "Ritwik",
+    name: "Raunak Kumar Gupta",
     university: "Somaiya Vidyavihar University",
     role: "Student", 
   });
@@ -19,7 +19,7 @@ function App() {
   const navbarLinks = [
     { label: "Home", path: "/" },
     { label: "Dashboard", path: "/dashboard" },
-    { label: "Login", path: "/login" },
+    
   ];
 
   return (

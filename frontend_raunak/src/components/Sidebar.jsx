@@ -10,7 +10,7 @@ const Sidebar = ({ studentData }) => (
       </div>
     </div>
     <nav>
-      <ul className="space-y-4 text-sm">
+      <ul className="space-y-4 text-md font-semibold">
         <li className="border-b border-gray-200 pb-2">
           <Link to="/dashboard" className="flex items-center text-gray-800 hover:text-white hover:bg-red-700 p-2 rounded">
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

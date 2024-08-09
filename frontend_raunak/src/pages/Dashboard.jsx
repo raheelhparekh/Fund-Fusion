@@ -5,7 +5,7 @@ import ApplicationTable from '../components/ApplicationTable';
 
 const Dashboard = ({ studentData, applicationData }) => {
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gray-100 ">
       <Sidebar studentData={studentData} />
       <main className="flex-1 p-6">
         <div className="bg-white shadow rounded-lg p-6">
@@ -27,7 +27,7 @@ const Dashboard = ({ studentData, applicationData }) => {
                     d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                   />
                 </svg>
-                <span className="text-sm">Create New Application</span>
+                <span className="text-sm">New Application</span>
               </button>
             </div>
             <p className="text-gray-600 mb-6">
