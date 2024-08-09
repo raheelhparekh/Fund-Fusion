@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import './Login.css';
 import loginPageBg from '/images/campus_bg.jpeg';

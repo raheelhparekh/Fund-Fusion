@@ -9,7 +9,6 @@ const ApplicationTable = ({ title, applications, studentName }) => (
           <th className="border-b p-4 text-gray-700">Topic</th>
           <th className="border-b p-4 text-gray-700">Name</th>
           <th className="border-b p-4 text-gray-700">Submitted</th>
-          <th className="border-b p-4 text-gray-700">Deadline</th>
           <th className="border-b p-4 text-gray-700">Branch</th>
           <th className="border-b p-4 text-gray-700">Status</th>
         </tr>
@@ -20,7 +19,6 @@ const ApplicationTable = ({ title, applications, studentName }) => (
             <td className="p-4">{app.topic}</td>
             <td className="p-4">{studentName}</td>
             <td className="p-4">{app.submitted}</td>
-            <td className="p-4">{app.deadline}</td>
             <td className="p-4">{app.branch}</td>
             <td className="p-4 text-green-500">{app.status}</td>
           </tr>
