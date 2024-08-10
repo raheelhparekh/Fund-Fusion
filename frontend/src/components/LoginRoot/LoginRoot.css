@@ -5,10 +5,15 @@
   justify-content: space-between;
   background-color: #f8f9fa;
   padding: 10px 20px;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000; 
 }
 
 .login-navbar-brand .login-logo {
-  height: 50px;
+  height: 45px;
 }
 
 .login-navbar-toggler {
@@ -53,7 +58,7 @@
 }
 
 .login-trust-logo {
-  height: 50px;
+  height: 40px;
 }
 
 @media (max-width: 768px) {

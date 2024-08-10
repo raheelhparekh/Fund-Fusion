@@ -38,11 +38,12 @@ const LoginRoot = () => {
       
       <Outlet/>
 
-      <footer className="flex h-12 items-center justify-center text-gray-800 bg-white">
+      <footer className="flex items-center justify-center h-6 w-full bg-gray-100 text-gray-800 fixed bottom-0 left-0 z-50">
         <div className="text-center text-sm">
           ©2024 KJSCE, All Rights Reserved.
         </div>
       </footer>
+    
 
     </>
   );
