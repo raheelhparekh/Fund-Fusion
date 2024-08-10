@@ -20,8 +20,12 @@ const router = createBrowserRouter([
     {path:'contact-us',element: <h1>contact-us</h1> },
   ]},
     
-  {path:'/validator',element: <ValidatorDashboard/>},
-  {path:'/validator/report',element: <ValidatorsReport/>}
+  {path:'/validator',element: <ValidatorDashboard/>, children:[
+    {path:'dashboard',element: <ValidatorDashboard/>, children:[
+      {path:':status',element: <ValidatorDashboard/> }
+    ]},
+    {path:'report',element: <ValidatorsReport/>}
+  ]},
 ])
 
 function App() {

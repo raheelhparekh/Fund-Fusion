@@ -10,12 +10,12 @@ function ApplicantLogin({changeRole}) {
     setAnimate(true);
     setTimeout(() => {
       changeRole();
-    }, 1000); // Match this timeout duration to your animation duration
+    }, 800); // Match this timeout duration to your animation duration
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate("/applicant");
+    navigate("/applicant/dashboard");
   };
 
   return (

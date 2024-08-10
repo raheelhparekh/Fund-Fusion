@@ -11,12 +11,12 @@ function ValidatorLogin({changeRole}) {
     // Call changeRole function after animation starts
     setTimeout(() => {
       changeRole();
-    }, 1000); // Match this timeout duration to your animation duration
+    }, 800); // Match this timeout duration to your animation duration
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate("/validator");
+    navigate("/validator/dashboard");
   };
 
   return (
