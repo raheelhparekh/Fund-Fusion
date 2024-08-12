@@ -1,9 +1,9 @@
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
-import {Login,ApplicantDashboard,ValidatorDashboard,ApplicationForm,ValidatorsReport,About,Policy} from './pages'
+import {Login,Dashboard,ApplicationForm,ValidatorsReport,About,Policy} from './pages'
 
 import './App.css'
 import LoginRoot from './components/LoginRoot/LoginRoot'
-import ApplicantDashboardRoot from './components/ApplicantDashboardRoot/ApplicantDashboardRoot'
+import DashboardRoot from './components/DashboardRoot/DashboardRoot'
 
 const router = createBrowserRouter([
   {path:'/',element: <LoginRoot/>, children:[
@@ -11,18 +11,18 @@ const router = createBrowserRouter([
     {path:'about',element: <About/> },
     {path:'policy',element: <Policy/>}
   ]},
-  {path:'/applicant',element: <ApplicantDashboardRoot/>, children:[
-    {path:'dashboard',element: <ApplicantDashboard/>, children:[
-      {path:':status',element: <ApplicantDashboard/> }
+  {path:'/applicant',element: <DashboardRoot role="Applicant"/>, children:[
+    {path:'dashboard',element: <Dashboard role="Applicant"/>, children:[
+      {path:':status',element: <Dashboard role="Applicant"/> }
     ]},
     {path:'form',element: <ApplicationForm/> },
     {path:'faqs',element: <h1>FAQs</h1> },
     {path:'contact-us',element: <h1>contact-us</h1> },
   ]},
     
-  {path:'/validator',element: <ValidatorDashboard/>, children:[
-    {path:'dashboard',element: <ValidatorDashboard/>, children:[
-      {path:':status',element: <ValidatorDashboard/> }
+  {path:'/validator',element: <DashboardRoot role="Validator"/>, children:[
+    {path:'dashboard',element: <Dashboard role="Validator"/>, children:[
+      {path:':status',element: <Dashboard role="Validator"/> }
     ]},
     {path:'report',element: <ValidatorsReport/>}
   ]},
