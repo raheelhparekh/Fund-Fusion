@@ -33,7 +33,7 @@ const DashboardRoot = ({ role }) => {
     <>
       <header>
         <nav className="bg-white shadow-lg border-b-4 w-full border-gray-300">
-          <div className="container mx-auto flex items-center justify-between px-4 h-20">
+          <div className="w-full flex items-center justify-between px-4 h-20">
             <div className="flex items-center">
               <Link to="/" className="flex items-center">
                 <img src={logo} alt="Somaiya" className="object-contain w-48" />

@@ -1,14 +1,13 @@
-import { React , useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { React, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './LoginAnimation.css';
 
-function ValidatorLogin({changeRole}) {
+function ValidatorLogin({ changeRole }) {
   const navigate = useNavigate();
   const [animate, setAnimate] = useState(false);
 
   const handleChangeRole = () => {
     setAnimate(true);
-    // Call changeRole function after animation starts
     setTimeout(() => {
       changeRole();
     }, 800); // Match this timeout duration to your animation duration
@@ -20,11 +19,11 @@ function ValidatorLogin({changeRole}) {
   };
 
   return (
-    <div className="flex bg-red-700 shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto">
-      <div className={`bg-white w-3/4 p-8 flex flex-col justify-center ${animate ? 'text-blur-out' : 'fade-in-fwd'}`}>
-        <h2 className="text-2xl font-bold mb-3">Login for Validator<span role="img" aria-label="wave">👋</span></h2>
+    <div className="flex flex-col md:flex-row bg-red-700 shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto">
+      <div className={`bg-white w-full md:w-3/4 p-8 flex flex-col justify-center ${animate ? 'text-blur-out' : 'fade-in-fwd'}`}>
+        <h2 className="text-lg md:text-xl lg:text-2xl font-bold mb-3">Login for Validator<span role="img" aria-label="wave">👋</span></h2>
         <button 
-          className="bg-gray-100 text-gray-700 px-4 py-2 rounded-full font-semibold mb-3 shadow-md flex items-center justify-center hover:bg-gray-200 transition-transform transform hover:scale-105"
+          className="bg-gray-100 text-gray-700 text-sm md:text-base px-4 py-2 rounded-full font-semibold mb-3 shadow-md flex items-center justify-center hover:bg-gray-200 transition-transform transform hover:scale-105"
           onClick={handleSubmit}
         >
           <svg
@@ -42,37 +41,37 @@ function ValidatorLogin({changeRole}) {
           </svg>
           Login With Google
         </button>
-        <p className="text-center text-gray-500 mb-3">or use email</p>
+        <p className="text-center text-gray-500 text-xs md:text-sm mb-3">or use email</p>
         <form onSubmit={handleSubmit}>
-          <input type="email" placeholder="Email" className="w-full mb-3 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" />
-          <input type="password" placeholder="Password" className="w-full mb-3 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" />
-          <div className="flex items-center justify-between mb-3">
-            <label className="flex items-center">
+          <input type="email" placeholder="Email" className="w-full mb-3 p-2 border border-gray-300 rounded-lg text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-red-500" />
+          <input type="password" placeholder="Password" className="w-full mb-3 p-2 border border-gray-300 rounded-lg text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-red-500" />
+          <div className="flex flex-col md:flex-row items-center justify-between mb-3">
+            <label className="flex items-center mb-2 md:mb-0 text-sm md:text-base">
               <input type="checkbox" className="mr-2" />
               <span>Remember me</span>
             </label>
-            <a href="#" className="text-red-700 hover:underline">Forgot Password?</a>
+            <a href="#" className="text-red-700 text-sm md:text-base hover:underline">Forgot Password?</a>
           </div>
           <button 
             type="submit" 
-            className="bg-red-700 text-white w-full py-2 rounded-lg font-semibold shadow-md hover:bg-red-800 transition"
+            className="bg-red-700 text-white text-sm md:text-base w-full py-2 rounded-lg font-semibold shadow-md hover:bg-red-800 transition"
           >
             Log in
           </button>
         </form>
       </div>
 
-      <div className={`w-3/4 bg-red-700 p-8 flex flex-col justify-center ${animate ? 'slide-out-left' : 'fade-in-fwd'}`}>
-        <h2 className="text-white text-3xl font-bold mb-3">Travel Policy</h2>
-        <p className="text-white mb-6">
-          Our web application simplifies the process of requesting, approving, and managing financial support for research students and associates. With transparent communication and streamlined workflows, you can focus on what matters most: your research.
+      <div className={`w-full md:w-3/4 bg-red-700 p-4 flex flex-col justify-center ${animate ? 'slide-out-left' : 'fade-in-fwd'}`}>
+        <h2 className="text-white text-xl md:text-2xl lg:text-3xl font-bold mb-3 hidden md:block">Travel Policy</h2>
+        <p className="text-white text-sm md:text-base mb-6 hidden md:block">
+          Our web application simplifies the process of requesting, approving, and managing financial support for research students and associates.
         </p>
-        <h3 className="text-white text-xl font-bold">Applicant?</h3>
+        <h3 className="text-white text-lg md:text-xl font-bold">Applicant?</h3>
         <p className="text-white mb-3">Go to Applicant’s Sign in</p>
-        <button className="bg-white text-red-700 px-3 py-1.5 rounded-full font-semibold shadow-md hover:bg-gray-100 transition" onClick={handleChangeRole}>Click Here</button>
+        <button className="bg-white text-red-700 text-sm md:text-base px-3 py-1.5 rounded-full font-semibold shadow-md hover:bg-gray-100 transition" onClick={handleChangeRole}>Click Here</button>
       </div>
     </div>
-  )
+  );
 }
 
-export default ValidatorLogin
+export default ValidatorLogin;

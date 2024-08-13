@@ -16,6 +16,12 @@
   height: 45px;
 }
 
+@media (max-width: 768px) {
+  .login-navbar-brand .login-logo {
+    height: 25px;
+  }
+}
+
 .login-navbar-toggler {
   display: none;
   cursor: pointer;

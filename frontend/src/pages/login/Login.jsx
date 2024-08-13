@@ -17,7 +17,7 @@ const Login = () => {
     <div className="login-page">
       <img src={loginPageBg} className='loginPage_bg' />
       <div className='login'>
-        <div className={`login-container}`}>
+        <div className={`login-container`}>
           {isApplicant ? (
               <>
                 <ApplicantLogin changeRole={toggleRole} />
