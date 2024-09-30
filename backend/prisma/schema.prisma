@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+enum Department {
+  NULL
+  COMPS
+  IT
+  MECH
+  AIDS
+  EXTC
+  ETRX
+  RAI
+}
+
+model Applicant {
+  profileId String @id @default(uuid())
+  userName  String 
+  email     String @unique @db.Text
+  password  String
+
+  department Department
+
+  applications Application[]
+}
+
+enum ApplicationStatus {
+  REJECTED
+  ACCEPTED
+  PENDING
+}
+
+model Application {
+  applicationId String @id @default(uuid())
+
+  applicantId String
+  applicant   Applicant @relation(fields: [applicantId], references: [profileId], onDelete: Cascade)
+
+  applicantName String
+
+  formData Json
+
+  supervisorValidation ApplicationStatus @default(PENDING)
+  hodValidation        ApplicationStatus? 
+  hoiValidation        ApplicationStatus?
+
+  createdAt DateTime @default(now())
+
+  validators Validator[]
+
+  @@index([applicantId])
+}
+
+enum Designation {
+  Supervisor
+  HOD
+  HOI
+}
+
+model Validator {
+  profileId String @id @default(uuid())
+  userName  String 
+  email     String @unique @db.Text
+  password  String
+
+  department  Department
+  designation Designation
+
+  applications Application[]
+}
+
+

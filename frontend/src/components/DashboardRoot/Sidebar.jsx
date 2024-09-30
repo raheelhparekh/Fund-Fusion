@@ -33,7 +33,7 @@ const Sidebar = ({role}) => (
               </NavLink>
             </li>
             <li className="border-b border-gray-200 pb-2">
-              <NavLink to={`/${role.toLowerCase()}/dashboard/approved`} className={({ isActive }) =>`flex items-center text-gray-600 hover:text-white hover:bg-red-700 p-2 rounded ${isActive ? 'font-extrabold' : ''}`}>
+              <NavLink to={`/${role.toLowerCase()}/dashboard/accepted`} className={({ isActive }) =>`flex items-center text-gray-600 hover:text-white hover:bg-red-700 p-2 rounded ${isActive ? 'font-extrabold' : ''}`}>
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                 </svg> Accepted

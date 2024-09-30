@@ -1,9 +1,10 @@
-import { React, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginAnimation.css';
 
 function ApplicantLogin({ changeRole }) {
   const navigate = useNavigate();
+  const [credentials, setCredentials] = useState({ username: '', password: '' });
   const [animate, setAnimate] = useState(false);
 
   const handleChangeRole = () => {
@@ -13,9 +14,28 @@ function ApplicantLogin({ changeRole }) {
     }, 800); // Match this timeout duration to your animation duration
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/applicant/dashboard");
+    try {
+      const response = await fetch("http://localhost:3000/applicant-login", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(credentials),
+      });
+
+      if (response.ok) {
+        // Handle successful login (navigate, store tokens, etc.)
+        navigate("/applicant/dashboard");
+      } else {
+        // Handle login failure (display error message, etc.)
+        console.error('Login failed');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+    }
   };
 
   return (
@@ -27,7 +47,12 @@ function ApplicantLogin({ changeRole }) {
         </p>
         <h3 className="text-white text-lg md:text-xl font-bold">Validator?</h3>
         <p className="text-white mb-3">Go to Validator’s Sign in</p>
-        <button className="bg-white text-red-700 text-sm md:text-base px-3 py-1.5 rounded-full font-semibold shadow-md hover:bg-gray-100 transition" onClick={handleChangeRole}>Click Here</button>
+        <button 
+          className="bg-white text-red-700 text-sm md:text-base px-3 py-1.5 rounded-full font-semibold shadow-md hover:bg-gray-100 transition" 
+          onClick={handleChangeRole}
+        >
+          Click Here
+        </button>
       </div>
 
       <div className={`bg-white w-full md:w-3/4 p-8 flex flex-col justify-center ${animate ? 'text-blur-out' : 'fade-in-fwd'}`}>
@@ -37,7 +62,7 @@ function ApplicantLogin({ changeRole }) {
           onClick={handleSubmit}
         >
           <svg
-            className="w-6 h-6 mr-2" // Adjust the size of the icon if needed
+            className="w-6 h-6 mr-2"
             width="32"
             height="32"
             viewBox="0 0 32 32"
@@ -53,8 +78,23 @@ function ApplicantLogin({ changeRole }) {
         </button>
         <p className="text-center text-gray-500 text-xs md:text-sm mb-3">or use email</p>
         <form onSubmit={handleSubmit}>
-          <input type="email" placeholder="Email" className="w-full mb-3 p-2 border border-gray-300 rounded-lg text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-red-500" />
-          <input type="password" placeholder="Password" className="w-full mb-3 p-2 border border-gray-300 rounded-lg text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-red-500" />
+
+          <input 
+            //type="email" 
+            placeholder="Email" 
+            className="w-full mb-3 p-2 border border-gray-300 rounded-lg text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-red-500"
+            value={credentials.username} 
+            onChange={(event) => setCredentials(prev => ({ ...prev, username: event.target.value }))} 
+          />
+
+          <input 
+            type="password" 
+            placeholder="Password" 
+            className="w-full mb-3 p-2 border border-gray-300 rounded-lg text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-red-500"
+            value={credentials.password} 
+            onChange={(event) => setCredentials(prev => ({ ...prev, password: event.target.value }))} 
+          />
+
           <div className="flex flex-col md:flex-row items-center justify-between mb-3">
             <label className="flex items-center mb-2 md:mb-0 text-sm md:text-base">
               <input type="checkbox" className="mr-2" />
@@ -71,7 +111,6 @@ function ApplicantLogin({ changeRole }) {
         </form>
       </div>
     </div>
-
   );
 }
 
