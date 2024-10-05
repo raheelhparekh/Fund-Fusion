@@ -56,6 +56,10 @@ model Application {
   hodValidation        ApplicationStatus? 
   hoiValidation        ApplicationStatus?
 
+  proofOfTravel        Bytes?
+  proofOfAccommodation  Bytes?
+  proofOfAttendance    Bytes?
+
   createdAt DateTime @default(now())
 
   validators Validator[]

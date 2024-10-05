@@ -1,233 +1,934 @@
-import React, { useState } from 'react';
-import { useSubmit, useNavigation} from 'react-router-dom'
-import './ApplicationForm.css';
-import LabelAndInputField from './components/LabelAndInputField';
-import SelectField from './components/SelectField';
-import FileField from './components/FileField';
-import DropDown from './components/DropDown';
+import React, { useState } from "react";
+import { useSubmit, useNavigation } from "react-router-dom";
+import "./ApplicationForm.css";
+// import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-import axios from 'axios';
-
-
-    const ApplicationForm = () => {
+const ApplicationForm = () => {
         const [formData, setFormData] = useState({
-            applicantFullName: '',
-            applicantAge: '',
-            applicantContact: '',
-            applicantAddress: '',
-            applicantEmail: '',
-            applicantRollNo: '',
-            applicantDepartment: '',
-            primarySupervisorFullName: '',
-            primarySupervisorEmail: '',
-            primarySupervisorContact: '',
-            primarySupervisorDepartment: '',
-            anotherSupervisor: false,
-            anotherSupervisorFullName: '',
-            anotherSupervisorEmail: '',
-            anotherSupervisorContact: '',
-            anotherSupervisorDepartment: '',
-            purposeOfTravel: '',
-            purposeOfTravelOther: '',
-            modeOfTravel: '',
-            modeOfTravelOther: '',
-            proofOfTravel: '',
-            accomodationOpted: false,
-            typeOfAccomodation: '',
-            durationOfStay: '',
-            accomodationAddress: '',
-            proofOfAccomodation: '',
-            eventName: '',
-            eventDate: '',
-            eventVenue: '',
-            eventWebsite: '',
-            proofOfAttendance: '',
-            parentalConsent: false,
-            fatherFullName: '',
-            fatherContact: '',
-            motherFullName: '',
-            motherContact: '',
-            anyOtherRequirements: ''
-        })
-    
-        const [currentForm, setCurrentForm] = useState('PersonalAndAcademicFormContainer');
-        function openAForm(event) {
-            const formName = event.target.dataset.formName;
-    
-            if (formName === currentForm) {
-                setCurrentForm('');
-            } else {
-                setCurrentForm(formName);
-            }
-        }
-    
-        const personalAndAcademicFormFields = [
-            { label: 'Full Name', type: 'text', dependsOn: null, name: "applicantFullName", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Contact', type: 'text', dependsOn: null, name: "applicantContact", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Age', type: 'text', dependsOn: null, name: "applicantAge", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Residential Address', type: 'text', dependsOn: null, name: "applicantAddress", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Somaiya Email Id', type: 'text', dependsOn: null, name: "applicantEmail", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Roll No', type: 'text', dependsOn: null, name: "applicantRollNo", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Department', type: 'dropdown', dependsOn: null, name: 'applicantDepartment', options: ['COMPS', 'IT', 'MECH', 'AIDS', 'EXTC', 'ETRX', 'RAI'], ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Supervisor\'s Full Name', type: 'text', dependsOn: null, name: "primarySupervisorFullName", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Supervisor\'s Somaiya Email Id', type: 'text', dependsOn: null, name: "primarySupervisorEmail", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Supervisor\'s Contact', type: 'text', dependsOn: null, name: "primarySupervisorContact", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Supervisor\'s Department', type: 'dropdown', dependsOn: null, name: 'primarySupervisorDepartment', options: ['COMPS', 'IT', 'MECH', 'AIDS', 'EXTC', 'ETRX', 'RAI'], ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Do you have another supervisor?', type: 'selectOne', dependsOn: null, name: 'anotherSupervisor', options: ['yes', 'no'], ifOtherThenSpecify: false, responsibleForRendering: true, formData: formData, setFormData: setFormData },
-            { label: 'Other Supervisor\'s Full Name', type: 'text', dependsOn: 'anotherSupervisor', name: "anotherSupervisorFullName", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Other Supervisor\'s Somaiya Email Id', type: 'text', dependsOn: 'anotherSupervisor', name: "anotherSupervisorEmail", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Other Supervisor\'s Contact', type: 'text', dependsOn: 'anotherSupervisor', name: "anotherSupervisorContact", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Other Supervisor\'s Department', type: 'dropdown', dependsOn: 'anotherSupervisor', name: 'anotherSupervisorDepartment', options: ['COMPS', 'IT', 'MECH', 'AIDS', 'EXTC', 'ETRX', 'RAI'], ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData }
-        ];
-    
-        const travelFormFields = [
-            { label: "Purpose of Travel", type: "selectOne", dependsOn: null, name: 'purposeOfTravel', options: ['Academic', 'Personal', 'Research', 'Other'], ifOtherThenSpecify: true, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Mode of Travel', type: 'selectOne', dependsOn: null, name: 'modeOfTravel', options: ['Flight', 'Train', 'Bus', 'Car', 'Other'], ifOtherThenSpecify: true, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Proof of Travel', type: 'file', dependsOn: null, name: 'proofOfTravel', options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Accommodation Opted?', type: 'selectOne', dependsOn: null, name: 'accommodationOpted', options: ['yes', 'no'], ifOtherThenSpecify: false, responsibleForRendering: true, formData: formData, setFormData: setFormData },
-            { label: 'Type of Accommodation', type: 'selectOne', dependsOn: 'accommodationOpted', name: 'typeOfAccommodation', options: ['Hotel', 'Guest House', 'Other'], ifOtherThenSpecify: true, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Duration of Stay', type: 'text', dependsOn: 'accommodationOpted', name: "durationOfStay", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Accommodation Address', type: 'text', dependsOn: 'accommodationOpted', name: "accommodationAddress", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-        ];
-    
-        const eventConferenceFields = [
-            { label: 'Event Name', type: 'text', dependsOn: null, name: "eventName", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Event Date', type: 'text', dependsOn: null, name: "eventDate", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Event Website/Reference', type: 'text', dependsOn: null, name: "eventWebsite", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Event Venue', type: 'text', dependsOn: null, name: "eventVenue", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-        ];
-    
-        const parentAndConsentFields = [
-            { label: 'Do you have parental consent?', type: 'selectOne', dependsOn: null, name: 'parentalConsent', options: ['yes', 'no'], ifOtherThenSpecify: false, responsibleForRendering: true, formData: formData, setFormData: setFormData },
-            { label: 'Father\'s Full Name', type: 'text', dependsOn: 'parentalConsent', name: "fatherFullName", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Father\'s Contact', type: 'text', dependsOn: 'parentalConsent', name: "fatherContact", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Mother\'s Full Name', type: 'text', dependsOn: 'parentalConsent', name: "motherFullName", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-            { label: 'Mother\'s Contact', type: 'text', dependsOn: 'parentalConsent', name: "motherContact", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-        ];
-    
-        const additionalFields = [
-            { label: 'Any Other Requirements', type: 'text', dependsOn: null, name: "anyOtherRequirements", options: null, ifOtherThenSpecify: false, responsibleForRendering: false, formData: formData, setFormData: setFormData },
-        ];
-
-
-
-    function renderInputFields({ label, type, dependsOn, name, options, ifOtherThenSpecify, responsibleForRendering, formData, setFormData }, index) {
-        switch (type) {
-            case "text":
-                if (dependsOn === null || formData[dependsOn]) {
-                    return <LabelAndInputField key={index} label={label} name={name} setFormData={setFormData} />;
-                }
-                break;
-            case "selectOne":
-                if (dependsOn === null || formData[dependsOn]) {
-                    return (
-                        <SelectField
-                            key={index}
-                            label={label}
-                            dependsOn={dependsOn}
-                            name={name}
-                            options={options}
-                            ifOtherThenSpecify={ifOtherThenSpecify}
-                            responsibleForRendering={responsibleForRendering}
-                            formData={formData}
-                            setFormData={setFormData}
-                        />
-                    );
-                }
-
-            case "file":
-                if (dependsOn === null || formData[dependsOn]) {
-                    return <FileField key={index} name={name} label={label} setFormData={setFormData} formData={formData} />;
-                }
-                break;
-            case "dropdown":
-                if (dependsOn === null || formData[dependsOn]) {
-                    return (
-                        <DropDown
-                            key={index}
-                            label={label}
-                            dependsOn={dependsOn}
-                            name={name}
-                            options={options}
-                            ifOtherThenSpecify={ifOtherThenSpecify}
-                            responsibleForRendering={responsibleForRendering}
-                            formData={formData}
-                            setFormData={setFormData}
-                        />
-                    );
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    const submit = useSubmit();
-
-    function handleSubmit(event) {
-        event.preventDefault();
-
-        const formDataObject = new FormData();
-
-        // Append all fields from formData to FormData object
-        Object.entries(formData).forEach(([key, value]) => {
-            formDataObject.append(key, value);
+                applicantFullName: "",
+                applicantAge: "",
+                applicantContact: "",
+                applicantAddress: "",
+                applicantCourse: "BTECH",
+                applicantYearOfStudy: "",
+                applicantEmail: "",
+                applicantRollNo: "",
+                applicantDepartment: "",
+                primarySupervisorFullName: "",
+                primarySupervisorEmail: "",
+                primarySupervisorContact: "",
+                primarySupervisorDepartment: "",
+                anotherSupervisor: false,
+                anotherSupervisorFullName: "",
+                anotherSupervisorEmail: "",
+                anotherSupervisorContact: "",
+                anotherSupervisorDepartment: "",
+                purposeOfTravel: "",
+                purposeOfTravelOther: "",
+                modeOfTravel: "",
+                modeOfTravelOther: "",
+                proofOfTravel: "",
+                accommodationOpted: false,
+                typeOfAccommodation: "",
+                durationOfStay: "",
+                accommodationAddress: "",
+                proofOfAccommodation: "",
+                eventName: "",
+                eventDate: "",
+                eventVenue: "",
+                eventWebsite: "",
+                proofOfAttendance: "",
+                parentalConsent: false,
+                fatherFullName: "",
+                fatherContact: "",
+                motherFullName: "",
+                motherContact: "",
+                anyOtherRequirements: "",
         });
 
-        // Submit the FormData object
-        submit(formDataObject, { method: "POST" });
-    }
+        const [currentForm, setCurrentForm] = useState("personalAndAcademicFormContainer");
+        function openAForm(event) {
+                let formName = event.target.getAttribute("data-form-name");
 
-    const navigation = useNavigation();
-    const isSubmitting = (navigation.state === "submitting")
+                formName = formName.replace("Header", "") + "Container";
 
-    return (
-        <div className='topLevelFormContainer'>
-            <form className='mainForm'>
-                <div className={`generalFormContainer personalAndAcademicFormContainer ${currentForm === 'PersonalAndAcademicFormContainer' ? '' : 'hiddenForm'}`}>
-                    <div className='header' data-form-name='PersonalAndAcademicFormContainer' onClick={openAForm}>
-                        Personal And Academic
-                    </div>
-                    <div className='form'>
-                        {personalAndAcademicFormFields.map((field, index) => renderInputFields(field, index))}
-                    </div>
+                if (formName === currentForm) {
+                        setCurrentForm("");
+                } else {
+                        setCurrentForm(formName);
+                }
+        }
+
+        const handleFileChange = (event) => {
+                const file = event.target.files[0];
+                const name = event.target.name;
+
+                setFormData((prevData) => ({
+                        ...prevData,
+                        [name]: file,
+                }));
+        };
+
+        const submit = useSubmit();
+
+        const navigation = useNavigation();
+        const isSubmitting = navigation.state === "submitting";
+
+        const handleSubmit = async (event) => {
+          event.preventDefault();
+
+          const formDataToSend = new FormData();
+
+          for (const key in formData) {
+            formDataToSend.append(key, formData[key]);
+          }
+
+          try {
+            submit(formDataToSend, { method: 'POST', encType: "multipart/form-data" });
+          } catch (error) {
+            console.error("Error uploading form:", error.message);
+          }
+        };
+
+        return (
+                <div className="topLevelFormContainer">
+                        <form className="mainForm">
+                                <div
+                                        className={`generalFormContainer personalAndAcademicFormContainer ${currentForm === "personalAndAcademicFormContainer"
+                                                ? ""
+                                                : "hiddenForm"
+                                                }`}>
+                                        <div
+                                                className="header"
+                                                data-form-name="personalAndAcademicFormHeader"
+                                                onClick={openAForm}>
+                                                Personal And Academic
+                                        </div>
+                                        <div className="personalAndAcademicForm form">
+                                                <div className="labelAndInputField">
+                                                        <label>Full Name</label>
+                                                        <input
+                                                                type="text"
+                                                                name="applicantFullName"
+                                                                value={formData.applicantFullName}
+                                                                onChange={(event) =>
+                                                                        setFormData({
+                                                                                ...formData,
+                                                                                applicantFullName: event.target.value,
+                                                                        })
+                                                                }
+                                                        />
+                                                </div>
+                                                <div className="labelAndInputField">
+                                                        <label>Contact</label>
+                                                        <input
+                                                                type="text"
+                                                                name="applicantContact"
+                                                                value={formData.applicantContact}
+                                                                onChange={(event) =>
+                                                                        setFormData({
+                                                                                ...formData,
+                                                                                applicantContact: event.target.value,
+                                                                        })
+                                                                }
+                                                        />
+                                                </div>
+                                                <div className="labelAndInputField">
+                                                        <label>Age</label>
+                                                        <input
+                                                                type="text"
+                                                                name="applicantAge"
+                                                                value={formData.applicantAge}
+                                                                onChange={(event) =>
+                                                                        setFormData({ ...formData, applicantAge: event.target.value })
+                                                                }
+                                                        />
+                                                </div>
+
+                                                <div className="labelAndInputField fullRow">
+                                                        <label>Residential Address</label>
+                                                        <input
+                                                                type="text"
+                                                                name="applicantAddress"
+                                                                value={formData.applicantAddress}
+                                                                onChange={(event) =>
+                                                                        setFormData({
+                                                                                ...formData,
+                                                                                applicantAddress: event.target.value,
+                                                                        })
+                                                                }
+                                                        />
+                                                </div>
+
+                                                <div className="dropDownField">
+                                                        <label>Select Course</label>
+                                                        <select
+                                                                name="applicantCourse"
+                                                                value={formData.applicantCourse} // Must match state
+                                                                onChange={(event) => {
+                                                                        console.log("Selected course:", event.target.value); // Debugging log
+                                                                        setFormData({
+                                                                                ...formData,
+                                                                                applicantCourse: event.target.value, // Update state
+                                                                        });
+                                                                }}
+                                                        >
+                                                                <option value="">Select Course</option> {/* Default option */}
+                                                                <option value="BTECH">Bachelor Of Technology</option>
+                                                                <option value="MTECH">Master Of Technology</option>
+                                                                <option value="PHD">PHD</option>
+                                                        </select>
+                                                </div>
+
+
+                                                <div className="dropDownField">
+                                                        <label>Select Year of Study</label>
+                                                        <select
+                                                                name="applicantYearOfStudy"
+                                                                value={formData.applicantYearOfStudy} // Controlled component
+                                                                onChange={(event) =>
+                                                                        setFormData({
+                                                                                ...formData,
+                                                                                applicantYearOfStudy: event.target.value,
+                                                                        })
+                                                                }
+                                                        >
+                                                                {formData.applicantCourse === "BTECH" ? (
+                                                                        <>
+                                                                                <option value="">Select Year</option>
+                                                                                <option value="FY">First Year</option>
+                                                                                <option value="SY">Second Year</option>
+                                                                                <option value="TY">Third Year</option>
+                                                                                <option value="LY">Fourth Year</option>
+                                                                        </>
+                                                                ) : formData.applicantCourse === "MTECH" ? (
+                                                                        <>
+                                                                                <option value="">Select Year</option>
+                                                                                <option value="FY">First Year</option>
+                                                                                <option value="SY">Second Year</option>
+                                                                        </>
+                                                                ) : formData.applicantCourse === "PHD" ? (
+                                                                        <>
+                                                                                <option value="">Select Year</option>
+                                                                                <option value="Y1">Year 1</option>
+                                                                                <option value="Y2">Year 2</option>
+                                                                                <option value="Y3">Year 3</option>
+                                                                        </>
+                                                                ) : null}
+                                                        </select>
+                                                </div>
+                                                <div className="dropDownField">
+                                                        <label>Select Department</label>
+                                                        <select
+                                                                name="applicantDepartment"
+                                                                value={formData.applicantDepartment} // This should match the state
+                                                                onChange={(event) =>
+                                                                        setFormData({
+                                                                                ...formData,
+                                                                                applicantDepartment: event.target.value, // Update the state
+                                                                        })
+                                                                }
+                                                        >
+                                                                <option value="">Select Department</option> {/* Default option */}
+                                                                <option value="COMPS">COMPS</option>
+                                                                <option value="IT">IT</option>
+                                                                <option value="MECH">MECH</option>
+                                                                <option value="AIDS">AIDS</option>
+                                                                <option value="EXTC">EXTC</option>
+                                                                <option value="ETRX">ETRX</option>
+                                                                <option value="RAI">RAI</option>
+                                                        </select>
+                                                </div>
+
+
+                                                <div className="labelAndInputField">
+                                                        <label>Somaiya Email Id</label>
+                                                        <input
+                                                                type="text"
+                                                                name="applicantEmail"
+                                                                value={formData.applicantEmail}
+                                                                onChange={(event) =>
+                                                                        setFormData({
+                                                                                ...formData,
+                                                                                applicantEmail: event.target.value,
+                                                                        })
+                                                                }
+                                                        />
+                                                </div>
+
+                                                <div className="labelAndInputField">
+                                                        <label>Roll No</label>
+                                                        <input
+                                                                type="text"
+                                                                name="applicantRollNo"
+                                                                value={formData.applicantRollNo}
+                                                                onChange={(event) =>
+                                                                        setFormData({
+                                                                                ...formData,
+                                                                                applicantRollNo: event.target.value,
+                                                                        })
+                                                                }
+                                                        />
+                                                </div>
+
+
+                                                <div className="labelAndInputField">
+                                                        <label>Supervisor's Full Name</label>
+                                                        <input
+                                                                type="text"
+                                                                name="primarySupervisorFullName"
+                                                                value={formData.primarySupervisorFullName}
+                                                                onChange={(event) =>
+                                                                        setFormData({
+                                                                                ...formData,
+                                                                                primarySupervisorFullName: event.target.value,
+                                                                        })
+                                                                }
+                                                        />
+                                                </div>
+
+                                                <div className="labelAndInputField">
+                                                        <label>Supervisor's Somaiya Email Id</label>
+                                                        <input
+                                                                type="text"
+                                                                name="primarySupervisorEmail"
+                                                                value={formData.primarySupervisorEmail}
+                                                                onChange={(event) =>
+                                                                        setFormData({
+                                                                                ...formData,
+                                                                                primarySupervisorEmail: event.target.value,
+                                                                        })
+                                                                }
+                                                        />
+                                                </div>
+
+                                                <div className="labelAndInputField">
+                                                        <label>Supervisor's Contact</label>
+                                                        <input
+                                                                type="text"
+                                                                name="primarySupervisorContact"
+                                                                value={formData.primarySupervisorContact}
+                                                                onChange={(event) =>
+                                                                        setFormData({
+                                                                                ...formData,
+                                                                                primarySupervisorContact: event.target.value,
+                                                                        })
+                                                                }
+                                                        />
+                                                </div>
+
+                                                <div className="dropDownField">
+                                                        <label>Supervisor's Department</label>
+                                                        <select
+                                                                name="primarySupervisorDepartment"
+                                                                value={formData.primarySupervisorDepartment} // Controlled component
+                                                                onChange={(event) =>
+                                                                        setFormData({
+                                                                                ...formData,
+                                                                                primarySupervisorDepartment: event.target.value, // Update department
+                                                                        })
+                                                                }
+                                                        >
+                                                                <option value="">Select Department</option> {/* Default option */}
+                                                                <option value="COMPS">COMPS</option>
+                                                                <option value="IT">IT</option>
+                                                                <option value="MECH">MECH</option>
+                                                                <option value="AIDS">AIDS</option>
+                                                                <option value="EXTC">EXTC</option>
+                                                                <option value="ETRX">ETRX</option>
+                                                                <option value="RAI">RAI</option>
+                                                        </select>
+                                                </div>
+
+
+                                                <div className="radioField fullRow">
+                                                        <label>Do you have another supervisor?</label>
+                                                        <div className="radioOptions">
+                                                                <div className="individualRadioOption">
+                                                                        <input
+                                                                                type="radio"
+                                                                                name="anotherSupervisor"
+                                                                                value="yes"
+                                                                                onChange={(event) =>
+                                                                                        setFormData({
+                                                                                                ...formData,
+                                                                                                anotherSupervisor: event.target.value === "yes",
+                                                                                        })
+                                                                                }
+                                                                        />
+                                                                        <label>Yes</label>
+                                                                </div>
+                                                                <div className="individualRadioOption">
+                                                                        <input
+                                                                                type="radio"
+                                                                                name="anotherSupervisor"
+                                                                                value="no"
+                                                                                onChange={(event) =>
+                                                                                        setFormData({
+                                                                                                ...formData,
+                                                                                                anotherSupervisor: event.target.value === "yes",
+                                                                                        })
+                                                                                }
+                                                                        />
+                                                                        <label>No</label>
+                                                                </div>
+                                                        </div>
+                                                </div>
+
+                                                {formData.anotherSupervisor && (
+                                                        <div className="labelAndInputField">
+                                                                <label>Other Supervisor's Full Name</label>
+                                                                <input
+                                                                        type="text"
+                                                                        name="anotherSupervisorFullName"
+                                                                        value={formData.anotherSupervisorFullName}
+                                                                        onChange={(event) =>
+                                                                                setFormData({
+                                                                                        ...formData,
+                                                                                        anotherSupervisorFullName: event.target.value,
+                                                                                })
+                                                                        }
+                                                                />
+                                                        </div>
+                                                )}
+                                                {formData.anotherSupervisor && (
+                                                        <div className="labelAndInputField">
+                                                                <label>Other Supervisor's Somaiya Email Id</label>
+                                                                <input
+                                                                        type="text"
+                                                                        name="anotherSupervisorEmail"
+                                                                        value={formData.anotherSupervisorEmail}
+                                                                        onChange={(event) =>
+                                                                                setFormData({
+                                                                                        ...formData,
+                                                                                        anotherSupervisorEmail: event.target.value,
+                                                                                })
+                                                                        }
+                                                                />
+                                                        </div>
+                                                )}
+                                                {formData.anotherSupervisor && (
+                                                        <div className="labelAndInputField">
+                                                                <label>Other Supervisor's Contact</label>
+                                                                <input
+                                                                        type="text"
+                                                                        name="anotherSupervisorContact"
+                                                                        value={formData.anotherSupervisorContact}
+                                                                        onChange={(event) =>
+                                                                                setFormData({
+                                                                                        ...formData,
+                                                                                        anotherSupervisorContact: event.target.value,
+                                                                                })
+                                                                        }
+                                                                />
+                                                        </div>
+                                                )}
+                                                {formData.anotherSupervisor && (
+                                                        <div className="dropDownField">
+                                                                <label>Other Supervisor's Department</label>
+                                                                <select
+                                                                        name="anotherSupervisorDepartment"
+                                                                        value={formData.anotherSupervisorDepartment} // Controlled component
+                                                                        onChange={(event) =>
+                                                                                setFormData({
+                                                                                        ...formData,
+                                                                                        anotherSupervisorDepartment: event.target.value, // Correctly updating state
+                                                                                })
+                                                                        }
+                                                                >
+                                                                        <option value="">Select Department</option> {/* Added default option */}
+                                                                        <option value="COMPS">COMPS</option>
+                                                                        <option value="IT">IT</option>
+                                                                        <option value="MECH">MECH</option>
+                                                                        <option value="AIDS">AIDS</option>
+                                                                        <option value="EXTC">EXTC</option>
+                                                                        <option value="ETRX">ETRX</option>
+                                                                        <option value="RAI">RAI</option>
+                                                                </select>
+                                                        </div>
+
+                                                )}
+                                        </div>
+                                </div>
+                                <div
+                                        className={`generalFormContainer travelFormContainer ${currentForm === "travelFormContainer" ? "" : "hiddenForm"
+                                                }`}>
+                                        <div
+                                                className="header"
+                                                data-form-name="travelFormHeader"
+                                                onClick={openAForm}>
+                                                Travel
+                                        </div>
+                                        <div className="travelForm form">
+                                                <div className="radioField fullRow">
+                                                        <label>Purpose of Travel</label>
+                                                        <div className="radioOptions">
+                                                                <div className="individualRadioOption">
+                                                                        <input
+                                                                                type="radio"
+                                                                                name="purposeOfTravel"
+                                                                                value="Academic"
+                                                                                onChange={(event) =>
+                                                                                        setFormData({
+                                                                                                ...formData,
+                                                                                                purposeOfTravel: event.target.value,
+                                                                                        })
+                                                                                }
+                                                                        />
+                                                                        <label>Academic</label>
+                                                                </div>
+                                                                <div className="individualRadioOption">
+                                                                        <input
+                                                                                type="radio"
+                                                                                name="purposeOfTravel"
+                                                                                value="Personal"
+                                                                                onChange={(event) =>
+                                                                                        setFormData({
+                                                                                                ...formData,
+                                                                                                purposeOfTravel: event.target.value,
+                                                                                        })
+                                                                                }
+                                                                        />
+                                                                        <label>Personal</label>
+                                                                </div>
+                                                                <div className="individualRadioOption">
+                                                                        <input
+                                                                                type="radio"
+                                                                                name="purposeOfTravel"
+                                                                                value="Research"
+                                                                                onChange={(event) =>
+                                                                                        setFormData({
+                                                                                                ...formData,
+                                                                                                purposeOfTravel: event.target.value,
+                                                                                        })
+                                                                                }
+                                                                        />
+                                                                        <label>Research</label>
+                                                                </div>
+                                                                <div className="individualRadioOption">
+                                                                        <input
+                                                                                type="radio"
+                                                                                name="purposeOfTravel"
+                                                                                value="Other"
+                                                                                onChange={(event) =>
+                                                                                        setFormData({
+                                                                                                ...formData,
+                                                                                                purposeOfTravel: event.target.value,
+                                                                                        })
+                                                                                }
+                                                                        />
+                                                                        <label>Other</label>
+                                                                </div>
+                                                                {formData.purposeOfTravel === "Other" && (
+                                                                        <div className="smallLabelAndInputField">
+                                                                                {/* <label>Specify</label> */}
+                                                                                <input
+                                                                                        type="text"
+                                                                                        name="purposeOfTravelOther"
+                                                                                        value={formData.purposeOfTravelOther}
+                                                                                        onChange={(event) =>
+                                                                                                setFormData({
+                                                                                                        ...formData,
+                                                                                                        purposeOfTravelOther: event.target.value,
+                                                                                                })
+                                                                                        }
+                                                                                        placeholder="Specify"
+                                                                                />
+                                                                        </div>
+                                                                )}
+                                                        </div>
+                                                </div>
+                                                <div className="radioField fullRow">
+                                                        <label>Mode of Travel</label>
+                                                        <div className="radioOptions">
+                                                                <div className="individualRadioOption">
+                                                                        <input
+                                                                                type="radio"
+                                                                                name="modeOfTravel"
+                                                                                value="Flight"
+                                                                                onChange={(event) =>
+                                                                                        setFormData({
+                                                                                                ...formData,
+                                                                                                modeOfTravel: event.target.value,
+                                                                                        })
+                                                                                }
+                                                                        />
+                                                                        <label>Flight</label>
+                                                                </div>
+                                                                <div className="individualRadioOption">
+                                                                        <input
+                                                                                type="radio"
+                                                                                name="modeOfTravel"
+                                                                                value="Train"
+                                                                                onChange={(event) =>
+                                                                                        setFormData({
+                                                                                                ...formData,
+                                                                                                modeOfTravel: event.target.value,
+                                                                                        })
+                                                                                }
+                                                                        />
+                                                                        <label>Train</label>
+                                                                </div>
+                                                                <div className="individualRadioOption">
+                                                                        <input
+                                                                                type="radio"
+                                                                                name="modeOfTravel"
+                                                                                value="Bus"
+                                                                                onChange={(event) =>
+                                                                                        setFormData({
+                                                                                                ...formData,
+                                                                                                modeOfTravel: event.target.value,
+                                                                                        })
+                                                                                }
+                                                                        />
+                                                                        <label>Bus</label>
+                                                                </div>
+                                                                <div className="individualRadioOption">
+                                                                        <input
+                                                                                type="radio"
+                                                                                name="modeOfTravel"
+                                                                                value="Car"
+                                                                                onChange={(event) =>
+                                                                                        setFormData({
+                                                                                                ...formData,
+                                                                                                modeOfTravel: event.target.value,
+                                                                                        })
+                                                                                }
+                                                                        />
+                                                                        <label>Car</label>
+                                                                </div>
+                                                                <div className="individualRadioOption">
+                                                                        <input
+                                                                                type="radio"
+                                                                                name="modeOfTravel"
+                                                                                value="Other"
+                                                                                onChange={(event) =>
+                                                                                        setFormData({
+                                                                                                ...formData,
+                                                                                                modeOfTravel: event.target.value,
+                                                                                        })
+                                                                                }
+                                                                        />
+                                                                        <label>Other</label>
+                                                                </div>
+                                                                {formData.modeOfTravel === "Other" && (
+                                                                        <div className="smallLabelAndInputField">
+                                                                                {/* <label>Specify</label> */}
+                                                                                <input
+                                                                                        type="text"
+                                                                                        name="modeOfTravelOther"
+                                                                                        value={formData.modeOfTravelOther}
+                                                                                        onChange={(event) =>
+                                                                                                setFormData({
+                                                                                                        ...formData,
+                                                                                                        modeOfTravelOther: event.target.value,
+                                                                                                })
+                                                                                        }
+                                                                                        placeholder="Specify"
+                                                                                />
+                                                                        </div>
+                                                                )}
+                                                        </div>
+                                                </div>
+                                                <div className="fileField fullRow">
+                                                        <label>Proof of Travel</label>
+                                                        <input type="file" name="proofOfTravel" onChange={handleFileChange} />
+                                                </div>
+                                                <div className="radioField fullRow">
+                                                        <label>Accommodation Opted?</label>
+                                                        <div className="radioOptions">
+                                                                <div className="individualRadioOption">
+                                                                        <input
+                                                                                type="radio"
+                                                                                name="accommodationOpted"
+                                                                                value="yes"
+                                                                                onChange={(event) =>
+                                                                                        setFormData({
+                                                                                                ...formData,
+                                                                                                accommodationOpted: event.target.value === "yes",
+                                                                                        })
+                                                                                }
+                                                                        />
+                                                                        <label>Yes</label>
+                                                                </div>
+                                                                <div className="individualRadioOption">
+                                                                        <input
+                                                                                type="radio"
+                                                                                name="accommodationOpted"
+                                                                                value="no"
+                                                                                onChange={(event) =>
+                                                                                        setFormData({
+                                                                                                ...formData,
+                                                                                                accommodationOpted: event.target.value === "yes",
+                                                                                        })
+                                                                                }
+                                                                        />
+                                                                        <label>No</label>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                                {formData.accommodationOpted && (
+                                                        <div className="dropDownField">
+                                                                <label>Type of Accommodation</label>
+                                                                <select
+                                                                        name="typeOfAccommodation"
+                                                                        value={formData.typeOfAccommodation} // Controlled component
+                                                                        onChange={(event) =>
+                                                                                setFormData({
+                                                                                        ...formData,
+                                                                                        typeOfAccommodation: event.target.value, // Update state correctly
+                                                                                })
+                                                                        }
+                                                                >
+                                                                        <option value="">Select Accommodation Type</option> {/* Default option */}
+                                                                        <option value="Hotel">Hotel</option>
+                                                                        <option value="Guest House">Guest House</option>
+                                                                        <option value="Other">Other</option>
+                                                                </select>
+                                                        </div>
+                                                )}
+                                                {formData.accommodationOpted && (<div className="labelAndInputField">
+                                                        <label>Duration of Stay</label>
+                                                        <input
+                                                                type="text"
+                                                                name="durationOfStay"
+                                                                value={formData.durationOfStay}
+                                                                onChange={(event) =>
+                                                                        setFormData({
+                                                                                ...formData,
+                                                                                durationOfStay: event.target.value,
+                                                                        })
+                                                                }
+                                                        />
+                                                </div>)}
+                                                {formData.accommodationOpted && (<div className="labelAndInputField fullRow">
+                                                        <label>Accommodation Address</label>
+                                                        <input
+                                                                type="text"
+                                                                name="accommodationAddress"
+                                                                value={formData.accommodationAddress}
+                                                                onChange={(event) =>
+                                                                        setFormData({
+                                                                                ...formData,
+                                                                                accommodationAddress: event.target.value,
+                                                                        })
+                                                                }
+                                                        />
+                                                </div>)}
+
+                                                {formData.accommodationOpted && (<div className="fileField fullRow">
+                                                        <label>Proof of Accommodation</label>
+                                                        <input type="file" name="proofOfAccommodation" onChange={handleFileChange} />
+                                                </div>)}
+
+                                        </div>
+                                </div>
+                                <div
+                                        className={`generalFormContainer eventConferenceFormContainer ${currentForm === "eventConferenceFormContainer" ? "" : "hiddenForm"
+                                                }`}>
+                                        <div
+                                                className="header"
+                                                data-form-name="eventConferenceFormHeader"
+                                                onClick={openAForm}>
+                                                Event/Conference
+                                        </div>
+                                        <div className="eventConferenceForm form">
+                                                <div className="labelAndInputField">
+                                                        <label>Event Name</label>
+                                                        <input
+                                                                type="text"
+                                                                name="eventName"
+                                                                value={formData.eventName}
+                                                                onChange={(event) =>
+                                                                        setFormData({ ...formData, eventName: event.target.value })
+                                                                }
+                                                        />
+                                                </div>
+                                                <div className="labelAndInputField">
+                                                        <label>Event Date</label>
+                                                        <input
+                                                                type="text"
+                                                                name="eventDate"
+                                                                value={formData.eventDate}
+                                                                onChange={(event) =>
+                                                                        setFormData({ ...formData, eventDate: event.target.value })
+                                                                }
+                                                        />
+                                                </div>
+                                                <div className="labelAndInputField">
+                                                        <label>Event Website/Reference</label>
+                                                        <input
+                                                                type="text"
+                                                                name="eventWebsite"
+                                                                value={formData.eventWebsite}
+                                                                onChange={(event) =>
+                                                                        setFormData({ ...formData, eventWebsite: event.target.value })
+                                                                }
+                                                        />
+                                                </div>
+                                                <div className="labelAndInputField fullRow">
+                                                        <label>Event Venue</label>
+                                                        <input
+                                                                type="text"
+                                                                name="eventVenue"
+                                                                value={formData.eventVenue}
+                                                                onChange={(event) =>
+                                                                        setFormData({ ...formData, eventVenue: event.target.value })
+                                                                }
+                                                        />
+                                                </div>
+                                                <div className="fileField fullRow">
+                                                        <label>Proof of Attendance</label>
+                                                        <input type="file" name="proofOfAttendance" onChange={handleFileChange} />
+                                                </div>
+                                        </div>
+                                </div>
+                                <div
+                                        className={`generalFormContainer parentAndConsentFormContainer ${currentForm === "parentAndConsentFormContainer" ? "" : "hiddenForm"
+                                                }`}>
+                                        <div
+                                                className="header"
+                                                data-form-name="parentAndConsentFormHeader"
+                                                onClick={openAForm}>
+                                                Parent And Consent
+                                        </div>
+                                        <div className="parentAndConsentForm form">
+                                                <div className="radioField fullRow">
+                                                        <label>Do you have parental consent?</label>
+                                                        <div className="radioOptions">
+                                                                <div className="individualRadioOption">
+                                                                        <input
+                                                                                type="radio"
+                                                                                name="parentalConsent"
+                                                                                value="yes"
+                                                                                onChange={(event) =>
+                                                                                        setFormData({
+                                                                                                ...formData,
+                                                                                                parentalConsent: event.target.value === "yes",
+                                                                                        })
+                                                                                }
+                                                                        />
+                                                                        <label>Yes</label>
+                                                                </div>
+                                                                <div className="individualRadioOption">
+                                                                        <input
+                                                                                type="radio"
+                                                                                name="parentalConsent"
+                                                                                value="no"
+                                                                                onChange={(event) =>
+                                                                                        setFormData({
+                                                                                                ...formData,
+                                                                                                parentalConsent: event.target.value === "yes",
+                                                                                        })
+                                                                                }
+                                                                        />
+                                                                        <label>No</label>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                                {formData.parentalConsent && (
+                                                        <div className="labelAndInputField">
+                                                                <label>Father's Full Name</label>
+                                                                <input
+                                                                        type="text"
+                                                                        name="fatherFullName"
+                                                                        value={formData.fatherFullName}
+                                                                        onChange={(event) =>
+                                                                                setFormData({
+                                                                                        ...formData,
+                                                                                        fatherFullName: event.target.value,
+                                                                                })
+                                                                        }
+                                                                />
+                                                        </div>
+                                                )}
+                                                {formData.parentalConsent && (
+                                                        <div className="labelAndInputField">
+                                                                <label>Father's Contact</label>
+                                                                <input
+                                                                        type="text"
+                                                                        name="fatherContact"
+                                                                        value={formData.fatherContact}
+                                                                        onChange={(event) =>
+                                                                                setFormData({
+                                                                                        ...formData,
+                                                                                        fatherContact: event.target.value,
+                                                                                })
+                                                                        }
+                                                                />
+                                                        </div>
+                                                )}
+                                                {formData.parentalConsent && (
+                                                        <div className="labelAndInputField">
+                                                                <label>Mother's Full Name</label>
+                                                                <input
+                                                                        type="text"
+                                                                        name="motherFullName"
+                                                                        value={formData.motherFullName}
+                                                                        onChange={(event) =>
+                                                                                setFormData({
+                                                                                        ...formData,
+                                                                                        motherFullName: event.target.value,
+                                                                                })
+                                                                        }
+                                                                />
+                                                        </div>
+                                                )}
+                                                {formData.parentalConsent && (
+                                                        <div className="labelAndInputField">
+                                                                <label>Mother's Contact</label>
+                                                                <input
+                                                                        type="text"
+                                                                        name="motherContact"
+                                                                        value={formData.motherContact}
+                                                                        onChange={(event) =>
+                                                                                setFormData({
+                                                                                        ...formData,
+                                                                                        motherContact: event.target.value,
+                                                                                })
+                                                                        }
+                                                                />
+                                                        </div>
+                                                )}
+                                        </div>
+                                </div>
+                                <div
+                                        className={`generalFormContainer additionalFormContainer ${currentForm === "additionalFormContainer" ? "" : "hiddenForm"
+                                                }`}>
+                                        <div
+                                                className="header"
+                                                data-form-name="additionalFormHeader"
+                                                onClick={openAForm}>
+                                                Additional
+                                        </div>
+                                        <div className="additionalForm form">
+                                                <div className="labelAndInputField fullRow">
+                                                        <label>Any Other Requirements</label>
+                                                        <input
+                                                                name="anyOtherRequirements"
+                                                                value={formData.anyOtherRequirements}
+                                                                onChange={(event) =>
+                                                                        setFormData({
+                                                                                ...formData,
+                                                                                anyOtherRequirements: event.target.value,
+                                                                        })
+                                                                }
+                                                        />
+                                                </div>
+                                        </div>
+                                </div>
+                                <div className="submitContainer">
+                                        <button
+                                                className="submit"
+                                                onClick={handleSubmit}
+                                                disabled={isSubmitting}>
+                                                {isSubmitting ? "Submitting" : "Submit"}
+                                        </button>
+                                </div>
+                        </form>
                 </div>
-                <div className={`generalFormContainer travelFormContainer ${currentForm === 'TravelFormContainer' ? '' : 'hiddenForm'}`}>
-                    <div className='header' data-form-name='TravelFormContainer' onClick={openAForm}>
-                        Travel
-                    </div>
-                    <div className='form'>
-                        {travelFormFields.map((field, index) => renderInputFields(field, index))}
-                    </div>
-                </div>
-                <div className={`generalFormContainer eventConferenceFormContainer ${currentForm === 'EventConferenceFormContainer' ? '' : 'hiddenForm'}`}>
-                    <div className='header' data-form-name='EventConferenceFormContainer' onClick={openAForm}>
-                        Event/Conference
-                    </div>
-                    <div className='form'>
-                        {eventConferenceFields.map((field, index) => renderInputFields(field, index))}
-                    </div>
-                </div>
-                <div className={`generalFormContainer parentAndConsentFormContainer ${currentForm === 'ParentAndConsentFormContainer' ? '' : 'hiddenForm'}`}>
-                    <div className='header' data-form-name='ParentAndConsentFormContainer' onClick={openAForm}>
-                        Parental Consent
-                    </div>
-                    <div className='form'>
-                        {parentAndConsentFields.map((field, index) => renderInputFields(field, index))}
-                    </div>
-                </div>
-                <div className={`generalFormContainer additionalFieldsFormContainer ${currentForm === 'AdditionalFieldsFormContainer' ? '' : 'hiddenForm'}`}>
-                    <div className='header' data-form-name='AdditionalFieldsFormContainer' onClick={openAForm}>
-                        Additional Fields
-                    </div>
-                    <div className='form'>
-                        {additionalFields.map((field, index) => renderInputFields(field, index))}
-                    </div>
-                </div>
-                <button  disabled = {isSubmitting} className='submitFormButton' type='submit' onClick={handleSubmit} > {isSubmitting?"Submitting":"Submit"} </button>
-            </form>
-        </div>
-    );
+        );
 };
 
 export default ApplicationForm;

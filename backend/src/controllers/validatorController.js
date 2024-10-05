@@ -25,8 +25,25 @@ const validatorRoot = async (req, res) => {
     // Categorize applications based on the validator's designation
     validator.applications.forEach((application) => {
       const status = application[`${validator.designation.toLowerCase()}Validation`];
+
+      let applicationData = {
+        applicantId: application.applicantId,
+        applicantName: application.applicantName,
+        applicationId: application.applicationId,
+        createdAt: application.createdAt,
+
+        formData : {
+          eventName: application.formData.eventName,
+          applicantDepartment: application.formData.applicantDepartment
+        },
+
+        supervisorValidation: application.supervisorValidation,
+        hodValidation: application.hodValidation,
+        hoiValidation: application.hoiValidation,
+      }
+
       if (applications[status]) {
-        applications[status].push(application);
+        applications[status].push(applicationData);
       }
     });
 

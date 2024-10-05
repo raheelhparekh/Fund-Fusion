@@ -1,40 +1,40 @@
 .topLevelFormContainer {
-    height: 100%;  /* Consider removing or changing */
+    height: 100%; /* Consider removing or changing */
     overflow-y: auto; /* To handle scrolling */
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-}
-
-.mainForm {
+  }
+  
+  .mainForm {
     width: 97%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    height: fit-content;  /* Let content determine the height */
-}
-
-.mainForm::-webkit-scrollbar {
+    height: fit-content; /* Let content determine the height */
+  }
+  
+  .mainForm::-webkit-scrollbar {
     width: 0px;
-}
-
-.mainForm::-webkit-scrollbar-track {
+  }
+  
+  .mainForm::-webkit-scrollbar-track {
     background: #f1f1f1;
-}
-
-.mainForm::-webkit-scrollbar-thumb {
+  }
+  
+  .mainForm::-webkit-scrollbar-thumb {
     background: #888;
-}
-
-.mainForm::-webkit-scrollbar-thumb:hover {
+  }
+  
+  .mainForm::-webkit-scrollbar-thumb:hover {
     background: #555;
-}
-
-.generalFormContainer{
+  }
+  
+  .generalFormContainer {
     background-color: white;
-    min-height:13%;
+    min-height: 13%;
     /* max-height: 90vh; */
     height: fit-content;
     width: 100%;
@@ -45,254 +45,181 @@
     overflow-y: auto;
     margin-top: 15px;
     border-radius: 15px;
-}
-
-.generalFormContainer::-webkit-scrollbar {
+  }
+  
+  .generalFormContainer::-webkit-scrollbar {
     width: 8px;
-}
-
-.generalFormContainer::-webkit-scrollbar-track {
+  }
+  
+  .generalFormContainer::-webkit-scrollbar-track {
     background: #f1f1f1;
-}
-
-.generalFormContainer::-webkit-scrollbar-thumb {
+  }
+  
+  .generalFormContainer::-webkit-scrollbar-thumb {
     background: #888;
-}
-
-.generalFormContainer::-webkit-scrollbar-thumb:hover {
+  }
+  
+  .generalFormContainer::-webkit-scrollbar-thumb:hover {
     background: #555;
-}
-.generalFormContainer>.header{
+  }
+  
+  .header:hover {
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  .generalFormContainer > .header {
     font-size: 24px;
     font-weight: bold;
     margin-top: 15px;
     margin-bottom: 15px;
-}
-
-.generalFormContainer > .form {
+  }
+  
+  .generalFormContainer > .form {
     margin-left: 30px;
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* Set to 3 columns */
-    row-gap: 5px;
-    column-gap: 20px;
-    width: 100%; 
-    max-width: 1200px; 
+    row-gap: 15px;
+    column-gap: 10px;
+    width: 100%;
     justify-content: center;
     align-content: center;
     height: fit-content;
-}
-
-/* Responsive grid layout */
-@media (max-width: 1200px) {
+  }
+  
+  /* Responsive grid layout */
+  @media (max-width: 1200px) {
     .generalFormContainer > .form {
-        grid-template-columns: repeat(2, 1fr); /* Two columns for medium screens */
+      grid-template-columns: repeat(2, 1fr); /* Two columns for medium screens */
     }
-}
-
-@media (max-width: 768px) {
+  }
+  
+  @media (max-width: 768px) {
     .generalFormContainer > .form {
-        grid-template-columns: 1fr; /* One column for small screens */
+      grid-template-columns: 1fr; /* One column for small screens */
     }
-}
-
-
-.hiddenForm>.form{
+  }
+  
+  .hiddenForm > .form {
     height: 0;
     visibility: hidden;
     overflow: hidden;
-}
-
-.header:hover{
-    cursor: pointer;
-    user-select: none;
-}
-
-.fullRowFieldForSelectOne {
-    height:60px;
-    grid-column: 1 / -1;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.fullRowFieldForSelectOne label {
-    font-size: 18px;
-    height:100%;
-    width:40%;
-    justify-self: flex-start;
-    margin-right: 10px; 
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.fullRowFieldForFileUpload {
-    height:60px;
-    grid-column: 1 / -1;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.fullRowFieldForFileUpload label {
-    font-size: 18px;
-    height:100%;
-    width:40%;
-    justify-self: flex-start;
-    margin-right: 10px; 
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.optionsAndOtherInput {
-    height: 100%;
-    width: 60%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
-    gap:10px;
-    margin-right: 40px;
-}
-
-.submitFormButton{
-    height: 50px;
-    width: 20%;
-    background-color: #521414;
-    color: white;
-    font-size: 20px;
-    border: none;
-    border-radius: 10px;
-    margin-top: 40px;
-    margin-bottom: 20px;
-}
-
-.labelAndInputField {
+    display: none;
+  }
+  
+  .labelAndInputField {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-bottom: 20px;
-    width: 200px; 
-    margin: 0;
-    padding: 0;
-}
-
-.labelAndInputField label {
+    /* background-color: aqua; */
+    width: 90%;
+  }
+  
+  .labelAndInputField label {
     font-size: 18px;
     margin-bottom: 0.2rem;
-}
-
-.labelAndInputField input {
+  }
+  
+  .labelAndInputField input {
     height: 45px;
-    background-color: #E5E7EB;
+    background-color: #e5e7eb;
     padding: 0.5rem;
     border-radius: 0.5rem;
     margin-bottom: 1rem;
     width: 100%;
-}
-
-.labelAndInputField.isWide {
-    width: 300px; 
-    padding: 0%;
+  }
+  
+  .smallLabelAndInputField {
+          height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 20%;
+    /* background-color: aqua; */
     margin: 0%;
-}
-
-.justInputElement{
+    padding: 0%;
+  }
+  
+  .smallLabelAndInputField input {
     height: 100%;
-    background-color: #E5E7EB;
-    padding: 0.5rem;
+    background-color: #e5e7eb;
+    width: 100%;
     border-radius: 0.5rem;
     margin-bottom: 1rem;
-    width: 35%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-left: 1.2rem;
-
-}
-
-.almostFullRowFieldForLabel{
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    grid-column: 1 / -1;
-    width: 85%;
+    /* background-color: aqua; */
+    
+  }
+  
+  .fullRow {
+    grid-column: span 3; /* Span all 3 columns */
+  }
+  
+  .dropDownField {
+    width: 90%;
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
     align-items: flex-start;
-    justify-content: center;
-}
-
-.fullRowFieldForLabel{
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    grid-column: 1 / -1;
-    width: 97%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-}
-.eightyPercentForLabel{
-    margin: 0;
-    padding: 0;
-    grid-column:span 2;
-    height: 100%;
-    width: 80%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-}
-
-.halfRowFieldForLabel{
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    grid-column: span 1.5;
-    width: 45%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;   
-}
-
-.dropdownContainer{
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    /* background-color:aqua; */
-}
-
-.dropdownContainer>label{
-    font-size: 18px;
-    margin-right: 10px;
-}
-
-.dropdownContainer>select{
+  }
+  
+  .dropDownField > select {
     height: 45px;
-    background-color: #E5E7EB;
+    background-color: #e5e7eb;
     padding: 0.5rem;
     border-radius: 0.5rem;
     margin-bottom: 1rem;
     width: 70%;
-}
-
-.individualRadioButtons{
+  }
+  
+  .radioField {
+    height: 45px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0%;
+    padding: 0%;
+  }
+  
+  .radioOptions {
+          height: 45px;
+          /* background-color: aqua; */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 40px;
+    padding: 0%;
+    margin-right: 7%;
+  }
+  
+  .individualRadioOption {
     display: flex;
     flex-direction: column;
-    margin: 0px 17px;
-}
-
-.fileUploadIcon{
-    display: flex;
-    flex-direction: column;
-}
+    align-items: center;
+    margin: 0%;
+    padding: 0%;
+  }
+  
+  .fileField{
+          height: 45px;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          /* background-color: aqua; */
+  }
+  
+  .submitContainer{
+          height:45px;
+          width:20%;
+          margin-top: 10px;
+         
+  }
+  
+  .submitContainer>button{
+          height:100%;
+          width: 100%;
+          background-color: rgb(125, 39, 39);
+          color: aliceblue;
+          font-weight: 700;
+          border-radius: 20px;
+  }
