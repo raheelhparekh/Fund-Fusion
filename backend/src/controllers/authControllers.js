@@ -30,7 +30,7 @@ const applicantLogin = async (req, res) => {
     
     const tokenObject = {
       id: validProfile.profileId,
-      designation: "applicant",
+      designation: validProfile.designation,
       department: validProfile.department
     }
 
@@ -73,7 +73,7 @@ const validatorLogin = async (req, res) => {
     
     const tokenObject = {
       id: validProfile.profileId,
-      designation: "validator",
+      designation: validProfile.designation,
       department: validProfile.department
     }
 
@@ -88,7 +88,7 @@ const validatorLogin = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  res.clearCookie("access_token");
+  res.clearCookie("access_token", { httpOnly: true });
   res.status(200).json("Logout Succesful");
 };
 

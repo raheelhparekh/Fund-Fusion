@@ -31,9 +31,10 @@ async function main() {
 
   // Applicant Data
   const applicants = [
-    { profileId: '1', userName: 'John Doe', email: 'john.doe@example.com', password: 'password123', department: 'COMPS' },
-    { profileId: '2', userName: 'Jane Smith', email: 'jane.smith@example.com', password: 'password123', department: 'IT' },
-    { profileId: '3', userName: 'Bob Brown', email: 'bob.brown@example.com', password: 'password123', department: 'MECH' },
+    { profileId: '1', userName: 'John Doe', email: 'john.doe@example.com', password: 'password123', department: 'COMPS', designation: 'Student' },
+    { profileId: '2', userName: 'Jane Smith', email: 'jane.smith@example.com', password: 'password123', department: 'COMPS', designation: 'Faculty'},
+    { profileId: '3', userName: 'Bob Brown', email: 'bob.brown@example.com', password: 'password123', department: 'MECH', designation: 'Student' },
+    { profileId: '4', userName: 'Narkotics', email: 'narko@example.com', password: 'password123', department: 'MECH', designation: 'Faculty' },
   ];
 
   // Insert Applicants

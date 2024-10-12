@@ -76,19 +76,19 @@ const ApplicationForm = () => {
         const isSubmitting = navigation.state === "submitting";
 
         const handleSubmit = async (event) => {
-          event.preventDefault();
+                event.preventDefault();
 
-          const formDataToSend = new FormData();
+                const formDataToSend = new FormData();
 
-          for (const key in formData) {
-            formDataToSend.append(key, formData[key]);
-          }
+                for (const key in formData) {
+                        formDataToSend.append(key, formData[key]);
+                }
 
-          try {
-            submit(formDataToSend, { method: 'POST', encType: "multipart/form-data" });
-          } catch (error) {
-            console.error("Error uploading form:", error.message);
-          }
+                try {
+                        submit(formDataToSend, { method: 'POST', encType: "multipart/form-data" });
+                } catch (error) {
+                        console.error("Error uploading form:", error.message);
+                }
         };
 
         return (
@@ -210,10 +210,6 @@ const ApplicationForm = () => {
                                                                         </>
                                                                 ) : formData.applicantCourse === "PHD" ? (
                                                                         <>
-                                                                                <option value="">Select Year</option>
-                                                                                <option value="Y1">Year 1</option>
-                                                                                <option value="Y2">Year 2</option>
-                                                                                <option value="Y3">Year 3</option>
                                                                         </>
                                                                 ) : null}
                                                         </select>

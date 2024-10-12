@@ -6,15 +6,34 @@ import Modal from '../../components/Modal/Modal';
 const Dashboard = ({ role }) => {
   const navigate = useNavigate()
   const submit = useSubmit()
-  console.log(useRouteLoaderData(`${role}-Root`).data)
   const { applications } = useRouteLoaderData(`${role}-Root`).data
 
   const { status } = useParams();
 
   const [applicationDisplay, setApplicationDisplay] = useState(null);
 
+  const getFullApplication = async (applicationId, currentStatus) => {
+    try {
+      const response = await fetch(`http://localhost:3000/${role.toLowerCase()}/getApplicationData/${applicationId}`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Failed to fetch application data: ${response.status} ${response.statusText}`);
+      }
+  
+      const fullApplication = await response.json();
+      
+      setApplicationDisplay({...fullApplication, currentStatus}); 
+    } catch (error) {
+      console.error('Error fetching application data:', error);
+      return null; 
+    }
+  };
+  
   const handleRowClick = (application) => {
-    setApplicationDisplay(application);
+    getFullApplication(application.applicationId, application.currentStatus)
   };
 
   const closeModal = () => {
@@ -105,7 +124,7 @@ const Dashboard = ({ role }) => {
           {/* keep componet whihch displays form data here*/}
           <h2>{applicationDisplay.formData.eventName}</h2>
           <p>{applicationDisplay.applicationId}</p>
-          
+          {console.log(applicationDisplay)}
           
           <div className="flex justify-between mt-4">
           {(role === "Validator" && applicationDisplay.currentStatus === "Pending") && 

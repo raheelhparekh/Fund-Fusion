@@ -1,4 +1,4 @@
-import { json } from "react-router-dom";
+import { json, redirect } from "react-router-dom";
 
 async function fetchUserData(url) {
   try {
@@ -7,8 +7,9 @@ async function fetchUserData(url) {
       credentials: 'include',
     });
 
-    if (res.status === 401) {
-      throw json({ message: 'Unauthorized access' }, { status: res.status });
+    if (res.status === 401 || res.status === 403) {
+      alert('Unauthorized Access. Please Login.');
+      return redirect('http://localhost:5173');  
     }
 
     if (!res.ok) {

@@ -25,6 +25,11 @@ enum Department {
   RAI
 }
 
+enum ApplicantDesignation {
+  Student
+  Faculty
+}
+
 model Applicant {
   profileId String @id @default(uuid())
   userName  String 
@@ -32,6 +37,7 @@ model Applicant {
   password  String
 
   department Department
+  designation ApplicantDesignation
 
   applications Application[]
 }
@@ -67,7 +73,7 @@ model Application {
   @@index([applicantId])
 }
 
-enum Designation {
+enum ValidatorDesignation {
   Supervisor
   HOD
   HOI
@@ -80,7 +86,7 @@ model Validator {
   password  String
 
   department  Department
-  designation Designation
+  designation ValidatorDesignation
 
   applications Application[]
 }

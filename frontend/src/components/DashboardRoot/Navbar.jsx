@@ -14,9 +14,18 @@ const studentIcon = (
   </svg>
 );
 
-const Navbar = ({ userData , role }) => {
+const Navbar = ({ userData }) => {
+
+  const handleLogout = async() => {
+      let res = await fetch("http://localhost:3000/logout", {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      return res;
+  }
   
-  const userDesignation = userData.designation || "Student";
+  const userDesignation = userData.designation;
   const userName = userData.userName;
 
   const [profileData] = useState({
@@ -50,12 +59,18 @@ const Navbar = ({ userData , role }) => {
                   <span>|</span>
                 </div>
               ))}
-              <div className="flex flex-row items-center gap-2">
+                <div className="flex flex-row items-center gap-2">
+                  <Link to= "/" onClick = {handleLogout} className="text-gray-700 hover:bg-red-700 hover:text-white p-1 rounded-md">
+                    Logut
+                  </Link>
+                  <span>|</span>
+                </div>
+              {/* <div className="flex flex-row items-center gap-2">
                 <div className="p-1 bg-neutral-200 rounded-md">
                   <IoNotifications size={18}/> 
                 </div>
                 <span>|</span>
-              </div>
+              </div> */}
               {profileData.name && profileData.role && (
                 <div className="text-gray-700 text-sm font-semibold">
                   <div className="bg-gray-200 p-1 px-3 rounded flex flex-row gap-2 items-center">
