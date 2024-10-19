@@ -4,7 +4,7 @@ import './LoginAnimation.css';
 
 function ValidatorLogin({ changeRole }) {
   const navigate = useNavigate();
-  const [credentials, setCredentials] = useState({ username: '', password: '' });
+  const [credentials, setCredentials] = useState({ username: '', password: 'password123' });
   const [animate, setAnimate] = useState(false);
 
   const handleChangeRole = () => {

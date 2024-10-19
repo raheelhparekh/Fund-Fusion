@@ -2,6 +2,7 @@ import React, { useState }from 'react'
 import { useRouteLoaderData, useParams, useNavigate, useSubmit } from 'react-router-dom';
 import ApplicationTable from './components/ApplicationTable';
 import Modal from '../../components/Modal/Modal';
+import ValidatorsReport from '../validatorsReport/ValidatorsReport';
   
 const Dashboard = ({ role }) => {
   const navigate = useNavigate()
@@ -124,6 +125,7 @@ const Dashboard = ({ role }) => {
           {/* keep componet whihch displays form data here*/}
           <h2>{applicationDisplay.formData.eventName}</h2>
           <p>{applicationDisplay.applicationId}</p>
+          <ValidatorsReport/>
           {console.log(applicationDisplay)}
           
           <div className="flex justify-between mt-4">
