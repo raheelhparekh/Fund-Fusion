@@ -1,6 +1,7 @@
 import React from 'react'
 
-function ValidatorsReport() {
+function ValidatorsReport({formData}) {
+  console.log(formData)
   return (
     <div>
       ValidatorsReport

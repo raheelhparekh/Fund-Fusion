@@ -125,8 +125,7 @@ const Dashboard = ({ role }) => {
           {/* keep componet whihch displays form data here*/}
           <h2>{applicationDisplay.formData.eventName}</h2>
           <p>{applicationDisplay.applicationId}</p>
-          <ValidatorsReport/>
-          {console.log(applicationDisplay)}
+          <ValidatorsReport formData={applicationDisplay.formData}/>
           
           <div className="flex justify-between mt-4">
           {(role === "Validator" && applicationDisplay.currentStatus === "Pending") && 

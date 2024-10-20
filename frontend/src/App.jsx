@@ -32,7 +32,6 @@ const router = createBrowserRouter([
       children:[
       {path:':status',element: <Dashboard role="Validator"/> }
     ]},
-    {path:'report',element: <ValidatorsReport/>}
   ]},
 ])
 
