@@ -1,5 +1,5 @@
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
-import {Login,Dashboard,ApplicationForm,ValidatorsReport,About,Policy} from './pages'
+import {Login,Dashboard,ApplicationForm,About,Policy} from './pages'
 
 import './App.css'
 import LoginRoot from './components/LoginRoot/LoginRoot'

@@ -2,7 +2,8 @@ import React, { useState }from 'react'
 import { useRouteLoaderData, useParams, useNavigate, useSubmit } from 'react-router-dom';
 import ApplicationTable from './components/ApplicationTable';
 import Modal from '../../components/Modal/Modal';
-import ValidatorsReport from '../validatorsReport/ValidatorsReport';
+import ApplicationDisplay from '../ApplicationDisplay/ApplicationDisplay';
+
   
 const Dashboard = ({ role }) => {
   const navigate = useNavigate()
@@ -121,11 +122,9 @@ const Dashboard = ({ role }) => {
         </div>
         {renderContent()}
 
-        {applicationDisplay && (<Modal onClose={closeModal}>
-          {/* keep componet whihch displays form data here*/}
-          <h2>{applicationDisplay.formData.eventName}</h2>
-          <p>{applicationDisplay.applicationId}</p>
-          <ValidatorsReport formData={applicationDisplay.formData}/>
+        {applicationDisplay && (
+        <Modal onClose={closeModal} title={applicationDisplay.formData.eventName}>
+          <ApplicationDisplay formData={applicationDisplay.formData}/>
           
           <div className="flex justify-between mt-4">
           {(role === "Validator" && applicationDisplay.currentStatus === "Pending") && 

@@ -1,6 +1,6 @@
 export { default as Login } from './login/Login'
 export { default as Dashboard } from './Dashboard/Dashboard'
 export { default as ApplicationForm } from './ApplicationForm/ApplicationForm'
-export { default as ValidatorsReport } from './validatorsReport/ValidatorsReport'
+export { default as ApplicationDisplay } from './ApplicationDisplay/ApplicationDisplay'
 export { default as About } from './about/About'
 export { default as Policy } from './policy/Policy'
