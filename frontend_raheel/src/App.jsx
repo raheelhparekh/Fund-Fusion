@@ -8,6 +8,7 @@ import PendingApplications from './pages/PendingApplications';
 import ApprovedApplications from './pages/ApprovedApplications';
 import RejectedApplications from './pages/RejectedApplications';
 import {applicationData} from './data/applicationData';
+import ValidatorsReport from './pages/ValidatorsReport';
 
 function App() {
   const [studentData, setStudentData] = useState({
@@ -32,6 +33,7 @@ function App() {
         <Route path="/approved-applications" element={<ApprovedApplications applicationData={applicationData} studentData={studentData} />} />
         <Route path="/rejected-applications" element={<RejectedApplications applicationData={applicationData} studentData={studentData} />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/validatorReport" element={<ValidatorsReport />} />
       </Routes>
     </Router>
   );
