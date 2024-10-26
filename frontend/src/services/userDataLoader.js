@@ -1,33 +1,29 @@
+import axios from "axios";
 import { json, redirect } from "react-router-dom";
 
-async function fetchUserData(url) {
+async function userDataLoader() {
   try {
-    const res = await fetch(url, {
-      method: 'GET',
-      credentials: 'include',
+    const res = await axios.get('http://localhost:3000/general/dataRoot', {
+      withCredentials: true,
     });
 
     if (res.status === 401 || res.status === 403) {
       alert('Unauthorized Access. Please Login.');
-      return redirect('http://localhost:5173');  
+      return redirect('/');
     }
-
-    if (!res.ok) {
-      throw json(
-        {
-          status: res.status,
-          statusText: res.statusText,
-        }
-      );
-    }
-
-    const data = await res.json();
-    return { data };
+    
+    return { data: res.data };
   } catch (error) {
     console.error('Fetch error:', error);
-    throw error;
+
+    throw json(
+      {
+        message: error.response?.data?.message || "Network error. Please try again later.",
+        status: error.response?.status || 500,
+      },
+      { status: error.response?.status || 500 }
+    );
   }
 }
 
-export const applicantLoader = () => fetchUserData('http://localhost:3000/applicant/root');
-export const validatorLoader = () => fetchUserData('http://localhost:3000/validator/root');
+export default userDataLoader;

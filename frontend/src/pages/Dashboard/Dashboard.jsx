@@ -16,7 +16,7 @@ const Dashboard = ({ role }) => {
 
   const getFullApplication = async (applicationId, currentStatus) => {
     try {
-      const response = await fetch(`http://localhost:3000/${role.toLowerCase()}/getApplicationData/${applicationId}`, {
+      const response = await fetch(`http://localhost:3000/general/getApplicationData/${applicationId}`, {
         method: 'GET',
         credentials: 'include',
       });
@@ -124,7 +124,7 @@ const Dashboard = ({ role }) => {
 
         {applicationDisplay && (
         <Modal onClose={closeModal} title={applicationDisplay.formData.eventName}>
-          <ApplicationDisplay formData={applicationDisplay.formData}/>
+          <ApplicationDisplay applicationId={applicationDisplay.applicationId} formData={applicationDisplay.formData}/>
           
           <div className="flex justify-between mt-4">
           {(role === "Validator" && applicationDisplay.currentStatus === "Pending") && 

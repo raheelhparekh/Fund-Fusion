@@ -3,7 +3,6 @@ import './Modal.css'
 
 
 const Modal = ({onClose, title, children }) => {
-    console.log(title)
     return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-display" onClick={(e) => e.stopPropagation()}>
