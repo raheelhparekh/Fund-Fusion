@@ -32,11 +32,11 @@ enum ApplicantDesignation {
 
 model Applicant {
   profileId String @id @default(uuid())
-  userName  String 
+  userName  String
   email     String @unique @db.Text
   password  String
 
-  department Department
+  department  Department
   designation ApplicantDesignation
 
   applications Application[]
@@ -58,12 +58,13 @@ model Application {
 
   formData Json
 
-  supervisorValidation ApplicationStatus @default(PENDING)
-  hodValidation        ApplicationStatus? 
-  hoiValidation        ApplicationStatus?
+  fdccoordinatorValidation ApplicationStatus?
+  supervisorValidation     ApplicationStatus?
+  hodValidation            ApplicationStatus?
+  hoiValidation            ApplicationStatus?
 
   proofOfTravel        Bytes?
-  proofOfAccommodation  Bytes?
+  proofOfAccommodation Bytes?
   proofOfAttendance    Bytes?
 
   createdAt DateTime @default(now())
@@ -74,6 +75,7 @@ model Application {
 }
 
 enum ValidatorDesignation {
+  FDCcoordinator
   Supervisor
   HOD
   HOI
@@ -81,7 +83,7 @@ enum ValidatorDesignation {
 
 model Validator {
   profileId String @id @default(uuid())
-  userName  String 
+  userName  String
   email     String @unique @db.Text
   password  String
 
@@ -90,5 +92,3 @@ model Validator {
 
   applications Application[]
 }
-
-

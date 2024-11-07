@@ -1,26 +1,27 @@
 import React from 'react';
 
-const ApplicationTable = ({ title, applications, onRowClick }) => {
-  
-  const getExactStatus = (title,app) => {
-    if (title.split(" ")[0] === "Pending") {
+const ApplicationTable = ({ title, applications, setApplicationDisplay }) => {
 
-      if (app.hoiValidation === "PENDING") {
-        return "HOI Validation PENDING"
-      }
-      if (app.hodValidation === "PENDING") {
-        return "HOD Validation PENDING"
-      }
-      if (app.supervisorValidation === "PENDING") {
-        return "Supervisor Validation PENDING"
-      }
-    
-    } else {
-      return title.split(" ")[0];
+  // Fetch full application data on row click
+  const getFullApplication = async (applicationId, currentStatus) => {
+    try {
+      const response = await fetch(`http://localhost:3000/general/getApplicationData/${applicationId}`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+      if (!response.ok) throw new Error(`Failed to fetch application data: ${response.status} ${response.statusText}`);
+      const fullApplication = await response.json();
+      setApplicationDisplay({ ...fullApplication, currentStatus });
+    } catch (error) {
+      console.error('Error fetching application data:', error);
     }
   };
 
+  const onRowClick = (application) => {
+    getFullApplication(application.applicationId, application.currentStatus);
+  };
 
+  
   return (
     <div className="mb-6">
       <h2 className="text-xl font-bold mb-2">{title}</h2>

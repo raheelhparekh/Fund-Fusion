@@ -1,173 +1,110 @@
 import prisma from '../config/prismaConfig.js';
 
-const applicantRoot = async (req, res) => {
-  try {
-    const user = req.user; // Contains all user info (id, designation, department, etc.)
-
-    // Fetch applicant information based on the user's profile ID
-    const applicant = await prisma.applicant.findUnique({
-      where: { profileId: user.id },
-      include: {
-        applications: true, // Include related applications in the query
-      }
-    });
-
-    // Check if the applicant exists
-    if (!applicant) {
-      return res.status(404).send("Applicant doesn't exist");
-    }
-
-    // Categorize applications based on their validation status
-    let applications = { "PENDING": [], "REJECTED": [], "ACCEPTED": [] };
-
-
-
-    applicant.applications.forEach((application) => {
-      let status = application.hoiValidation || application.hodValidation || application.supervisorValidation;
-
-      let applicationData = {
-        applicantId: application.applicantId,
-        applicantName: application.applicantName,
-        applicationId: application.applicationId,
-        createdAt: application.createdAt,
-
-        formData : {
-          eventName: application.formData.eventName,
-          applicantDepartment: application.formData.applicantDepartment
-        },
-
-        supervisorValidation: application.supervisorValidation,
-        hodValidation: application.hodValidation,
-        hoiValidation: application.hoiValidation,
-      }
-
-      if (applications[status]) {
-        applications[status].push(applicationData);
-      }
-    });
-
-    // Remove the password & applications before sending user info
-    delete applicant.password;
-    delete applicant.applications;
-    
-    // Return the response with the user's info and categorized applications
-    return res.status(200).json({
-      message: "Applicant Authorized",
-      user: applicant,
-      applications: applications
-    });
-
-  } catch (error) {
-    console.log(error);
-    res.status(500).send(error.message);
-  }
-};
-
 const createApplication = async (req, res) => {
+  const applicantId = req.user.id;
+  const department = req.user.department;
+  const applicantDesignation = req.user.designation;
 
-  let applicantId = req.user.id; 
-  let department = req.user.department;
-  // Access form data and files from the request
-  let formData = req.body;
+  const formData = req.body;
   const { proofOfTravel, proofOfAccommodation, proofOfAttendance } = req.files;
 
   try {
-    let applicant = await prisma.applicant.findUnique({
-      where: {
-        profileId: applicantId
-      }
+    const applicant = await prisma.applicant.findUnique({
+      where: { profileId: applicantId }
     });
 
     if (!applicant) {
       return res.status(404).send("Applicant invalid");
     }
-    let applicantName = applicant.userName;
 
-    let supervisor = await prisma.validator.findUnique({
-      where: {
-        email: formData.primarySupervisorEmail,
-      }
-    });
+    const applicantName = applicant.userName;
 
-    if (!supervisor || supervisor.designation !== "Supervisor") {
-      return res.status(404).send("Supervisor email invalid");
-    }
-
-    if (supervisor.department !== department) {
-      return res.status(404).send("Supervisor doesn't belong to your department");
-    }
-
+    let supervisor = null;
     let additionalSupervisor = null;
+
+    // Require a primary supervisor email for Students
+    if (!formData.primarySupervisorEmail && applicantDesignation === "Student") {
+      return res.status(404).send("Supervisor Email Required");
+    }
+
+    // Supervisor logic: Only apply if supervisor email fields are provided
+    if (formData.primarySupervisorEmail) {
+      supervisor = await prisma.validator.findUnique({
+        where: { email: formData.primarySupervisorEmail }
+      });
+
+      if (!supervisor || supervisor.designation !== "Supervisor" || supervisor.department !== department) {
+        return res.status(404).send("Invalid supervisor information");
+      }
+    }
 
     if (formData.anotherSupervisorEmail) {
       additionalSupervisor = await prisma.validator.findUnique({
-        where: {
-          email: formData.anotherSupervisorEmail,
-        }
+        where: { email: formData.anotherSupervisorEmail }
       });
-    }
 
-    if (additionalSupervisor) {
-      if (additionalSupervisor.profileId === supervisor.profileId) {
+      if (additionalSupervisor && additionalSupervisor.profileId === supervisor?.profileId) {
         return res.status(404).send("Additional Supervisor's email can't be the same as Supervisor's");
       }
 
-      if (additionalSupervisor.designation !== "Supervisor") {
-        return res.status(404).send("Additional Supervisor email invalid");
+      if (additionalSupervisor && additionalSupervisor.designation !== "Supervisor") {
+        return res.status(404).send("Invalid additional supervisor email");
       }
     }
 
-    let hod = await prisma.validator.findFirst({
-      where: {
-        AND: {
-          department: department,
-          designation: 'HOD'
-        }
-      }
+    let fdccoordinator = null;
+
+    // Retrieve FDC coordinator only for Faculty applicants
+    if (applicantDesignation === "Faculty") {
+      fdccoordinator = await prisma.validator.findFirst({
+        where: { department, designation: "FDCcoordinator" }
+      });
+      if (!fdccoordinator) return res.status(404).send("FDC coordinator not found");
+    }
+
+    // Retrieve HOD and HOI (required for all applicants)
+    const hod = await prisma.validator.findFirst({
+      where: { department, designation: 'HOD' }
     });
+    if (!hod) return res.status(404).send("HOD not found");
 
-    if (!hod) {
-      return res.status(404).send("HOD not found");
-    }
-
-    let hoi = await prisma.validator.findFirst({
-      where: {
-        AND: {
-          designation: 'HOI'
-        }
-      }
+    const hoi = await prisma.validator.findFirst({
+      where: { designation: 'HOI' }
     });
+    if (!hoi) return res.status(404).send("HOI not found");
 
-    if (!hoi) {
-      return res.status(404).send("HOI not found");
-    }
-
-    let validators = [
-      { profileId: supervisor.profileId },
-      { profileId: hod.profileId },
+    // Compile the validators list with available supervisors, FDC coordinator, HOD, and HOI
+    const validators = [
+      ...(supervisor ? [{ profileId: supervisor.profileId }] : []),
       ...(additionalSupervisor ? [{ profileId: additionalSupervisor.profileId }] : []),
+      ...(fdccoordinator ? [{ profileId: fdccoordinator.profileId }] : []),
+      { profileId: hod.profileId },
       { profileId: hoi.profileId }
     ];
-    
-    // Convert file buffers into Bytes for Prisma
+
+    // Prepare file buffers
     const proofOfTravelBuffer = proofOfTravel?.[0]?.buffer || null;
     const proofOfAccommodationBuffer = proofOfAccommodation?.[0]?.buffer || null;
     const proofOfAttendanceBuffer = proofOfAttendance?.[0]?.buffer || null;
-  
-    
 
-    let applicationData = {
-      applicantId,
+    // Construct the application data object
+    const applicationData = {
       applicantName,
-      formData: JSON.parse(JSON.stringify(formData)), // Convert formData to JSON
-      proofOfTravel: proofOfTravelBuffer,        
-      proofOfAccommodation: proofOfAccommodationBuffer,  
-      proofOfAttendance: proofOfAttendanceBuffer  
+      formData: JSON.parse(JSON.stringify(formData)),
+      proofOfTravel: proofOfTravelBuffer,
+      proofOfAccommodation: proofOfAccommodationBuffer,
+      proofOfAttendance: proofOfAttendanceBuffer,
+      fdccoordinatorValidation: applicantDesignation === "Faculty" ? (supervisor || additionalSupervisor) ? undefined : "PENDING" : undefined,
+      supervisorValidation: formData.primarySupervisorEmail ? "PENDING" : undefined,
     };
 
-    let newApplication = await prisma.application.create({
+    // Create new application entry with linked applicant and validators
+    const newApplication = await prisma.application.create({
       data: {
         ...applicationData,
+        applicant: {
+          connect: { profileId: applicantId } // Link the applicant by profileId
+        },
         validators: {
           connect: validators
         }
@@ -179,9 +116,6 @@ const createApplication = async (req, res) => {
     console.error('Error creating application:', error);
     res.status(500).send(error.message);
   }
-}
+};
 
-export {
-  applicantRoot,
-  createApplication
-}
+export { createApplication };

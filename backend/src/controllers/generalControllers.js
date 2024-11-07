@@ -1,3 +1,4 @@
+import { application } from "express";
 import prisma from "../config/prismaConfig.js";
 
 const dataRoot = async (req, res) => {
@@ -5,16 +6,17 @@ const dataRoot = async (req, res) => {
     const user = req.user; // Contains all user info (id, designation, department, etc.)
     const userId = user.id;
 
-    // Initialize the applications object to categorize by status
-    const applications = { "PENDING": [], "REJECTED": [], "ACCEPTED": [] };
-
     // Determine if the user is an Applicant or Validator based on designation
     if (['Student', 'Faculty'].includes(user.designation)) {
       // Applicant Logic
       const applicant = await prisma.applicant.findUnique({
         where: { profileId: userId },
-        include: {
-          applications: true, // Include related applications in the query
+        select: {
+          profileId: true,
+          userName: true,
+          email: true,
+          department: true,        
+          designation: true,
         }
       });
 
@@ -23,47 +25,26 @@ const dataRoot = async (req, res) => {
         return res.status(404).send("Applicant doesn't exist");
       }
 
-      // Categorize applications based on their validation status
-      applicant.applications.forEach((application) => {
-        const status = application.hoiValidation || application.hodValidation || application.supervisorValidation;
-
-        const applicationData = {
-          applicantId: application.applicantId,
-          applicantName: application.applicantName,
-          applicationId: application.applicationId,
-          createdAt: application.createdAt,
-          formData: {
-            eventName: application.formData.eventName,
-            applicantDepartment: application.formData.applicantDepartment,
-          },
-          supervisorValidation: application.supervisorValidation,
-          hodValidation: application.hodValidation,
-          hoiValidation: application.hoiValidation,
-        };
-
-        if (applications[status]) {
-          applications[status].push(applicationData);
-        }
-      });
-
-      // Remove the password & applications before sending user info
-      delete applicant.password;
-      delete applicant.applications;
+      delete applicant._count;
 
       // Return the response for applicant
       return res.status(200).json({
         message: "Applicant Authorized",
         user: applicant,
-        applications: applications,
+        role: "Applicant"
       });
 
-    } else if (['Supervisor', 'HOD', 'HOI'].includes(user.designation)) {
+    } else if (['Supervisor', 'HOD', 'HOI', "FDCcoordinator"].includes(user.designation)) {
       // Validator Logic
       const validator = await prisma.validator.findUnique({
         where: { profileId: userId },
-        include: {
-          applications: true, // Include related applications in the query
-        }
+        select: {
+          profileId: true,
+          userName: true,
+          email: true,
+          department: true,
+          designation: true,
+        },
       });
 
       // Check if the validator exists
@@ -71,38 +52,13 @@ const dataRoot = async (req, res) => {
         return res.status(404).send("Validator doesn't exist");
       }
 
-      // Categorize applications based on the validator's designation
-      validator.applications.forEach((application) => {
-        const status = application[`${validator.designation.toLowerCase()}Validation`];
-
-        const applicationData = {
-          applicantId: application.applicantId,
-          applicantName: application.applicantName,
-          applicationId: application.applicationId,
-          createdAt: application.createdAt,
-          formData: {
-            eventName: application.formData.eventName,
-            applicantDepartment: application.formData.applicantDepartment,
-          },
-          supervisorValidation: application.supervisorValidation,
-          hodValidation: application.hodValidation,
-          hoiValidation: application.hoiValidation,
-        };
-
-        if (applications[status]) {
-          applications[status].push(applicationData);
-        }
-      });
-
-      // Remove the password & applications before sending user info
-      delete validator.password;
-      delete validator.applications;
+      delete validator._count;
 
       // Return the response for validator
       return res.status(200).json({
         message: "Validator Authorized",
         user: validator,
-        applications: applications,
+        role: "Validator"
       });
     } else {
       return res.status(403).send("Unauthorized");
@@ -110,11 +66,145 @@ const dataRoot = async (req, res) => {
 
   } catch (error) {
     // Handle any errors that occur during the process
-    console.log(error);
+    console.error(error);
     res.status(500).send(error.message);
   }
 };
 
+const getApplicationsByStatus = async (req, res) => {
+  try {
+    const user = req.user;
+    const userId = user.id;
+    const take = parseInt(req.query.take) || 5;
+    const skip = parseInt(req.query.skip) || 0;
+    const status = req.params.status.toUpperCase(); // Expected: "PENDING", "ACCEPTED", or "REJECTED"
+    const sortBy = req.query?.sortBy;
+    const sortValue = req.query?.sortValue;
+
+    const validStatuses = ["PENDING", "ACCEPTED", "REJECTED"];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).send("Invalid status");
+    }
+
+    let applications, totalApplications;
+
+    // Filter conditions for Student and Faculty
+    if (['Student', 'Faculty'].includes(user.designation)) {
+      const baseWhere = {
+        applicantId: userId,
+        ...(status === "PENDING" && {
+          OR: [
+            { fdccoordinatorValidation: "PENDING" },
+            { supervisorValidation: "PENDING" },
+            { hodValidation: "PENDING" },
+            { hoiValidation: "PENDING" },
+          ],
+        }),
+        ...(status === "ACCEPTED" && {
+          AND: [
+            { fdccoordinatorValidation: user.designation === "Faculty" ? "ACCEPTED" : null },
+            {
+              OR: [
+                { supervisorValidation: "ACCEPTED" },
+                { supervisorValidation: user.designation === "Student" ? "ACCEPTED" : null }
+              ]
+            },
+            { hodValidation: "ACCEPTED" },
+            { hoiValidation: "ACCEPTED" },
+          ],
+        }),
+        ...(status === "REJECTED" && {
+          OR: [
+            { fdccoordinatorValidation: "REJECTED" },
+            { supervisorValidation: "REJECTED" },
+            { hodValidation: "REJECTED" },
+            { hoiValidation: "REJECTED" },
+          ],
+        }),
+      };
+
+      // Apply case-insensitive filter for search functionality
+      if (sortBy && sortValue) {
+        baseWhere[sortBy] = {
+          contains: sortValue,
+          mode: 'insensitive',
+        };
+      }
+
+      // Count and fetch applications
+      totalApplications = await prisma.application.count({ where: baseWhere });
+      applications = await prisma.application.findMany({
+        where: baseWhere,
+        select: {
+          applicationId: true,
+          applicantName: true,
+          formData: true,
+          createdAt: true,
+        },
+        take,
+        skip,
+        orderBy: { createdAt: "desc" },
+      });
+
+    // Filter conditions for Validators (Supervisor, HOD, HOI, FDCcoordinator)
+    } else if (['Supervisor', 'HOD', 'HOI', "FDCcoordinator"].includes(user.designation)) {
+      const validationField = `${user.designation.toLowerCase()}Validation`;
+
+      const baseWhere = {
+        validators: { some: { profileId: userId } },
+        [validationField]: status,
+      };
+
+      if (sortBy && sortValue) {
+        baseWhere[sortBy] = {
+          contains: sortValue,
+          mode: 'insensitive',
+        };
+      }
+
+      totalApplications = await prisma.application.count({
+        where: baseWhere,
+      });
+
+      applications = await prisma.application.findMany({
+        where: baseWhere,
+        select: {
+          applicationId: true,
+          applicantName: true,
+          formData: true,
+          createdAt: true,
+        },
+        take,
+        skip,
+        orderBy: { createdAt: "desc" },
+      });
+    } else {
+      // Unauthorized access for other user roles
+      return res.status(403).send("Unauthorized");
+    }
+
+    // Format response with selected fields
+    const responseApplications = applications.map(application => ({
+      applicationId: application.applicationId,
+      applicantName: application.applicantName,
+      formData: {
+        eventName: application.formData.eventName,
+        applicantDepartment: application.formData.applicantDepartment,
+      },
+      createdAt: application.createdAt,
+    }));
+
+    return res.status(200).json({
+      message: `${status} Applications Fetched Successfully`,
+      totalApplications,
+      applications: responseApplications,
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error.message);
+  }
+};
 
 const getApplicationData = async (req, res) => {
   try {
@@ -203,4 +293,4 @@ const getFile = async (req, res) => {
 };
 
 
-export { getApplicationData, getFile, dataRoot };
+export { getApplicationData, getFile, dataRoot, getApplicationsByStatus };

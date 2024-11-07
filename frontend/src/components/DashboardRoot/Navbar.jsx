@@ -61,7 +61,7 @@ const Navbar = ({ userData }) => {
               ))}
                 <div className="flex flex-row items-center gap-2">
                   <Link to= "/" onClick = {handleLogout} className="text-gray-700 hover:bg-red-700 hover:text-white p-1 rounded-md">
-                    Logut
+                    Logout
                   </Link>
                   <span>|</span>
                 </div>
