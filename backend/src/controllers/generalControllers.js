@@ -221,6 +221,7 @@ const getApplicationData = async (req, res) => {
         applicantName: true,
         formData: true,
         supervisorValidation: true,
+        fdccoordinatorValidation: true,
         hodValidation: true,
         hoiValidation: true,
         createdAt: true,

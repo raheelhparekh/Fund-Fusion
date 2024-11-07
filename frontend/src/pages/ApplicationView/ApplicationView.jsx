@@ -2,6 +2,7 @@ import React from "react";
 import FormDisplay from "./FormDisplay";
 import { useRouteLoaderData, useSubmit } from "react-router-dom";
 import Modal from "../../components/Modal/Modal";
+import ValidationStatus from "./ValidationStatus";
 
 function ApplicationView({ applicationDisplay, closeModal }) {
   const { role } =
@@ -18,8 +19,19 @@ function ApplicationView({ applicationDisplay, closeModal }) {
     submit(formData, { method: "POST" });
   };
 
+  console.log(applicationDisplay);
+
   return (
     <Modal onClose={closeModal} title={applicationDisplay.formData.eventName}>
+      <ValidationStatus
+        validations={{
+          fdccoordinatorValidation: applicationDisplay.fdccoordinatorValidation,
+          supervisorValidation: applicationDisplay.supervisorValidation,
+          hodValidation: applicationDisplay.hodValidation,
+          hoiValidation: applicationDisplay.hoiValidation,
+        }}
+      />
+
       <FormDisplay
         applicationId={applicationDisplay.applicationId}
         formData={applicationDisplay.formData}
