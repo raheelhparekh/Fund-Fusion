@@ -19,10 +19,11 @@ function ApplicationView({ applicationDisplay, closeModal }) {
     submit(formData, { method: "POST" });
   };
 
-  console.log(applicationDisplay);
+  let title = applicationDisplay.formData.eventName;
 
   return (
-    <Modal onClose={closeModal} title={applicationDisplay.formData.eventName}>
+    <Modal onClose={closeModal}>
+      <h1 className="text-3xl font-extrabold">{title}</h1>
       <ValidationStatus
         validations={{
           fdccoordinatorValidation: applicationDisplay.fdccoordinatorValidation,
