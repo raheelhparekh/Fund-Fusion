@@ -13,7 +13,7 @@ const studentFormFeilds = [
         label: "Enter Age",
         name: "applicantAge",
         type: "number",
-        validation: yup.number().required("Age is required").min(18, "Age must be at least 18"),
+        validation: yup.number().required("Age is required").min(0, "Age must be positive"),
       },
       {
         label: "Enter Contact Number",
