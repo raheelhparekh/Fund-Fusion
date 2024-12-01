@@ -11,7 +11,7 @@ const Root = () => {
       <Navbar userData={user} role={role} />
       <div className="flex bg-gray-100 h-full">
         <Sidebar role={role} />
-        <div className="w-full h-full overflow-y-scroll">
+        <div className="w-full h-[90%] overflow-y-scroll">
           <Outlet />
         </div>
       </div>

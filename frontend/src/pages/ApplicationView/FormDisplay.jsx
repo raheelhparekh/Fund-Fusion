@@ -34,6 +34,7 @@ function FormDisplay({ applicationId, formData }) {
           downloadable
           applicationId={applicationId}
           fileName="proofOfTravel"
+          value={formData["proofOfTravel"]}
         />
         <Field
           label="Accommodation Opted?"
@@ -56,6 +57,7 @@ function FormDisplay({ applicationId, formData }) {
               downloadable
               applicationId={applicationId}
               fileName="proofOfAccommodation"
+              value={formData["proofOfAccommodation"]}
             />
           </>
         )}
@@ -75,6 +77,7 @@ function FormDisplay({ applicationId, formData }) {
           downloadable
           applicationId={applicationId}
           fileName="proofOfAttendance"
+          value={formData["proofOfAttendance"]}
         />
       </div>
 
@@ -106,7 +109,7 @@ const Field = ({
 }) => (
   <div className="flex flex-row mb-4 items-center">
     <label className="font-semibold mb-2 mr-4">{label}:</label>
-    {downloadable ? (
+    {downloadable ? value === "" ? <span>No File Submited</span>: (
       <PdfActions applicationId={applicationId} fileName={fileName} />
     ) : (
       <div

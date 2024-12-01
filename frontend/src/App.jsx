@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { Login, Dashboard, ApplicationForm, About, Policy, Applications } from './pages'
+import { Login, Dashboard, Form, About, Policy, Applications } from './pages'
 import './App.css'
 import LoginRoot from './components/LoginRoot/LoginRoot'
 import userDataLoader from './services/userDataLoader';
@@ -20,7 +20,7 @@ const router = createBrowserRouter([
                 children: [
                         { path: "dashboard", element: <Dashboard /> },
                         { path: "dashboard/:status", element: <Applications /> },
-                        { path: "form", element: <ApplicationForm />, action: createApplicationAction },
+                        { path: "form", element: <Form />, action: createApplicationAction },
                         { path: "faqs", element: <h1>FAQs</h1> },
                         { path: "contact-us", element: <h1>Contact Us</h1> },
                 ]
