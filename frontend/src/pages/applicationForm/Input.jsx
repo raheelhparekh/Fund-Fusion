@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { studentFormFeilds, facultyFormFeilds } from "./FormFeilds";
 import { useRouteLoaderData } from "react-router-dom";
 
-let formFeilds;
-
 function Input({
   values,
   errors,
@@ -14,12 +12,11 @@ function Input({
 }) {
   const applicant = useRouteLoaderData("Applicant-Root");
   const designation = applicant.data.user.designation; //Faculty or Student
+  let formFeilds;
   if (designation === "Student") {
     formFeilds = studentFormFeilds;
-  } else if (designation === "Faculty") {
+  } else  {
     formFeilds = facultyFormFeilds;
-  } else {
-    return;
   }
 
   const [currentForm, setCurrentForm] = useState(

@@ -1,11 +1,49 @@
 import React from "react";
 import { Formik } from "formik";
 import Input from "./Input"; // Import the Input component
-import { useSubmit } from "react-router-dom";
+import { useSubmit, useRouteLoaderData, useNavigation } from "react-router-dom";
+import { studentFormFeilds, facultyFormFeilds } from "./FormFeilds";
+import * as Yup from 'yup';
 
 function Form() {
   const submit = useSubmit();
+  const navigation = useNavigation();
+  const isSubmittingNav = navigation.state === "submitting";
+  let formFeilds = []
+
+  const applicant = useRouteLoaderData("Applicant-Root");
+  const designation = applicant.data.user.designation; //Faculty or Student
+  if (designation === "Student") {
+    formFeilds = studentFormFeilds;
+  } else  {
+    formFeilds = facultyFormFeilds;
+  }
+
+  const createValidationSchema = (formFields) => {
+    const schema = {};
   
+    formFields.forEach((section) => {
+      section.fields.forEach((field) => {
+        if (field.validation) {
+          schema[field.name] = field.validation;
+        }
+        else if (field.type === "dropdown" && field.options) {
+          schema[field.name] = Yup.string().required(`${field.label} is required`);
+        } 
+        else if (field.type === "checkbox") {
+          schema[field.name] = Yup.boolean();
+        } 
+        else if (field.type === "text" || field.type === "tel" || field.type === "email") {
+          schema[field.name] = Yup.string().required(`${field.label} is required`);
+        }
+      });
+    });
+  
+    return Yup.object().shape(schema);
+  };
+  
+  const validationSchema = createValidationSchema(formFeilds);
+
   // Form submission handler
   const handleSubmit = async (values, { setSubmitting }) => {
     const formDataToSend = new FormData();
@@ -79,17 +117,7 @@ function Form() {
         motherContact: "",
         anyOtherRequirements: "",
       }}
-      validate={(values) => {
-        const errors = {};
-        if (!values.applicantEmail) {
-          errors.applicantEmail = "Required";
-        } else if (
-          !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.applicantEmail)
-        ) {
-          errors.applicantEmail = "Invalid email address";
-        }
-        return errors;
-      }}
+      validationSchema={validationSchema} 
       onSubmit={handleSubmit}
     >
       {({
@@ -113,10 +141,10 @@ function Form() {
           />
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isSubmittingNav}
             className="w-full bg-blue-500 text-white py-2 rounded-md disabled:bg-gray-400"
           >
-            Submit
+            {(isSubmitting || isSubmittingNav) ? "Submitting" : "Submit"}
           </button>
         </form>
       )}
