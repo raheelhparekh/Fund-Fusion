@@ -15,7 +15,9 @@ export async function createApplicationAction({ request }) {
     }
 
     if (!res.ok) {
-      throw json({ message: res.statusText }, { status: res.status });
+      const errorData = await res.text();
+      alert(errorData)
+      return null
     }
 
     return redirect("../dashboard");

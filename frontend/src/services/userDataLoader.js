@@ -1,7 +1,7 @@
 import axios from "axios";
 import { json, redirect } from "react-router-dom";
 
-async function userDataLoader({ params , request }) {
+async function userDataLoader({ params, request }) {
   try {
     const res = await axios.get("http://localhost:3000/general/dataRoot", {
       withCredentials: true,
@@ -14,7 +14,7 @@ async function userDataLoader({ params , request }) {
 
     const userRole = res.data.role;
     const url = new URL(request.url);
-    const userRoleInURL = url.pathname.split('/')[1]; 
+    const userRoleInURL = url.pathname.split("/")[1];
 
     // Route protection based on role and route id
     if (userRoleInURL === "applicant" && userRole !== "Applicant") {
@@ -29,10 +29,20 @@ async function userDataLoader({ params , request }) {
 
     return { data: res.data };
   } catch (error) {
-    console.error("Fetch error:", error);
+    if (error.status === 401 || error.status === 403) {
+      alert(error.response?.data?.message);
+      await fetch("http://localhost:3000/logout", {
+        method: 'GET',
+        credentials: 'include',
+      });
+      return redirect("/");
+    }
+
     throw json(
       {
-        message: error.response?.data?.message || "Network error. Please try again later.",
+        message:
+          error.response?.data?.message ||
+          "Network error. Please try again later.",
         status: error.response?.status || 500,
       },
       { status: error.response?.status || 500 }

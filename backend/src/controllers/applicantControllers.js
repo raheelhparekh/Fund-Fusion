@@ -59,7 +59,7 @@ const createApplication = async (req, res) => {
       fdccoordinator = await prisma.validator.findFirst({
         where: { department, designation: "FDCcoordinator" }
       });
-      if (!fdccoordinator) return res.status(404).send("FDC coordinator not found");
+      if (!fdccoordinator) return res.status(404).send("Invalid Email for FDC coordinator");
     }
 
     // Retrieve HOD and HOI (required for all applicants)

@@ -17,7 +17,7 @@ const ApplicationForm = () => {
     applicantAge: "",
     applicantContact: "",
     applicantAddress: "",
-    applicantCourse: "BTECH",
+    applicantCourse: "",
     applicantYearOfStudy: "",
     applicantEmail: "",
     applicantRollNo: "",
