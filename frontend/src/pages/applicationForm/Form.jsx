@@ -3,7 +3,7 @@ import { Formik } from "formik";
 import Input from "./Input"; // Import the Input component
 import { useSubmit, useRouteLoaderData, useNavigation } from "react-router-dom";
 import { studentFormFeilds, facultyFormFeilds } from "./FormFeilds";
-import * as Yup from 'yup';
+import * as yup from 'yup';
 
 function Form() {
   const submit = useSubmit();
@@ -27,19 +27,10 @@ function Form() {
         if (field.validation) {
           schema[field.name] = field.validation;
         }
-        else if (field.type === "dropdown" && field.options) {
-          schema[field.name] = Yup.string().required(`${field.label} is required`);
-        } 
-        else if (field.type === "checkbox") {
-          schema[field.name] = Yup.boolean();
-        } 
-        else if (field.type === "text" || field.type === "tel" || field.type === "email") {
-          schema[field.name] = Yup.string().required(`${field.label} is required`);
-        }
       });
     });
   
-    return Yup.object().shape(schema);
+    return yup.object().shape(schema);
   };
   
   const validationSchema = createValidationSchema(formFeilds);
@@ -85,7 +76,7 @@ function Form() {
         applicantEmail: "",
         applicantRollNo: "",
         applicantDepartment: "",
-        primarySupervisor: false,
+        primarySupervisor: true,
         primarySupervisorFullName: "",
         primarySupervisorEmail: "",
         primarySupervisorContact: "",
