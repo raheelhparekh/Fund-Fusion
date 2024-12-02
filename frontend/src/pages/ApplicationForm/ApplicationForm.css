@@ -1,0 +1,226 @@
+.topLevelFormContainer {
+    height: 100%; /* Consider removing or changing */
+    overflow-y: auto; /* To handle scrolling */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  
+  .mainForm {
+    width: 97%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: fit-content; /* Let content determine the height */
+  }
+  
+  .mainForm::-webkit-scrollbar {
+    width: 0px;
+  }
+  
+  .mainForm::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  .mainForm::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+  
+  .mainForm::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  
+  .generalFormContainer {
+    background-color: white;
+    min-height: 13%;
+    /* max-height: 90vh; */
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin-top: 15px;
+    border-radius: 15px;
+  }
+  
+  .generalFormContainer::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .generalFormContainer::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  .generalFormContainer::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+  
+  .generalFormContainer::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  
+  .header:hover {
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  .generalFormContainer > .header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .generalFormContainer > .form {
+    margin-left: 30px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Set to 3 columns */
+    row-gap: 15px;
+    column-gap: 10px;
+    width: 100%;
+    justify-content: center;
+    align-content: center;
+    height: fit-content;
+  }
+  
+  /* Responsive grid layout */
+  @media (max-width: 1200px) {
+    .generalFormContainer > .form {
+      grid-template-columns: repeat(2, 1fr); /* Two columns for medium screens */
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .generalFormContainer > .form {
+      grid-template-columns: 1fr; /* One column for small screens */
+    }
+  }
+  
+  .hiddenForm > .form {
+    height: 0;
+    visibility: hidden;
+    overflow: hidden;
+    display: none;
+  }
+  
+  .labelAndInputField {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* background-color: aqua; */
+    width: 90%;
+  }
+  
+  .labelAndInputField label {
+    font-size: 18px;
+    margin-bottom: 0.2rem;
+  }
+  
+  .labelAndInputField input {
+    height: 45px;
+    background-color: #e5e7eb;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+  
+  .smallLabelAndInputField {
+          height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 20%;
+    /* background-color: aqua; */
+    margin: 0%;
+    padding: 0%;
+  }
+  
+  .smallLabelAndInputField input {
+    height: 100%;
+    background-color: #e5e7eb;
+    width: 100%;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    /* background-color: aqua; */
+    
+  }
+  
+  .fullRow {
+    grid-column: span 3; /* Span all 3 columns */
+  }
+  
+  .dropDownField {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
+  
+  .dropDownField > select {
+    height: 45px;
+    background-color: #e5e7eb;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    width: 70%;
+  }
+  
+  .radioField {
+    height: 45px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0%;
+    padding: 0%;
+  }
+  
+  .radioOptions {
+          height: 45px;
+          /* background-color: aqua; */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 40px;
+    padding: 0%;
+    margin-right: 7%;
+  }
+  
+  .individualRadioOption {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0%;
+    padding: 0%;
+  }
+  
+  .fileField{
+          height: 45px;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          /* background-color: aqua; */
+  }
+  
+  .submitContainer{
+          height:40px;
+          width:20%;
+          margin-top: 10px;
+          margin-bottom: 100px;
+         
+  }
+  
+  .submitContainer>button{
+          height:100%;
+          width: 100%;
+          background-color: rgb(125, 39, 39);
+          color: aliceblue;
+          font-weight: 700;
+          border-radius: 20px;
+  }

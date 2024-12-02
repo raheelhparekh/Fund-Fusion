@@ -329,7 +329,7 @@ const studentFormFeilds = [
         label: "Enter Event Website",
         name: "eventWebsite",
         type: "text",
-        validation: yup.string().required("Event Website is required"),
+        validation: yup.string().url("Invalid URL format").required("Event Website is required"),
       },
       {
         label: "Upload Proof of Attendance",
@@ -754,7 +754,7 @@ const facultyFormFeilds = [
         label: "Enter Event Website",
         name: "eventWebsite",
         type: "text",
-        validation: yup.string().required("Event Website is required"),
+        validation: yup.string().url("Invalid URL format").required("Event Website is required"),
       },
       {
         label: "Upload Proof of Attendance",
