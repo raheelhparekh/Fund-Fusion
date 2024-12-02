@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Login, Dashboard, Form, About, Policy, Applications } from "./pages";
+import { Login, Dashboard, Form, About, Policy, Applications, Report } from "./pages";
 import "./App.css";
 import LoginRoot from "./components/LoginRoot/LoginRoot";
 import userDataLoader from "./services/userDataLoader";
@@ -42,6 +42,10 @@ const router = createBrowserRouter([
         element: <Applications />,
         action: applicationStatusAction,
       },
+      {
+        path: "report",
+        element: <Report />,
+      }
     ],
   },
 ]);
