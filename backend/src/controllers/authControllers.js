@@ -34,7 +34,7 @@ const applicantLogin = async (req, res) => {
     const token = generateToken(tokenObject);
 
     return res
-      .cookie("access_token", token, { httpOnly: true })
+      .cookie("access_token", token, { sameSite: 'None', secure: true, httpOnly: true })
       .status(200)
       .json({ username: validProfile.userName });
   } catch (error) {

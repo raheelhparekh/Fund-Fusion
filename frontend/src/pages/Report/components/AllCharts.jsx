@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Line } from "react-chartjs-2";
 import { Bar } from "react-chartjs-2";
 import { Pie } from "react-chartjs-2";
@@ -147,25 +147,25 @@ function AllChartsPage() {
   };
 
   return (
-    <div className='p-10'>
-      <h1 className='text-3xl mb-6'>Travel Policy Report</h1>
+    <div className="p-10">
+      <h1 className="text-3xl mb-6">Travel Policy Report</h1>
 
       {/* Container for all three charts */}
-      <div className='grid grid-cols-3 gap-6'>
-        {/* Line Chart */}
-        <div style={{ width: "100%", height: "400px" }}>
-          <Line options={lineOptions} data={lineData} />
-        </div>
-
+      <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-[2fr,1fr] gap-6">
         {/* Bar Chart */}
-        <div style={{ width: "100%", height: "400px" }}>
+        <div className="w-full">
           <Bar options={barOptions} data={barData} />
         </div>
 
         {/* Pie Chart */}
-        <div style={{ width: "100%", height: "400px" }}>
+        <div className="w-full">
           <Pie options={pieOptions} data={pieData} />
         </div>
+      </div>
+
+      {/* Line Chart */}
+      <div className="w-full">
+        <Line options={lineOptions} data={lineData} />
       </div>
     </div>
   );
