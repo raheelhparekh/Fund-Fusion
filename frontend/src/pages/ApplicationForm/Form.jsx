@@ -24,7 +24,7 @@ function Form() {
   
     formFields.forEach((section) => {
       section.fields.forEach((field) => {
-        if (field.validation && !(field?.parent)) {
+        if (field.validation && (field?.parent)) {
           schema[field.name] = field.validation;
         }
       });

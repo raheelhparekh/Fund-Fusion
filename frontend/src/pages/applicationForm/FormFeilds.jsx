@@ -1,4 +1,4 @@
-import * as yup from 'yup';
+import * as yup from "yup";
 const studentFormFeilds = [
   {
     label: "Personal and Academic Information",
@@ -13,13 +13,19 @@ const studentFormFeilds = [
         label: "Enter Age",
         name: "applicantAge",
         type: "number",
-        validation: yup.number().required("Age is required").min(0, "Age must be positive"),
+        validation: yup
+          .number()
+          .required("Age is required")
+          .min(0, "Age must be positive"),
       },
       {
         label: "Enter Contact Number",
         name: "applicantContact",
         type: "tel",
-        validation: yup.string().required("Contact Number is required").matches(/^[0-9]{10}$/, "Contact Number must be 10 digits"),
+        validation: yup
+          .string()
+          .required("Contact Number is required")
+          .matches(/^[0-9]{10}$/, "Contact Number must be 10 digits"),
       },
       {
         label: "Enter Address",
@@ -65,13 +71,19 @@ const studentFormFeilds = [
         label: "Enter Email",
         name: "applicantEmail",
         type: "email",
-        validation: yup.string().email("Invalid email format").required("Email is required"),
+        validation: yup
+          .string()
+          .email("Invalid email format")
+          .required("Email is required"),
       },
       {
         label: "Enter Roll No",
         name: "applicantRollNo",
         type: "text",
-        validation: yup.string().required("Roll No is required").matches(/^\d{11}$/, "Roll No must be exactly 11 digits"),
+        validation: yup
+          .string()
+          .required("Roll No is required")
+          .matches(/^\d{11}$/, "Roll No must be exactly 11 digits"),
       },
       {
         label: "Select Department",
@@ -97,19 +109,27 @@ const studentFormFeilds = [
         label: "Enter Primary Supervisor Full Name",
         name: "primarySupervisorFullName",
         type: "text",
-        validation: yup.string().required("Primary Supervisor Full Name is required"),
+        validation: yup
+          .string()
+          .required("Primary Supervisor Full Name is required"),
       },
       {
         label: "Enter Primary Supervisor Email",
         name: "primarySupervisorEmail",
         type: "email",
-        validation: yup.string().email("Invalid email format").required("Primary Supervisor Email is required"),
+        validation: yup
+          .string()
+          .email("Invalid email format")
+          .required("Primary Supervisor Email is required"),
       },
       {
         label: "Enter Primary Supervisor Contact",
         name: "primarySupervisorContact",
         type: "tel",
-        validation: yup.string().required("Primary Supervisor Contact is required").matches(/^[0-9]{10}$/, "Contact Number must be 10 digits"),
+        validation: yup
+          .string()
+          .required("Primary Supervisor Contact is required")
+          .matches(/^[0-9]{10}$/, "Contact Number must be 10 digits"),
       },
       {
         label: "Enter Primary Supervisor Department",
@@ -129,7 +149,9 @@ const studentFormFeilds = [
             { label: "RAI", value: "RAI" },
           ],
         },
-        validation: yup.string().required("Primary Supervisor Department is required"),
+        validation: yup
+          .string()
+          .required("Primary Supervisor Department is required"),
       },
       {
         label: "Do you have another Supervisor?",
@@ -141,30 +163,36 @@ const studentFormFeilds = [
         label: "Enter Another Supervisor Full Name",
         name: "anotherSupervisorFullName",
         type: "text",
-        validation: yup.string().when("anotherSupervisor", {
-          is: true,
-          then: yup.string().required("Another Supervisor Full Name is required"),
-        }),
+        validation: yup
+          .string()
+          .when("anotherSupervisor", {
+            is: true,
+            then: (schema) => schema.required("Another Supervisor Full Name is required"),
+          }),
       },
       {
         parent: "anotherSupervisor",
         label: "Enter Another Supervisor Email",
         name: "anotherSupervisorEmail",
         type: "email",
-        validation: yup.string().email("Invalid email format").when("anotherSupervisor", {
-          is: true,
-          then: yup.string().required("Another Supervisor Email is required"),
-        }),
+        validation: yup
+          .string()
+          .when("anotherSupervisor", {
+            is: true,
+            then: (schema) => schema.required("Another Supervisor Email is required").email("Invalid email format"),
+          }),
       },
       {
         parent: "anotherSupervisor",
         label: "Enter Another Supervisor Contact",
         name: "anotherSupervisorContact",
         type: "tel",
-        validation: yup.string().matches(/^[0-9]{10}$/, "Contact Number must be 10 digits").when("anotherSupervisor", {
-          is: true,
-          then: yup.string().required("Another Supervisor Contact is required"),
-        }),
+        validation: yup
+          .string()
+          .when("anotherSupervisor", {
+            is: true,
+            then: (schema) => schema.required("Another Supervisor Contact is required").matches(/^[0-9]{10}$/, "Contact Number must be 10 digits"),
+          }),
       },
       {
         parent: "anotherSupervisor",
@@ -185,10 +213,12 @@ const studentFormFeilds = [
             { label: "RAI", value: "RAI" },
           ],
         },
-        validation: yup.string().when("anotherSupervisor", {
-          is: true,
-          then: yup.string().required("Another Supervisor Department is required"),
-        }),
+        validation: yup
+          .string()
+          .when("anotherSupervisor", {
+            is: true,
+            then: (schema) => schema.required("Another Supervisor Department is required"),
+          }),
       },
     ],
   },
@@ -214,10 +244,12 @@ const studentFormFeilds = [
         label: "Enter Purpose of Travel (Other)",
         name: "purposeOfTravelOther",
         type: "text",
-        validation: yup.string().when("purposeOfTravel", {
-          is: "Other",
-          then: yup.string().required("Purpose of Travel (Other) is required"),
-        }),
+        validation: yup
+          .string()
+          .when("purposeOfTravel", {
+            is: "Other",
+            then: (schema) => schema.required("Purpose of Travel (Other) is required"),
+          }),
       },
       {
         label: "Select Mode of Travel",
@@ -239,16 +271,18 @@ const studentFormFeilds = [
         label: "Enter Mode of Travel (Other)",
         name: "modeOfTravelOther",
         type: "text",
-        validation: yup.string().when("modeOfTravel", {
-          is: "Other",
-          then: yup.string().required("Mode of Travel (Other) is required"),
-        }),
+        validation: yup
+          .string()
+          .when("modeOfTravel", {
+            is: "Other",
+            then: (schema) => schema.required("Mode of Travel (Other) is required"),
+          }),
       },
       {
         label: "Upload Proof of Travel",
         name: "proofOfTravel",
         type: "file",
-        validation: yup.mixed().required("Proof of Travel is required"),
+        validation: (schema) => schema.required("Proof of Travel is required"),
       },
       {
         label: "Accommodation Opted?",
@@ -267,40 +301,48 @@ const studentFormFeilds = [
             { label: "Hostel", value: "hostel" },
           ],
         },
-        validation: yup.string().when("accommodationOpted", {
-          is: true,
-          then: yup.string().required("Type of Accommodation is required"),
-        }),
+        validation: yup
+          .string()
+          .when("accommodationOpted", {
+            is: true,
+            then: (schema) => schema.required("Type of Accommodation is required"),
+          }),
       },
       {
         parent: "accommodationOpted",
         label: "Enter Duration of Stay",
         name: "durationOfStay",
         type: "text",
-        validation: yup.string().when("accommodationOpted", {
-          is: true,
-          then: yup.string().required("Duration of Stay is required"),
-        }),
+        validation: yup
+          .string()
+          .when("accommodationOpted", {
+            is: true,
+            then: (schema) => schema.required("Duration of Stay is required"),
+          }),
       },
       {
         parent: "accommodationOpted",
         label: "Enter Accommodation Address",
         name: "accommodationAddress",
         type: "text",
-        validation: yup.string().when("accommodationOpted", {
-          is: true,
-          then: yup.string().required("Accommodation Address is required"),
-        }),
+        validation: yup
+          .string()
+          .when("accommodationOpted", {
+            is: true,
+            then: (schema) => schema.required("Accommodation Address is required"),
+          }),
       },
       {
         parent: "accommodationOpted",
         label: "Upload Proof of Accommodation",
         name: "proofOfAccommodation",
         type: "file",
-        validation: yup.mixed().when("accommodationOpted", {
-          is: true,
-          then: yup.mixed().required("Proof of Accommodation is required"),
-        }),
+        validation: yup
+          .mixed()
+          .when("accommodationOpted", {
+            is: true,
+            then: (schema) => schema.required("Proof of Accommodation is required"),
+          }),
       },
     ],
   },
@@ -335,7 +377,7 @@ const studentFormFeilds = [
         label: "Upload Proof of Attendance",
         name: "proofOfAttendance",
         type: "file",
-        validation: yup.mixed().required("Proof of Attendance is required"),
+        validation: (schema) => schema.required("Proof of Attendance is required"),
       },
     ],
   },
@@ -346,47 +388,55 @@ const studentFormFeilds = [
         label: "Parental Consent?",
         name: "parentalConsent",
         type: "checkbox",
-        validation: yup.boolean().isTrue("Parent's Consent is Required")
+        validation: yup.boolean().isTrue("Parent's Consent is Required"),
       },
       {
         parent: "parentalConsent",
         label: "Enter Father's Full Name",
         name: "fatherFullName",
         type: "text",
-        validation: yup.string().when("parentalConsent", {
-          is: true,
-          then: yup.string().required("Father's Full Name is required"),
-        }),
+        validation: yup
+          .string()
+          .when("parentalConsent", {
+            is: true,
+            then: (schema) => schema.required("Father's Full Name is required"),
+          }),
       },
       {
         parent: "parentalConsent",
         label: "Enter Father's Contact",
         name: "fatherContact",
         type: "tel",
-        validation: yup.string().matches(/^[0-9]{10}$/, "Contact Number must be 10 digits").when("parentalConsent", {
-          is: true,
-          then: yup.string().required("Father's Contact is required"),
-        }),
+        validation: yup
+          .string()
+          .when("parentalConsent", {
+            is: true,
+            then: (schema) => schema.required("Father's Contact is required").matches(/^[0-9]{10}$/, "Contact Number must be 10 digits"),
+          }),
       },
       {
         parent: "parentalConsent",
         label: "Enter Mother's Full Name",
         name: "motherFullName",
         type: "text",
-        validation: yup.string().when("parentalConsent", {
-          is: true,
-          then: yup.string().required("Mother's Full Name is required"),
-        }),
+        validation: yup
+          .string()
+          .when("parentalConsent", {
+            is: true,
+            then: (schema) => schema.required("Mother's Full Name is required"),
+          }),
       },
       {
         parent: "parentalConsent",
         label: "Enter Mother's Contact",
         name: "motherContact",
         type: "tel",
-        validation: yup.string().matches(/^[0-9]{10}$/, "Contact Number must be 10 digits").when("parentalConsent", {
-          is: true,
-          then: yup.string().required("Mother's Contact is required"),
-        }),
+        validation: yup
+          .string()
+          .when("parentalConsent", {
+            is: true,
+            then: (schema) => schema.required("Mother's Contact is required").matches(/^[0-9]{10}$/, "Contact Number must be 10 digits"),
+          }),
       },
     ],
   },
@@ -402,7 +452,6 @@ const studentFormFeilds = [
     ],
   },
 ];
-
 const facultyFormFeilds = [
   {
     label: "Personal and Academic Information",
@@ -417,13 +466,19 @@ const facultyFormFeilds = [
         label: "Enter Age",
         name: "applicantAge",
         type: "number",
-        validation: yup.number().required("Age is required").min(18, "Age must be at least 18"),
+        validation: yup
+          .number()
+          .required("Age is required")
+          .min(18, "Age must be at least 18"),
       },
       {
         label: "Enter Contact Number",
         name: "applicantContact",
         type: "tel",
-        validation: yup.string().required("Contact Number is required").matches(/^[0-9]{10}$/, "Contact Number must be 10 digits"),
+        validation: yup
+          .string()
+          .required("Contact Number is required")
+          .matches(/^[0-9]{10}$/, "Contact Number must be 10 digits"),
       },
       {
         label: "Enter Address",
@@ -435,7 +490,10 @@ const facultyFormFeilds = [
         label: "Enter Email",
         name: "applicantEmail",
         type: "email",
-        validation: yup.string().email("Invalid email format").required("Email is required"),
+        validation: yup
+          .string()
+          .email("Invalid email format")
+          .required("Email is required"),
       },
       {
         label: "Enter Roll No",
@@ -473,30 +531,36 @@ const facultyFormFeilds = [
         label: "Enter Primary Supervisor Full Name",
         name: "primarySupervisorFullName",
         type: "text",
-        validation: yup.string().when("primarySupervisor", {
-          is: true,
-          then: yup.string().required("Primary Supervisor Full Name is required"),
-        }),
+        validation: yup
+          .string()
+          .when("primarySupervisor", {
+            is: true,
+            then: (schema) => schema.required("Primary Supervisor Full Name is required"),
+          }),
       },
       {
         parent: "primarySupervisor",
         label: "Enter Primary Supervisor Email",
         name: "primarySupervisorEmail",
         type: "email",
-        validation: yup.string().email("Invalid email format").when("primarySupervisor", {
-          is: true,
-          then: yup.string().required("Primary Supervisor Email is required"),
-        }),
+        validation: yup
+          .string()
+          .when("primarySupervisor", {
+            is: true,
+            then: (schema) => schema.required("Primary Supervisor Email is required").email("Invalid email format"),
+          }),
       },
       {
         parent: "primarySupervisor",
         label: "Enter Primary Supervisor Contact",
         name: "primarySupervisorContact",
         type: "tel",
-        validation: yup.string().matches(/^[0-9]{10}$/, "Contact Number must be 10 digits").when("primarySupervisor", {
-          is: true,
-          then: yup.string().required("Primary Supervisor Contact is required"),
-        }),
+        validation: yup
+          .string()
+          .when("primarySupervisor", {
+            is: true,
+            then: (schema) => schema.required("Primary Supervisor Contact is required").matches(/^[0-9]{10}$/, "Contact Number must be 10 digits"),
+          }),
       },
       {
         parent: "primarySupervisor",
@@ -517,10 +581,12 @@ const facultyFormFeilds = [
             { label: "RAI", value: "RAI" },
           ],
         },
-        validation: yup.string().when("primarySupervisor", {
-          is: true,
-          then: yup.string().required("Primary Supervisor Department is required"),
-        }),
+        validation: yup
+          .string()
+          .when("primarySupervisor", {
+            is: true,
+            then: (schema) => schema.required("Primary Supervisor Department is required"),
+          }),
       },
       {
         parent: "primarySupervisor",
@@ -533,30 +599,36 @@ const facultyFormFeilds = [
         label: "Enter Another Supervisor Full Name",
         name: "anotherSupervisorFullName",
         type: "text",
-        validation: yup.string().when("anotherSupervisor", {
-          is: true,
-          then: yup.string().required("Another Supervisor Full Name is required"),
-        }),
+        validation: yup
+          .string()
+          .when("anotherSupervisor", {
+            is: true,
+            then: (schema) => schema.required("Another Supervisor Full Name is required"),
+          }),
       },
       {
         parent: "anotherSupervisor",
         label: "Enter Another Supervisor Email",
         name: "anotherSupervisorEmail",
         type: "email",
-        validation: yup.string().email("Invalid email format").when("anotherSupervisor", {
-          is: true,
-          then: yup.string().required("Another Supervisor Email is required"),
-        }),
+        validation: yup
+          .string()
+          .when("anotherSupervisor", {
+            is: true,
+            then: (schema) => schema.required("Another Supervisor Email is required").email("Invalid email format"),
+          }),
       },
       {
         parent: "anotherSupervisor",
         label: "Enter Another Supervisor Contact",
         name: "anotherSupervisorContact",
         type: "tel",
-        validation: yup.string().matches(/^[0-9]{10}$/, "Contact Number must be 10 digits").when("anotherSupervisor", {
-          is: true,
-          then: yup.string().required("Another Supervisor Contact is required"),
-        }),
+        validation: yup
+          .string()
+          .when("anotherSupervisor", {
+            is: true,
+            then: (schema) => schema.required("Another Supervisor Contact is required").matches(/^[0-9]{10}$/, "Contact Number must be 10 digits"),
+          }),
       },
       {
         parent: "anotherSupervisor",
@@ -577,10 +649,12 @@ const facultyFormFeilds = [
             { label: "RAI", value: "RAI" },
           ],
         },
-        validation: yup.string().when("anotherSupervisor", {
-          is: true,
-          then: yup.string().required("Another Supervisor Department is required"),
-        }),
+        validation: yup
+          .string()
+          .when("anotherSupervisor", {
+            is: true,
+            then: (schema) => schema.required("Another Supervisor Department is required"),
+          }),
       },
     ],
   },
@@ -606,10 +680,12 @@ const facultyFormFeilds = [
         label: "Enter Purpose of Travel (Other)",
         name: "purposeOfTravelOther",
         type: "text",
-        validation: yup.string().when("purposeOfTravel", {
-          is: "Other",
-          then: yup.string().required("Purpose of Travel (Other) is required"),
-        }),
+        validation: yup
+          .string()
+          .when("purposeOfTravel", {
+            is: "Other",
+            then: (schema) => schema.required("Purpose of Travel (Other) is required"),
+          }),
       },
       {
         label: "Select Mode of Travel",
@@ -631,16 +707,18 @@ const facultyFormFeilds = [
         label: "Enter Mode of Travel (Other)",
         name: "modeOfTravelOther",
         type: "text",
-        validation: yup.string().when("modeOfTravel", {
-          is: "Other",
-          then: yup.string().required("Mode of Travel (Other) is required"),
-        }),
+        validation: yup
+          .string()
+          .when("modeOfTravel", {
+            is: "Other",
+            then: (schema) => schema.required("Mode of Travel (Other) is required"),
+          }),
       },
       {
         label: "Upload Proof of Travel",
         name: "proofOfTravel",
         type: "file",
-        validation: yup.mixed().required("Proof of Travel is required"),
+        validation: (schema) => schema.required("Proof of Travel is required"),
       },
       {
         label: "Accommodation Opted?",
@@ -659,40 +737,48 @@ const facultyFormFeilds = [
             { label: "Hostel", value: "hostel" },
           ],
         },
-        validation: yup.string().when("accommodationOpted", {
-          is: true,
-          then: yup.string().required("Type of Accommodation is required"),
-        }),
+        validation: yup
+          .string()
+          .when("accommodationOpted", {
+            is: true,
+            then: (schema) => schema.required("Type of Accommodation is required"),
+          }),
       },
       {
         parent: "accommodationOpted",
         label: "Enter Duration of Stay",
         name: "durationOfStay",
         type: "text",
-        validation: yup.string().when("accommodationOpted", {
-          is: true,
-          then: yup.string().required("Duration of Stay is required"),
-        }),
+        validation: yup
+          .string()
+          .when("accommodationOpted", {
+            is: true,
+            then: (schema) => schema.required("Duration of Stay is required"),
+          }),
       },
       {
         parent: "accommodationOpted",
         label: "Enter Accommodation Address",
         name: "accommodationAddress",
         type: "text",
-        validation: yup.string().when("accommodationOpted", {
-          is: true,
-          then: yup.string().required("Accommodation Address is required"),
-        }),
+        validation: yup
+          .string()
+          .when("accommodationOpted", {
+            is: true,
+            then: (schema) => schema.required("Accommodation Address is required"),
+          }),
       },
       {
         parent: "accommodationOpted",
         label: "Upload Proof of Accommodation",
         name: "proofOfAccommodation",
         type: "file",
-        validation: yup.mixed().when("accommodationOpted", {
-          is: true,
-          then: yup.mixed().required("Proof of Accommodation is required"),
-        }),
+        validation: yup
+          .mixed()
+          .when("accommodationOpted", {
+            is: true,
+            then: (schema) => schema.required("Proof of Accommodation is required"),
+          }),
       },
     ],
   },
@@ -727,7 +813,7 @@ const facultyFormFeilds = [
         label: "Upload Proof of Attendance",
         name: "proofOfAttendance",
         type: "file",
-        validation: yup.mixed().required("Proof of Attendance is required"),
+        validation: (schema) => schema.required("Proof of Attendance is required"),
       },
     ],
   },
@@ -743,5 +829,4 @@ const facultyFormFeilds = [
     ],
   },
 ];
-
 export { studentFormFeilds, facultyFormFeilds };

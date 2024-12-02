@@ -43,11 +43,11 @@ const createApplication = async (req, res) => {
         where: { email: formData.anotherSupervisorEmail }
       });
 
-      if (additionalSupervisor && additionalSupervisor.profileId === supervisor?.profileId) {
+      if (additionalSupervisor?.profileId === supervisor?.profileId) {
         return res.status(404).send("Additional Supervisor's email can't be the same as Supervisor's");
       }
 
-      if (additionalSupervisor && additionalSupervisor.designation !== "Supervisor") {
+      if (additionalSupervisor?.designation !== "Supervisor") {
         return res.status(404).send("Invalid additional supervisor email");
       }
     }

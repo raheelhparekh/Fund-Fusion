@@ -29,7 +29,7 @@ function Input({
           {section.fields.map((formFeild) => {
             if (formFeild?.parent) {
               if (values[formFeild?.parent] === false) {
-                typeof values[formFeild?.parent] === "boolean"
+                typeof values[formFeild?.name] === "boolean"
                   ? (values[formFeild?.name] = false)
                   : (values[formFeild?.name] = "");
                 return null;
@@ -37,7 +37,7 @@ function Input({
                 typeof values[formFeild?.parent] === "string" &&
                 values[formFeild?.parent] !== "Other"
               ) {
-                typeof values[formFeild?.parent] === "boolean"
+                typeof values[formFeild?.name] === "boolean"
                   ? (values[formFeild?.name] = false)
                   : (values[formFeild?.name] = "");
                 return null;
