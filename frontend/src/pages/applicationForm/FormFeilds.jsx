@@ -346,6 +346,7 @@ const studentFormFeilds = [
         label: "Parental Consent?",
         name: "parentalConsent",
         type: "checkbox",
+        validation: yup.boolean().isTrue("Parent's Consent is Required")
       },
       {
         parent: "parentalConsent",
@@ -429,40 +430,6 @@ const facultyFormFeilds = [
         name: "applicantAddress",
         type: "text",
         validation: yup.string().required("Address is required"),
-      },
-      {
-        label: "Select Course",
-        name: "applicantCourse",
-        type: "dropdown",
-        options: {
-          "": [
-            { label: "BTech", value: "BTech" },
-            { label: "MTech", value: "MTech" },
-            { label: "PHD", value: "PHD" },
-          ],
-        },
-        validation: yup.string().required("Course selection is required"),
-      },
-      {
-        depend: "applicantCourse",
-        label: "Enter Year of Study",
-        name: "applicantYearOfStudy",
-        type: "dropdown",
-        options: {
-          BTech: [
-            { label: "FY", value: "FY" },
-            { label: "SY", value: "SY" },
-            { label: "TY", value: "TY" },
-            { label: "LY", value: "LY" },
-          ],
-          MTech: [
-            { label: "FY", value: "FY" },
-            { label: "SY", value: "SY" },
-          ],
-          PHD: [],
-          "": [],
-        },
-        validation: yup.string().required("Year of Study is required"),
       },
       {
         label: "Enter Email",
@@ -761,56 +728,6 @@ const facultyFormFeilds = [
         name: "proofOfAttendance",
         type: "file",
         validation: yup.mixed().required("Proof of Attendance is required"),
-      },
-    ],
-  },
-  {
-    label: "Parental Consent",
-    fields: [
-      {
-        label: "Parental Consent?",
-        name: "parentalConsent",
-        type: "checkbox",
-      },
-      {
-        parent: "parentalConsent",
-        label: "Enter Father's Full Name",
-        name: "fatherFullName",
-        type: "text",
-        validation: yup.string().when("parentalConsent", {
-          is: true,
-          then: yup.string().required("Father's Full Name is required"),
-        }),
-      },
-      {
-        parent: "parentalConsent",
-        label: "Enter Father's Contact",
-        name: "fatherContact",
-        type: "tel",
-        validation: yup.string().matches(/^[0-9]{10}$/, "Contact Number must be 10 digits").when("parentalConsent", {
-          is: true,
-          then: yup.string().required("Father's Contact is required"),
-        }),
-      },
-      {
-        parent: "parentalConsent",
-        label: "Enter Mother's Full Name",
-        name: "motherFullName",
-        type: "text",
-        validation: yup.string().when("parentalConsent", {
-          is: true,
-          then: yup.string().required("Mother's Full Name is required"),
-        }),
-      },
-      {
-        parent: "parentalConsent",
-        label: "Enter Mother's Contact",
-        name: "motherContact",
-        type: "tel",
-        validation: yup.string().matches(/^[0-9]{10}$/, "Contact Number must be 10 digits").when("parentalConsent", {
-          is: true,
-          then: yup.string().required("Mother's Contact is required"),
-        }),
       },
     ],
   },
