@@ -34,7 +34,6 @@ function Form() {
   };
   
   const validationSchema = createValidationSchema(formFeilds);
-  console.log(validationSchema)
 
   // Form submission handler
   const handleSubmit = async (values, { setSubmitting }) => {
