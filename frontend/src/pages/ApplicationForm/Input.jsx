@@ -19,17 +19,12 @@ function Input({
     formFeilds = facultyFormFeilds;
   }
 
-  const [currentForm, setCurrentForm] = useState(
-    "Personal and Academic Information"
-  );
   return formFeilds.map((section, sectionIndex) => (
     <div
       key={sectionIndex}
       className="bg-white p-2 mb-4 rounded"
-      onClick={() => setCurrentForm(section.label)}
     >
       <h3 className="text-xl font-semibold mt-4 mb-4">{section.label}</h3>
-      {currentForm === section.label && (
         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
           {section.fields.map((formFeild) => {
             if (formFeild?.parent) {
@@ -171,7 +166,6 @@ function Input({
             }
           })}
         </div>
-      )}
     </div>
   ));
 }
