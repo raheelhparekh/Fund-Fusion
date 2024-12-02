@@ -24,7 +24,7 @@ function Form() {
   
     formFields.forEach((section) => {
       section.fields.forEach((field) => {
-        if (field.validation && (field?.parent)) {
+        if (field.validation) {
           schema[field.name] = field.validation;
         }
       });
@@ -34,6 +34,7 @@ function Form() {
   };
   
   const validationSchema = createValidationSchema(formFeilds);
+  console.log(validationSchema)
 
   // Form submission handler
   const handleSubmit = async (values, { setSubmitting }) => {
@@ -47,16 +48,10 @@ function Form() {
     }
 
     try {
-      const response = await submit(formDataToSend, {
+      submit(formDataToSend, {
         method: "POST",
         encType: "multipart/form-data", // Specify the encoding type
       });
-
-      if (response.ok) {
-        alert("Form submitted successfully!");
-      } else {
-        throw new Error("Form submission failed");
-      }
     } catch (error) {
       console.error("Error uploading form:", error.message);
     } finally {

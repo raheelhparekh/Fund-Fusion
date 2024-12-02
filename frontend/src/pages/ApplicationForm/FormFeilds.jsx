@@ -65,7 +65,12 @@ const studentFormFeilds = [
           PHD: [],
           "": [],
         },
-        validation: yup.string().required("Year of Study is required"),
+        validation: yup.string().when("applicantCourse", {
+          is: "PHD",
+          then: (schema) => schema.notRequired(),
+          otherwise: (schema) => schema.required("Year of Study is required")
+        }
+        ),
       },
       {
         label: "Enter Email",
@@ -282,7 +287,7 @@ const studentFormFeilds = [
         label: "Upload Proof of Travel",
         name: "proofOfTravel",
         type: "file",
-        validation: (schema) => schema.required("Proof of Travel is required"),
+        validation: yup.mixed().required("Proof of Travel is required"),
       },
       {
         label: "Accommodation Opted?",
@@ -377,7 +382,7 @@ const studentFormFeilds = [
         label: "Upload Proof of Attendance",
         name: "proofOfAttendance",
         type: "file",
-        validation: (schema) => schema.required("Proof of Attendance is required"),
+        validation: yup.mixed().required("Proof of Attendance is required"),
       },
     ],
   },
