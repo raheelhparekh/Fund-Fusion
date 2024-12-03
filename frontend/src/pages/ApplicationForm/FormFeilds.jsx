@@ -287,7 +287,9 @@ const studentFormFeilds = [
         label: "Upload Proof of Travel",
         name: "proofOfTravel",
         type: "file",
-        validation: yup.mixed().required("Proof of Travel is required"),
+        validation: yup.mixed().required("Proof of Travel is required").test("fileType", "Only PDF files are allowed", (value) => {
+          return value && value.type === "application/pdf";
+        }),
       },
       {
         label: "Accommodation Opted?",
@@ -346,7 +348,9 @@ const studentFormFeilds = [
           .mixed()
           .when("accommodationOpted", {
             is: true,
-            then: (schema) => schema.required("Proof of Accommodation is required"),
+            then: (schema) => schema.required("Proof of Accommodation is required").test("fileType", "Only PDF files are allowed", (value) => {
+              return value && value.type === "application/pdf";
+            }),
           }),
       },
     ],
@@ -382,7 +386,9 @@ const studentFormFeilds = [
         label: "Upload Proof of Attendance",
         name: "proofOfAttendance",
         type: "file",
-        validation: yup.mixed().required("Proof of Attendance is required"),
+        validation: yup.mixed().required("Proof of Attendance is required").test("fileType", "Only PDF files are allowed", (value) => {
+          return value && value.type === "application/pdf";
+        }),
       },
     ],
   },
@@ -723,7 +729,9 @@ const facultyFormFeilds = [
         label: "Upload Proof of Travel",
         name: "proofOfTravel",
         type: "file",
-        validation: (schema) => schema.required("Proof of Travel is required"),
+        validation: yup.mixed().required("Proof of Travel is required").test("fileType", "Only PDF files are allowed", (value) => {
+          return value && value.type === "application/pdf";
+        }),
       },
       {
         label: "Accommodation Opted?",
@@ -782,7 +790,9 @@ const facultyFormFeilds = [
           .mixed()
           .when("accommodationOpted", {
             is: true,
-            then: (schema) => schema.required("Proof of Accommodation is required"),
+            then: (schema) => schema.required("Proof of Accommodation is required").test("fileType", "Only PDF files are allowed", (value) => {
+              return value && value.type === "application/pdf";
+            }),
           }),
       },
     ],
@@ -818,7 +828,9 @@ const facultyFormFeilds = [
         label: "Upload Proof of Attendance",
         name: "proofOfAttendance",
         type: "file",
-        validation: (schema) => schema.required("Proof of Attendance is required"),
+        validation: yup.mixed().required("Proof of Attendance is required").test("fileType", "Only PDF files are allowed", (value) => {
+          return value && value.type === "application/pdf";
+        }),
       },
     ],
   },
