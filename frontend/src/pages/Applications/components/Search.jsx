@@ -16,7 +16,7 @@ const Search = ({ value, setValue }) => {
       if (!applicantNamesCache) {
         try {
           const res = await axios.get(
-            "http://localhost:3000/validator/getApplicantNames",
+            `${import.meta.env.VITE_APP_API_URL}/validator/getApplicantNames`,
             { withCredentials: true }
           );
           if (res.status === 200) {

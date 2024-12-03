@@ -9,7 +9,7 @@ function PdfActions({ fileName, applicationId }) {
 
   const fetchFileBlob = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/general/getFile/${applicationId}/${fileName}`, {
+      const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/general/getFile/${applicationId}/${fileName}`, {
         responseType: 'blob',
         withCredentials: true,
       });

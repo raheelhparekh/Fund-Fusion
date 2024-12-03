@@ -7,7 +7,7 @@ export async function applicationStatusAction({ request, params }) {
     const action = formData.get('action');
 
     try {
-        const res = await fetch( `http://localhost:3000/validator/${applicationId}/${action}` , {
+        const res = await fetch( `${import.meta.env.VITE_APP_API_URL}/validator/${applicationId}/${action}` , {
             method: 'PUT',
             credentials: 'include'
         });

@@ -3,7 +3,7 @@ import { json, redirect } from "react-router-dom";
 
 async function userDataLoader({ params, request }) {
   try {
-    const res = await axios.get("http://localhost:3000/general/dataRoot", {
+    const res = await axios.get(`${import.meta.env.VITE_APP_API_URL}/general/dataRoot`, {
       withCredentials: true,
     });
 
@@ -31,7 +31,7 @@ async function userDataLoader({ params, request }) {
   } catch (error) {
     if (error.status === 401 || error.status === 403) {
       alert(error.response?.data?.message);
-      await fetch("http://localhost:3000/logout", {
+      await fetch(`${import.meta.env.VITE_APP_API_URL}/logout`, {
         method: 'GET',
         credentials: 'include',
       });

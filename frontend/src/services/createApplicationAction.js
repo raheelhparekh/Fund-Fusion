@@ -4,7 +4,7 @@ export async function createApplicationAction({ request }) {
   const formData = await request.formData();
 
   try {
-    const res = await fetch('http://localhost:3000/applicant/create-application', {
+    const res = await fetch(`${import.meta.env.VITE_APP_API_URL}/applicant/create-application`, {
       method: 'POST',
       credentials: 'include',
       body: formData

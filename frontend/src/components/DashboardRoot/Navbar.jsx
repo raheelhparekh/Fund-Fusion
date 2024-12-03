@@ -17,7 +17,7 @@ const studentIcon = (
 const Navbar = ({ userData }) => {
 
   const handleLogout = async() => {
-      let res = await fetch("http://localhost:3000/logout", {
+      let res = await fetch(`${import.meta.env.VITE_APP_API_URL}/logout`, {
         method: 'GET',
         credentials: 'include',
       });
