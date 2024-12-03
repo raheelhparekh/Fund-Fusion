@@ -6,11 +6,11 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/applicant-login': `${import.meta.env.VITE_APP_API_URL}`,
-      '/validator-login': `${import.meta.env.VITE_APP_API_URL}`,
-      '/verify-applicant': `${import.meta.env.VITE_APP_API_URL}`,
-      '/verify-validator': `${import.meta.env.VITE_APP_API_URL}`,
-      '/submit': `${import.meta.env.VITE_APP_API_URL}`,
+      '/applicant-login': process.env.VITE_APP_API_URL,
+      '/validator-login': process.env.VITE_APP_API_URL,
+      '/verify-applicant': process.env.VITE_APP_API_URL,
+      '/verify-validator': process.env.VITE_APP_API_URL,
+      '/submit': process.env.VITE_APP_API_URL,
     }
   },
 })
