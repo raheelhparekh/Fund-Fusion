@@ -22,9 +22,9 @@ function Input({
   return formFeilds.map((section, sectionIndex) => (
     <div
       key={sectionIndex}
-      className="bg-white p-2 mb-4 rounded"
+      className="bg-white p-4 mb-4 rounded"
     >
-      <h3 className="text-xl font-semibold mt-4 mb-4">{section.label}</h3>
+      <h3 className="text-xl font-semibold mt-2 mb-4">{section.label}</h3>
         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
           {section.fields.map((formFeild) => {
             if (formFeild?.parent) {
@@ -47,7 +47,7 @@ function Input({
             switch (formFeild.type) {
               case "dropdown":
                 return (
-                  <div key={formFeild.name} className="space-y-1">
+                  <div key={formFeild.name} className="space-y-1 bg-slate-50 p-3 rounded-md">
                     <label
                       htmlFor={formFeild.name}
                       className="block font-medium"
@@ -86,7 +86,7 @@ function Input({
 
               case "checkbox":
                 return (
-                  <div key={formFeild.name} className="space-y-1">
+                  <div key={formFeild.name} className="space-y-1 bg-slate-50 p-3 rounded-md">
                     <label
                       htmlFor={formFeild.name}
                       className="inline-flex items-center space-x-2"
@@ -112,7 +112,7 @@ function Input({
 
               case "file":
                 return (
-                  <div key={formFeild.name} className="space-y-1">
+                  <div key={formFeild.name} className="space-y-1 bg-slate-50 p-3 rounded-md">
                     <label
                       htmlFor={formFeild.name}
                       className="block font-medium"
@@ -128,7 +128,7 @@ function Input({
                         setFieldValue(formFeild.name, e.target.files[0]);
                       }}
                       onBlur={handleBlur}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      className="w-full bg-white px-3 py-2 border border-gray-300 rounded-md"
                     />
                     <p className="text-red-500 text-sm">
                       {errors[formFeild.name] &&
@@ -140,7 +140,7 @@ function Input({
 
               default:
                 return (
-                  <div key={formFeild.name} className="space-y-1">
+                  <div key={formFeild.name} className="space-y-1 bg-slate-50 p-3 rounded-md">
                     <label
                       htmlFor={formFeild.name}
                       className="block font-medium"

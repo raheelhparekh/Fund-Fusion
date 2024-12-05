@@ -115,7 +115,7 @@ function Form() {
         setFieldValue, // Use setFieldValue for file handling
         isSubmitting,
       }) => (
-        <form onSubmit={handleSubmit} className="m-6 pb-4 overflow-y-scroll">
+        <form onSubmit={handleSubmit} className="m-6 pb-4 overflow-y-scroll bg-transparent">
           <Input
             values={values}
             errors={errors}
@@ -127,7 +127,7 @@ function Form() {
           <button
             type="submit"
             disabled={isSubmitting || isSubmittingNav}
-            className="w-full bg-blue-500 text-white py-2 rounded-md disabled:bg-gray-400"
+            className="w-full flex items-center justify-center bg-gradient-to-r from-red-600 to-red-800 hover:from-red-800 hover:to-red-600 text-white font-semibold py-2 px-4 rounded-lg shadow-lg transform transition duration-300 ease-in-out disabled:bg-gray-400"
           >
             {(isSubmitting || isSubmittingNav) ? "Submitting" : "Submit"}
           </button>

@@ -1,4 +1,4 @@
-import { json, redirect } from 'react-router-dom';
+import { json } from 'react-router-dom';
 
 export async function createApplicationAction({ request }) {
   const formData = await request.formData();
@@ -11,18 +11,18 @@ export async function createApplicationAction({ request }) {
     });
 
     if (res.status === 401) {
-      throw json({ message: 'Unauthorized access' }, { status: res.status });
+      return json({ message: 'Unauthorized access' }, { status: res.status });
     }
 
     if (!res.ok) {
       const errorData = await res.text();
-      alert(errorData)
-      return null
+      return json({ message: errorData }, { status: res.status });
     }
 
-    return redirect("../dashboard");
+    return null;
+
   } catch (error) {
     console.error('Fetch error:', error);
-    throw json({ message: error.message }, { status: error.status || 500 });
+    return json({ message: error.message || 'An unexpected error occurred' }, { status: error.status || 500 });
   }
 }

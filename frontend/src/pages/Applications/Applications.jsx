@@ -76,8 +76,8 @@ const Applications = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <main className="flex-1 p-6">
-      <div className="bg-white shadow rounded-lg p-6 mb-20">
+    <main className="flex flex-col p-6">
+      <div className="min-w-min bg-white shadow rounded-lg p-6 mb-20">
         <ApplicationsStatusDescription />
 
         {role === "Validator" && <Search value={applicantName} setValue={handleSelect} />}

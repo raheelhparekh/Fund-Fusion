@@ -24,7 +24,7 @@ const ApplicationTable = ({ title, applications, setApplicationDisplay }) => {
   
   return (
     <div className="mb-6">
-      <h2 className="text-xl font-bold mb-2">{title}</h2>
+      {/* <h2 className="text-xl font-bold mb-2">{title}</h2> */}
       <table className="w-full text-left border-collapse">
         <thead>
           <tr>

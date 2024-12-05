@@ -2,6 +2,7 @@ import { React, useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '/images/logo.jpeg'; 
 import { IoNotifications } from 'react-icons/io5';
+import Hamburger from 'hamburger-react'
 
 const studentIcon = (
   <svg
@@ -14,8 +15,7 @@ const studentIcon = (
   </svg>
 );
 
-const Navbar = ({ userData }) => {
-
+const Navbar = ({ userData, sidebarIsVisible, setSidebarIsVisible}) => {
   const handleLogout = async() => {
       let res = await fetch(`${import.meta.env.VITE_APP_API_URL}/logout`, {
         method: 'GET',
@@ -36,7 +36,6 @@ const Navbar = ({ userData }) => {
 
   //Navbar Links for Role should be different
   const links = [
-    { label: "Home", path: "dashboard" },
     { label: "Dashboard", path: "dashboard" },
   ];
 
@@ -46,13 +45,17 @@ const Navbar = ({ userData }) => {
         <nav className="bg-white shadow-lg border-b-4 w-full border-gray-300">
           <div className="w-full flex items-center justify-between px-4 h-20">
             <div className="flex items-center">
-              <Link to="/" className="flex items-center">
+              <Link to="/" className="hidden md:flex items-center">
                 <img src={logo} alt="Somaiya" className="object-contain w-48" />
               </Link>
+              <div className='md:hidden'>
+                <Hamburger toggled={sidebarIsVisible} toggle={setSidebarIsVisible} />
+              </div>
+              
             </div>
             <div className="flex items-center text-1xl font-medium justify-end space-x-3">
               {links.map((link, index) => (
-                <div key={index} className="flex flex-row items-center gap-2">
+                <div key={index} className="hidden sm:flex flex-row items-center gap-2">
                   <Link to={link.path} className="text-gray-700 hover:bg-red-700 hover:text-white p-1 rounded-md">
                     {link.label}
                   </Link>
@@ -60,7 +63,7 @@ const Navbar = ({ userData }) => {
                 </div>
               ))}
                 <div className="flex flex-row items-center gap-2">
-                  <Link to= "/" onClick = {handleLogout} className="text-gray-700 hover:bg-red-700 hover:text-white p-1 rounded-md">
+                  <Link to= "/" onClick={handleLogout} className="text-gray-700 hover:bg-red-700 hover:text-white p-1 rounded-md">
                     Logout
                   </Link>
                   <span>|</span>
@@ -75,7 +78,7 @@ const Navbar = ({ userData }) => {
                 <div className="text-gray-700 text-sm font-semibold">
                   <div className="bg-gray-200 p-1 px-3 rounded flex flex-row gap-2 items-center">
                     {studentIcon}
-                    <div className="flex flex-col">
+                    <div className="hidden sm:flex flex-col ">
                       {profileData.name} <span className="text-xs text-gray-500 ml-1">{profileData.role}</span>
                     </div>
                   </div>

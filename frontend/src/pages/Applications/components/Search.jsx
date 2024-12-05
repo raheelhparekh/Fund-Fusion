@@ -37,7 +37,7 @@ const Search = ({ value, setValue }) => {
   return (
     <div className="mb-7 p-2 rounded bg-gray-200">
       <div className="flex flex-row items-start justify-start">
-        <div className="w-10/12">
+        <div className="w-[90%]">
           <ReactSearchBox
             placeholder={`Applicant Name`}
             data={applicantNames}

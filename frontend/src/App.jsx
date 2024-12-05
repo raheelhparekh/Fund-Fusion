@@ -6,6 +6,7 @@ import userDataLoader from "./services/userDataLoader";
 import { createApplicationAction } from "./services/createApplicationAction";
 import { applicationStatusAction } from "./services/applicationStatusAction";
 import Root from "./components/DashboardRoot/Root";
+import ContactUs from "./pages/ContactUs/ContactUs";
 
 const router = createBrowserRouter([
   {
@@ -23,11 +24,11 @@ const router = createBrowserRouter([
     id: "Applicant-Root",
     loader: userDataLoader,
     children: [
-      { path: "dashboard", element: <Dashboard /> },
+      { path: "dashboard", element: <Dashboard />, },
       { path: "dashboard/:status", element: <Applications /> },
       { path: "form", element: <Form />, action: createApplicationAction },
       { path: "faqs", element: <h1>FAQs</h1> },
-      { path: "contact-us", element: <h1>Contact Us</h1> },
+      { path: "contact-us", element: <ContactUs/> },
     ],
   },
   {
