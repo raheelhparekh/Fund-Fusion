@@ -1,4 +1,4 @@
-import { json } from 'react-router-dom';
+import { json, redirect,  } from 'react-router-dom';
 
 export async function createApplicationAction({ request }) {
   const formData = await request.formData();
@@ -16,10 +16,12 @@ export async function createApplicationAction({ request }) {
 
     if (!res.ok) {
       const errorData = await res.text();
+      alert(errorData)
       return json({ message: errorData }, { status: res.status });
     }
-
-    return null;
+    
+    alert("Application Submitted Succesfully")
+    return redirect("../dashboard/pending");
 
   } catch (error) {
     console.error('Fetch error:', error);

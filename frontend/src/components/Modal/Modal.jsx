@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const Modal = ({ onClose, children }) => {
   return (
@@ -12,15 +12,14 @@ const Modal = ({ onClose, children }) => {
       >
         <div className="flex justify-start p-2">
           <button
+            type="button"
             className="absolute top-3 right-3 text-xl font-bold text-gray-700 hover:text-gray-900"
             onClick={onClose}
           >
             X
           </button>
         </div>
-        <div className="h-full overflow-y-auto">
-          {children}
-        </div>
+        <div className="h-full overflow-y-auto">{children}</div>
       </div>
     </div>
   );

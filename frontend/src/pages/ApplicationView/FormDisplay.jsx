@@ -38,9 +38,9 @@ function FormDisplay({ applicationId, formData }) {
         />
         <Field
           label="Accommodation Opted?"
-          value={formData.accommodationOpted ? "Yes" : "No"}
+          value={formData.accommodationOpted === "true" ? "Yes" : "No"}
         />
-        {formData.accommodationOpted && (
+        {formData.accommodationOpted === "true" && (
           <>
             <Field
               label="Type of Accommodation"
@@ -82,19 +82,20 @@ function FormDisplay({ applicationId, formData }) {
       </div>
 
       {/* Parent & Consent Section */}
-      <div className="mb-8">
+      { formData.parentalConsent === "true" &&
+        <div className="mb-8">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">
           Parent & Consent
         </h2>
         <Field
           label="Parental Consent"
-          value={formData.parentalConsent ? "Yes" : "No"}
+          value={formData.parentalConsent  === "true"? "Yes" : "No"}
         />
         <Field label="Father's Full Name" value={formData.fatherFullName} />
         <Field label="Father's Contact" value={formData.fatherContact} />
         <Field label="Mother's Full Name" value={formData.motherFullName} />
         <Field label="Mother's Contact" value={formData.motherContact} />
-      </div>
+      </div>}
     </div>
   );
 }
