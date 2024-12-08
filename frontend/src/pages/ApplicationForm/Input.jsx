@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { studentFormFeilds, facultyFormFeilds } from "./FormFeilds";
 import { useRouteLoaderData } from "react-router-dom";
-import Modal from "../../components/Modal/Modal";
-import ExpenseForm from "./components/ExpenseForm";
 
 function Input({
   values,
@@ -22,7 +20,7 @@ function Input({
   }
 
   return formFeilds.map((section, sectionIndex) => (
-    <div key={sectionIndex} className="bg-white p-4 mb-4 rounded">
+    <div key={sectionIndex} className="space-y-4 bg-white p-6 rounded-lg shadow-lg min-w-fit border-t-4 border-red-700 mb-4">
       <h3 className="text-xl font-semibold mt-2 mb-4">{section.label}</h3>
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
         {section.fields.map((formFeild) => {
