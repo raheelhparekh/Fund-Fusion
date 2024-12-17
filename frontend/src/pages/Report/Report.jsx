@@ -1,10 +1,21 @@
-import React from 'react'
-import AllChartsPage from './components/AllCharts'
+// import React from 'react'
+// import AllChartsPage from './components/AllCharts'
 
+
+// function Report() {
+//   return (
+//     <AllChartsPage />
+//   )
+// }
+
+// export default Report
+import React from 'react'
+
+import Charts from '../../../Omkar_Report/components/charts'
 
 function Report() {
   return (
-    <AllChartsPage />
+    <Charts />
   )
 }
 
