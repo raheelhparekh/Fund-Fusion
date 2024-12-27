@@ -1,27 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const ApplicationTable = ({ title, applications, setApplicationDisplay }) => {
+const ApplicationTable = ({ title, applications,}) => {
 
-  // Fetch full application data on row click
-  const getFullApplication = async (applicationId, currentStatus) => {
-    try {
-      const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/general/getApplicationData/${applicationId}`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-      if (!response.ok) throw new Error(`Failed to fetch application data: ${response.status} ${response.statusText}`);
-      const fullApplication = await response.json();
-      setApplicationDisplay({ ...fullApplication, currentStatus });
-    } catch (error) {
-      console.error('Error fetching application data:', error);
-    }
-  };
+  const navigate = useNavigate();
 
-  const onRowClick = (application) => {
-    getFullApplication(application.applicationId, application.currentStatus);
-  };
-
-  
   return (
     <div className="mb-6">
       {/* <h2 className="text-xl font-bold mb-2">{title}</h2> */}
@@ -39,7 +22,12 @@ const ApplicationTable = ({ title, applications, setApplicationDisplay }) => {
           {applications.map((app, index) => (
             <tr
               key={index}
-              onClick={() => onRowClick({...app, currentStatus : title.split(" ")[0]})} 
+              // onClick={() => onRowClick({ ...app, currentStatus: title.split(" ")[0] })}
+              onClick={() => {
+                const location = window.location.pathname;
+                const newPath = location.split('/').slice(0, -1).join('/');
+                navigate(`${newPath}/${title.split(" ")[0]?.toLowerCase()}/${app.applicationId}`);
+              }}
               className="odd:bg-gray-50 even:bg-white hover:bg-gray-200 cursor-pointer"
               style={{ height: '50px' }}
             >
@@ -47,7 +35,7 @@ const ApplicationTable = ({ title, applications, setApplicationDisplay }) => {
               <td className="p-4">{app.applicantName}</td>
               <td className="p-4">{formatDateToDDMMYYYY(app.createdAt)}</td>
               <td className="p-4">{app.formData.applicantDepartment}</td>
-              <td className="p-4 text-green-500">{title.split(" ")[0] }</td>
+              <td className="p-4 text-green-500">{title.split(" ")[0]}</td>
             </tr>
           ))}
         </tbody>

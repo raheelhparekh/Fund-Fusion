@@ -11,6 +11,8 @@ export default defineConfig({
       '/verify-applicant': process.env.VITE_APP_API_URL,
       '/verify-validator': process.env.VITE_APP_API_URL,
       '/submit': process.env.VITE_APP_API_URL,
-    }
+    },
+    host: true,
+    port: 5173,
   },
 })

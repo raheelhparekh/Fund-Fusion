@@ -1,11 +1,7 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
+// Generator to create Prisma Client
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "darwin-arm64", "linux-musl-arm64-openssl-3.0.x"]
 }
 
 datasource db {
@@ -14,32 +10,23 @@ datasource db {
   relationMode = "prisma"
 }
 
-enum Department {
-  NULL
-  COMPS
-  IT
-  MECH
-  AIDS
-  EXTC
-  ETRX
-  RAI
+enum Institute {
+  KJSIDS
+  SKSC
+  KJSCE
+  SIRC
+  KJSIM
+  SSA
+  KJSCEd
+  DLIS
+  MSSMPA
 }
+
 
 enum ApplicantDesignation {
-  Student
-  Faculty
-}
-
-model Applicant {
-  profileId String @id @default(uuid())
-  userName  String
-  email     String @unique @db.Text
-  password  String
-
-  department  Department
-  designation ApplicantDesignation
-
-  applications Application[]
+  FACULTY
+  HOD
+  HOI
 }
 
 enum ApplicationStatus {
@@ -48,47 +35,78 @@ enum ApplicationStatus {
   PENDING
 }
 
-model Application {
-  applicationId String @id @default(uuid())
-
-  applicantId String
-  applicant   Applicant @relation(fields: [applicantId], references: [profileId], onDelete: Cascade)
-
-  applicantName String
-
-  formData Json
-
-  fdccoordinatorValidation ApplicationStatus?
-  supervisorValidation     ApplicationStatus?
-  hodValidation            ApplicationStatus?
-  hoiValidation            ApplicationStatus?
-
-  proofOfTravel        Bytes?
-  proofOfAccommodation Bytes?
-  proofOfAttendance    Bytes?
-
-  createdAt DateTime @default(now())
-
-  validators Validator[]
-
-  @@index([applicantId])
-}
-
 enum ValidatorDesignation {
-  FDCcoordinator
-  Supervisor
   HOD
   HOI
+  VC
+  ACCOUNTS
+}
+
+model Applicant {
+  profileId   String      @id @default(uuid())
+  userName    String
+  email       String      @unique @db.Text
+  password    String
+
+  institute   Institute?  
+  department  String?
+  designation ApplicantDesignation
+
+  applications Application[] 
+
+  @@index([email])
+}
+
+model Application {
+  applicationId    String      @id @default(uuid())
+  applicantId      String
+  applicant        Applicant   @relation(fields: [applicantId], references: [profileId], onDelete: Cascade)
+
+  applicantName    String
+  formData         Json
+
+  hodValidation    ApplicationStatus?
+  hoiValidation    ApplicationStatus?
+  vcValidation     ApplicationStatus?
+  accountsValidation ApplicationStatus?
+
+  rejectionFeedback String? 
+
+  proofOfTravel        Bytes?
+  proofOfAccommodation  Bytes?
+  proofOfAttendance     Bytes?
+  expenseProof0         Bytes?
+  expenseProof1         Bytes?
+  expenseProof2         Bytes?
+  expenseProof3         Bytes?
+  expenseProof4         Bytes?
+  expenseProof5         Bytes?
+  expenseProof6         Bytes?
+  expenseProof7         Bytes?
+  expenseProof8         Bytes?
+  expenseProof9         Bytes?
+
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt       
+
+  validators   Validator[]
+
+  @@index([applicantId]) 
+  @@index([createdAt])    
 }
 
 model Validator {
-  profileId String @id @default(uuid())
-  userName  String
-  email     String @unique @db.Text
-  password  String
+  profileId   String      @id @default(uuid())
+  userName    String
+  email       String      @unique @db.Text
+  password    String
 
-  department  Department
+  institute   Institute? 
+  department  String? 
   designation ValidatorDesignation
 
   applications Application[]
+
+  @@index([email])
 }
+

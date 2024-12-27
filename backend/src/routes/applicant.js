@@ -4,9 +4,10 @@ import { createApplication } from '../controllers/applicantControllers.js';
 
 const router = express.Router();
 
-router.post("/create-application",
+router.post("/create-application", 
   uploadFields,
   createApplication
 );
+
 
 export default router;

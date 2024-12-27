@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { applicantDesignations, validatorDesignations } from '../config/designations.js';
 
 const verifyApplicantToken = (req, res, next) => {
 
@@ -17,10 +18,12 @@ const verifyApplicantToken = (req, res, next) => {
         req.user = {
             id : payload.id,
             designation : payload.designation,
-            department : payload.department
+            department : payload.department,
+            institute : payload.institute,
+            role : payload.role
         };
     
-        if (req.user && req.user.designation === 'Student' || 'Faculty') {
+        if (req.user && applicantDesignations.includes(req.user.designation)) {
             next();
         } else {
             return res.status(401).json({message : "Access denied. Not a applicant."});
@@ -46,10 +49,12 @@ const verifyValidatorToken = (req, res, next) => {
         req.user = {
             id : payload.id,
             designation : payload.designation,
-            department : payload.department
+            department : payload.department,
+            institute : payload.institute,
+            role : payload.role
         }
 
-        if (req.user && req.user.designation === "Supervisor" || "HOD" || "HOI") {
+        if (req.user && validatorDesignations.includes(req.user.designation)) {
             next();
         } else {
             return res.status(401).json({message:"Access denied. Not a validator."});
@@ -75,10 +80,12 @@ const verifyToken = (req, res, next) => {
       req.user = {
           id : payload.id,
           designation : payload.designation,
-          department : payload.department
+          department : payload.department,
+          institute : payload.institute,
+          role : payload.role
       }
 
-      if (req.user && req.user.designation === 'Student' || 'Faculty' || "Supervisor" || "HOD" || "HOI") {
+      if (req.user && [...applicantDesignations ,...validatorDesignations].includes(req.user.designation)) {
           next();
       } else {
           return res.status(401).json({message:"Access denied. Not a validator."});

@@ -1,13 +1,26 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Login, Dashboard, Form, About, Policy, Applications, Report } from "./pages";
+import React, { Suspense } from "react";
 import "./App.css";
-import LoginRoot from "./components/LoginRoot/LoginRoot";
+
+// Lazy loading the pages and components
+const Login = React.lazy(() => import("./pages/Login/Login"));
+const Dashboard = React.lazy(() => import("./pages/Dashboard/Dashboard"));
+const Form = React.lazy(() => import("./pages/ApplicationForm/Form"));
+const About = React.lazy(() => import("./pages/About/About"));
+const Policy = React.lazy(() => import("./pages/Policy/Policy"));
+const Applications = React.lazy(() => import("./pages/Applications/Applications"));
+const Report = React.lazy(() => import("./pages/Report/Report"));
+const LoginRoot = React.lazy(() => import("./components/LoginRoot/LoginRoot"));
+const Root = React.lazy(() => import("./components/DashboardRoot/Root"));
+const ContactUs = React.lazy(() => import("./pages/ContactUs/ContactUs"));
+const ApplicationView = React.lazy(() => import("./pages/ApplicationView/ApplicationView"));
+
 import userDataLoader from "./services/userDataLoader";
 import { createApplicationAction } from "./services/createApplicationAction";
 import { applicationStatusAction } from "./services/applicationStatusAction";
-import Root from "./components/DashboardRoot/Root";
-import ContactUs from "./pages/ContactUs/ContactUs";
+import Loading from "./components/Loading";
 
+// Define the router with lazy-loaded components
 const router = createBrowserRouter([
   {
     path: "/",
@@ -24,11 +37,12 @@ const router = createBrowserRouter([
     id: "Applicant-Root",
     loader: userDataLoader,
     children: [
-      { path: "dashboard", element: <Dashboard />, },
+      { path: "dashboard", element: <Dashboard /> },
       { path: "dashboard/:status", element: <Applications /> },
+      { path: "dashboard/:status/:applicationId", element: <ApplicationView /> },
       { path: "form", element: <Form />, action: createApplicationAction },
-      { path: "faqs", element: <h1>FAQs</h1> },
-      { path: "contact-us", element: <ContactUs/> },
+      { path: "contact-us", element: <ContactUs /> },
+      { path: "policy", element: <Policy /> },
     ],
   },
   {
@@ -38,21 +52,20 @@ const router = createBrowserRouter([
     loader: userDataLoader,
     children: [
       { path: "dashboard", element: <Dashboard /> },
-      {
-        path: "dashboard/:status",
-        element: <Applications />,
-        action: applicationStatusAction,
-      },
-      {
-        path: "report",
-        element: <Report />,
-      }
+      { path: "dashboard/:status", element: <Applications /> },
+      { path: "dashboard/:status/:applicationId", element: <ApplicationView />, action: applicationStatusAction },
+      { path: "report", element: <Report /> },
+      { path: "policy", element: <Policy /> },
     ],
   },
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <Suspense fallback={<Loading/>}>
+      <RouterProvider router={router} />
+    </Suspense>
+  );
 }
 
 export default App;

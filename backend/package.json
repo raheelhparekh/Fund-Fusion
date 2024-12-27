@@ -8,6 +8,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.16",
     "prisma": "^5.20.0"
   },
   "name": "backend",
@@ -17,6 +18,7 @@
     "nodemon": "^3.1.4"
   },
   "scripts": {
+    "test2": "nodemon --inspect src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/server.js",
     "start": "node src/server.js"

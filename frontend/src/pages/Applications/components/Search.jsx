@@ -47,7 +47,7 @@ const Search = ({ value, setValue }) => {
             fuseConfigs={{ ignoreLocation: true, threshold: 0.3 }}
           />
         </div>
-        <button className="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded ml-3" onClick={()=> setValue("")}>
+        <button type='button' className="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded ml-3" onClick={()=> setValue("")}>
           Clear
         </button>
       </div>

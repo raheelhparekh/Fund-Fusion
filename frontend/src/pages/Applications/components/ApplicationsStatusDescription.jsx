@@ -10,12 +10,13 @@ function ApplicationsStatusDescription() {
 
   return (
     <div className="bg-slate-50 shadow-md rounded-lg p-6 mb-8 border border-slate-400">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-6 gap-5">
         <h1 className="text-3xl font-semibold text-gray-800">
           {`${status.toUpperCase()} APPLICATIONS`}
         </h1>
         {role === "Applicant" && (
           <button
+            type='button'
             onClick={() => navigate("../form")}
             className="flex items-center bg-gradient-to-r from-red-600 to-red-800 hover:from-red-800 hover:to-red-600 text-white font-semibold py-2 px-4 rounded-lg shadow-lg transform transition duration-300 ease-in-out hover:scale-105"
           >

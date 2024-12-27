@@ -4,8 +4,10 @@ import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 
 const Root = () => {
-  const { user, role } = useLoaderData().data;
+  const { user, role } = useLoaderData()?.data;
   const [sidebarIsVisible, setSidebarIsVisible] = useState(true)
+  const urlPath = window.location.pathname;
+
 
   const handleResize = () => {
     if (window.innerWidth < 768) {
@@ -29,11 +31,11 @@ const Root = () => {
   }, []);
 
   return (
-    <div className="overflow-hidden h-screen">
-      <Navbar userData={user} role={role} setSidebarIsVisible={setSidebarIsVisible} sidebarIsVisible={sidebarIsVisible}/>
-      <div className="flex bg-gray-100 h-full">
-        {sidebarIsVisible && <Sidebar role={role} />}
-        <div className="w-full h-[90%] overflow-y-scroll">
+    <div className="h-full">
+      <Navbar userData={user} role={role} setSidebarIsVisible={setSidebarIsVisible} sidebarIsVisible={sidebarIsVisible} />
+      <div className= "flex h-full bg-gray-100 overflow-auto">
+        {sidebarIsVisible && !(urlPath.split("/").at(-1).includes("dashboard")) && <Sidebar role={role} />}
+        <div className="w-full min-h-full h-screen overflow-y-scroll">
           <Outlet />
         </div>
       </div>

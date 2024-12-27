@@ -16,6 +16,7 @@ function Pagination({ numOfItems, itemsPerPage = 10, currentPage, onPageChange }
     <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
       <div className="flex flex-1 justify-between sm:hidden">
         <button
+          type='button'
           onClick={handlePrevious}
           className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           disabled={currentPage === 1}
@@ -23,6 +24,7 @@ function Pagination({ numOfItems, itemsPerPage = 10, currentPage, onPageChange }
           Previous
         </button>
         <button
+          type='button'
           onClick={handleNext}
           className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           disabled={currentPage === totalPages}
@@ -40,6 +42,7 @@ function Pagination({ numOfItems, itemsPerPage = 10, currentPage, onPageChange }
         <div>
           <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
             <button
+              type='button'
               onClick={handlePrevious}
               className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
               disabled={currentPage === 1}
@@ -52,6 +55,7 @@ function Pagination({ numOfItems, itemsPerPage = 10, currentPage, onPageChange }
 
             {pages.map(page => (
               <button
+                type='button'
                 key={page}
                 onClick={() => onPageChange(page)}
                 aria-current={currentPage === page ? 'page' : undefined}
@@ -62,6 +66,7 @@ function Pagination({ numOfItems, itemsPerPage = 10, currentPage, onPageChange }
             ))}
 
             <button
+              type='button'
               onClick={handleNext}
               className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
               disabled={currentPage === totalPages}

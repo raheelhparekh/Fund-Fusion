@@ -13,7 +13,7 @@ const About = () => {
           <p className="text-lg md:text-xl">
             Structured, efficient, and research-focused travel planning.
           </p>
-          <button className="mt-6 px-6 py-3 bg-white text-red-600 font-semibold rounded-lg shadow-md hover:bg-red-700 hover:text-white transition duration-300">
+          <button type='button' className="mt-6 px-6 py-3 bg-white text-red-600 font-semibold rounded-lg shadow-md hover:bg-red-700 hover:text-white transition duration-300">
             Learn More
           </button>
         </div>

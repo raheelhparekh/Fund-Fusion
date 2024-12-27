@@ -11,7 +11,7 @@
 // export default Report
 import React from 'react'
 
-import Charts from '../../../Omkar_Report/components/charts'
+import Charts from '../Report/components/charts'
 
 function Report() {
   return (

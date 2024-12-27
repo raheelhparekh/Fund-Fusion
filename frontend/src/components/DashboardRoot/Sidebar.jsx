@@ -1,17 +1,30 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { FaSignOutAlt } from "react-icons/fa";
+import { Link, NavLink } from "react-router-dom";
+
+export const handleLogout = async () => {
+  let res = await fetch(`${import.meta.env.VITE_APP_API_URL}/logout`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  return res;
+};
 
 const Sidebar = ({ role }) => (
-  <aside className="w-72 h-screen bg-white p-6 shadow-lg">
-    <div className="mb-2 text-center border-b-2 border-gray-200 pb-3">
-      <div className="bg-slate-50 shadow-md rounded-lg px-6 py-3 my-[35px] border border-slate-400">
-        <h2 className=" text-2xl font-bold text-red-700">{`${role} Portal`}</h2>
-        <p className="text-black text-xs font-bold py-2">
-          Somaiya Vidyavihar University
+  <div className="w-72 h-screen bg-white p-6 shadow-lg z-10 flex flex-col overflow-y-auto">
+    <div className="mb-8 text-center border-b-2 border-gray-200 pb-6">
+      <div className="bg-white shadow-lg rounded-lg px-4 py-4 border border-gray-300">
+        <h2 className="text-xl font-semibold text-red-700 tracking-tight">
+          {`${role} Portal`}
+        </h2>
+        <p className="text-gray-700 text-sm font-medium py-1">
+          Travel Policy SVU
         </p>
       </div>
     </div>
-    <nav>
+
+    <nav className="flex-grow">
       <ul className="space-y-4 text-sm">
         <li className="border-b border-gray-200 pb-2">
           <NavLink
@@ -64,7 +77,7 @@ const Sidebar = ({ role }) => (
                 to={`/${role.toLowerCase()}/dashboard/pending`}
                 className={({ isActive }) =>
                   `flex items-center text-gray-600 hover:text-white hover:bg-red-700 p-2 rounded ${
-                    isActive ? "font-extrabold" : ""
+                    isActive ? "font-black" : ""
                   }`
                 }
               >
@@ -90,7 +103,7 @@ const Sidebar = ({ role }) => (
                 to={`/${role.toLowerCase()}/dashboard/accepted`}
                 className={({ isActive }) =>
                   `flex items-center text-gray-600 hover:text-white hover:bg-red-700 p-2 rounded ${
-                    isActive ? "font-extrabold" : ""
+                    isActive ? "font-black" : ""
                   }`
                 }
               >
@@ -116,7 +129,7 @@ const Sidebar = ({ role }) => (
                 to={`/${role.toLowerCase()}/dashboard/rejected`}
                 className={({ isActive }) =>
                   `flex items-center text-gray-600 hover:text-white hover:bg-red-700 p-2 rounded ${
-                    isActive ? "font-extrabold" : ""
+                    isActive ? "font-black" : ""
                   }`
                 }
               >
@@ -144,7 +157,7 @@ const Sidebar = ({ role }) => (
           <>
             <li className="border-b border-gray-200 pb-2">
               <NavLink
-                to="/applicant/faqs"
+                to="/applicant/policy"
                 className={({ isActive }) =>
                   `flex items-center text-gray-800 hover:text-white hover:bg-red-700 p-2 rounded ${
                     isActive ? "font-extrabold" : ""
@@ -165,7 +178,7 @@ const Sidebar = ({ role }) => (
                     d="M19 10v6a2 2 0 01-2 2H7a2 2 0 01-2-2V10a2 2 0 012-2h10a2 2 0 012 2zM10 14h4m-2-2v4"
                   ></path>
                 </svg>{" "}
-                FAQ's
+                Policy
               </NavLink>
             </li>
             <li>
@@ -228,7 +241,18 @@ const Sidebar = ({ role }) => (
         )}
       </ul>
     </nav>
-  </aside>
+    {/* Spacer to push logout to the bottom */}
+    <div className="mt-14">
+      <Link
+        to="/"
+        onClick={handleLogout}
+        className="flex items-center text-gray-700 hover:bg-red-700 hover:text-white px-4 py-2 rounded-md transition-all duration-200"
+      >
+        <FaSignOutAlt className="w-4 h-4 mr-2" />
+        Logout
+      </Link>
+    </div>
+  </div>
 );
 
 export default Sidebar;
