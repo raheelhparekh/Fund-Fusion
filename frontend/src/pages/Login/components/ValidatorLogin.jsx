@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import './LoginAnimation.css';
 
 function ValidatorLogin({ changeRole }) {
-  const navigate = useNavigate();
   const [credentials, setCredentials] = useState({ email: 'hod.comps.kjsce@example.com', password: 'securePassword123' });
   const [animate, setAnimate] = useState(false);
   const [error, setError] = useState('');
@@ -53,7 +52,7 @@ function ValidatorLogin({ changeRole }) {
       const result = await response.json();
       if (response.ok) {
         // Handle successful login (navigate, store tokens, etc.)
-        navigate("/validator/dashboard");
+        window.location.href = '/validator/dashboard';
       } else {
         setError(result.message || 'Invalid login credentials.');
       }

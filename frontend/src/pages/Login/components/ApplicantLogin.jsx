@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import './LoginAnimation.css';
 
 function ApplicantLogin({ changeRole }) {
-  const navigate = useNavigate();
   const [credentials, setCredentials] = useState({ email: 'faculty.comps.kjsce@example.com', password: 'securePassword123' });
   const [animate, setAnimate] = useState(false);
   const [error, setError] = useState('');
@@ -44,7 +43,7 @@ function ApplicantLogin({ changeRole }) {
 
       const result = await response.json();
       if (response.ok) {
-        navigate("/applicant/dashboard");
+        window.location.href = '/applicant/dashboard';
       } else {
         setError(result.message || 'Invalid login credentials.');
       }

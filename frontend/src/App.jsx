@@ -4,6 +4,7 @@ import "./App.css";
 
 // Lazy loading the pages and components
 const Login = React.lazy(() => import("./pages/Login/Login"));
+const Root = React.lazy(() => import("./components/DashboardRoot/Root"));
 const Dashboard = React.lazy(() => import("./pages/Dashboard/Dashboard"));
 const Form = React.lazy(() => import("./pages/ApplicationForm/Form"));
 const About = React.lazy(() => import("./pages/About/About"));
@@ -11,7 +12,6 @@ const Policy = React.lazy(() => import("./pages/Policy/Policy"));
 const Applications = React.lazy(() => import("./pages/Applications/Applications"));
 const Report = React.lazy(() => import("./pages/Report/Report"));
 const LoginRoot = React.lazy(() => import("./components/LoginRoot/LoginRoot"));
-const Root = React.lazy(() => import("./components/DashboardRoot/Root"));
 const ContactUs = React.lazy(() => import("./pages/ContactUs/ContactUs"));
 const ApplicationView = React.lazy(() => import("./pages/ApplicationView/ApplicationView"));
 

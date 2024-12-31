@@ -103,7 +103,7 @@ const ChartWithDropdown = () => {
           id="type-select"
           value={applicationType}
           onChange={(e) => setApplicationType(e.target.value)}
-          style={{ padding: "5px", fontSize: "16px",borderRadius:"15px", borderRadius:"15px",textAlign:"center",border:"2px solid black" }}
+          style={{ padding: "5px", fontSize: "16px", borderRadius:"15px",textAlign:"center",border:"2px solid black" }}
         >
           <option value="approved">Approved Applications</option>
           <option value="rejected">Rejected Applications</option>
