@@ -90,7 +90,7 @@
     };
 
     const chartData = {
-        labels: ["2020", "2021", "2022", "2023", "2024"], // Example years
+        labels: ["Jan", "Feb", "Mar", "April", "May","June","July","Aug","Sep","Nov","Dec"], // Example years
         datasets: [
         {
             label: param.series[0].name, // e.g., "Applications"

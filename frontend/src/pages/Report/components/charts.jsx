@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ChartWithDropdown from "./approved";
 import Cards from "./cards"
+import ApprovalVsRejectionTrends from "./map"
 import './cards.css'
 import BasicTable from "./Table";
 import { Line } from "react-chartjs-2";
@@ -35,45 +36,9 @@ ChartJS.register(
 
 function Charts() {
   // Line Chart Data and Options
-  const lineOptions = {
-    responsive: true,
-    plugins: {
-      title: {
-        display: true,
-        text: "Number of Applications Over the Years ",
-      },
-    },
-    scales: {
-      x: {
-        title: {
-          display: true,
-          text: "Year",
-        },
-      },
-      y: {
-        title: {
-          display: true,
-          text: "Number of Applications",
-        },
-        ticks: {
-          beginAtZero: true,
-        },
-      },
-    },
-  };
+  
 
-  const lineData = {
-    labels: [2020, 2021, 2022, 2023, 2024],
-    datasets: [
-      {
-        label: "Applications",
-        data: [1200, 1500, 1800, 2200, 2500], // Updated data for number of applications
-        borderColor: "rgb(75, 192, 192)",
-        fill: false,
-        tension: 0.1,
-      },
-    ],
-  };
+
 
   // Bar Chart Data and Options
   const barOptions = {
@@ -88,7 +53,7 @@ function Charts() {
       x: {
         title: {
           display: true,
-          text: "Year",
+          text: "Month",
         },
       },
       y: {
@@ -104,11 +69,11 @@ function Charts() {
   };
 
   const barData = {
-    labels: [2020, 2021, 2022, 2023, 2024],
+    labels: ["Jan", "Feb", "Mar", "April", "May","June","July","Aug","Sep","Nov","Dec"],
     datasets: [
       {
         label: "Applications",
-        data: [1200, 1500, 1800, 2200, 200], // Updated data for number of applications
+        data: [1200, 1500, 1800, 2200, 200,800,1235,604,2345,2523,3453,6453], // Updated data for number of applications
         backgroundColor: "rgba(75, 192, 192, 0.5)",
         borderColor: "rgb(75, 192, 192)",
         borderWidth: 1,
@@ -151,52 +116,41 @@ function Charts() {
     ],
   };
 
-  const chartOptions = {
+  const pie_Options = {
     responsive: true,
     plugins: {
       title: {
         display: true,
-        text: "Approved and Rejected Applications Over the Years",
-      },
-    },
-    scales: {
-      x: {
-        title: {
-          display: true,
-          text: "Year",
-        },
-      },
-      y: {
-        title: {
-          display: true,
-          text: "Number of Applications",
-        },
-        ticks: {
-          beginAtZero: true,
-        },
+        text: "Travel",
       },
     },
   };
-  const [selectedOption, setSelectedOption] = useState("approved");
-  const chartDataOptions = {
-    labels: [2020, 2021, 2022, 2023, 2024], // Years
+
+  const pie_Data = {
+    labels: ["Domestic", "International", "Local"],
     datasets: [
       {
-        label: "Approved Applications",
-        data: [800, 1100, 1300, 1600, 180], // Data for approved applications
-        backgroundColor: "rgba(54, 162, 235, 0.5)", // Blue color
-        borderColor: "rgb(54, 162, 235)",
-        borderWidth: 1,
-      },
-      {
-        label: "Rejected Applications",
-        data: [400, 400, 500, 600, 20], // Data for rejected applications
-        backgroundColor: "rgba(255, 99, 132, 0.5)", // Red color
-        borderColor: "rgb(255, 99, 132)",
+        data: [1200, 1500, 1800], // Updated data for number of applications
+        backgroundColor: [
+          "rgba(79, 246, 96, 0.5)",
+          "rgba(255, 99, 132, 0.5)",
+          "rgba(54, 162, 235, 0.5)",
+       
+          
+        ],
+        borderColor: [
+          "rgb(79, 246, 96)",
+          "rgb(255, 99, 132)",
+          "rgb(54, 162, 235)",
+          
+          
+        ],
         borderWidth: 1,
       },
     ],
   };
+  
+ 
   
   
 
@@ -231,10 +185,17 @@ function Charts() {
         <div className="Table">
             <Table/>
         </div>
-      {/* Line Chart */}
-      {/* <div className="w-full">
-        <Line options={lineOptions} data={lineData} />
-      </div> */}
+        <div className="h">
+          <div className="hhh">
+          <Pie options={pie_Options} data={pie_Data} />
+          </div>
+          
+          <div className="hh">
+        <ApprovalVsRejectionTrends/>
+        </div>
+        
+        </div>
+        
     </div>
   );
 }
