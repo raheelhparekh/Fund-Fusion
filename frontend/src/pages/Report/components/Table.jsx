@@ -1,12 +1,6 @@
 import React from "react";
 
-const Table = () => {
-  const tableData = [
-    { id: 1, Stream: "Comps", Scholarship: 25, Purpose_of_Travel: "Academic", Funds: "90,429" },
-    { id: 2, Stream: "IT", Scholarship: 30, Purpose_of_Travel: "Personal", Funds: "33,235" },
-    { id: 3, Stream: "Mech", Scholarship: 22, Purpose_of_Travel: "Research", Funds: "42,342" },
-    { id: 4, Stream: "RAI", Scholarship: 28, Purpose_of_Travel: "Academic", Funds: "65,123" },
-  ];
+const Table = ({ tableData }) => {
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
@@ -27,7 +21,7 @@ const Table = () => {
           </tr>
         </thead>
         <tbody>
-          {tableData.map((row) => (
+          {tableData?.map((row) => (
             <tr key={row.id}>
               <td style={{ padding: "10px", border: "1px solid #ddd" }}>{row.id}</td>
               <td style={{ padding: "10px", border: "1px solid #ddd" }}>{row.Stream}</td>

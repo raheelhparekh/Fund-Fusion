@@ -34,11 +34,119 @@ ChartJS.register(
   Legend
 );
 
-function Charts() {
+function Charts({ reportData }) {
+  const { data, query } = reportData;
+
+  const tableData = [];
+  const groupedData = {};
+  if (data) {
+    for (const item of data) {
+      const { institute, department, formData } = item;
+      const { totalExpense, purposeOfTravel } = formData;
+
+      if (!groupedData[institute]) {
+        groupedData[institute] = {};
+      }
+
+      if (query.institute) {
+        if (!groupedData[institute][department]) {
+          groupedData[institute][department] = {
+            totalExpense: 0,
+            purposeOfTravel: purposeOfTravel || "Not Provided",
+            applications: 0,
+          };
+        }
+
+        // Aggregate the data
+        groupedData[institute][department].totalExpense +=
+          parseFloat(totalExpense); // Summing the expenses
+        groupedData[institute][department].applications += 1;
+      } else {
+        if (!groupedData[institute].applications) {
+          groupedData[institute] = {
+            totalExpense: 0,
+            purposeOfTravel: purposeOfTravel || "Not Provided",
+            applications: 0,
+          };
+        }
+
+        // Aggregate the data
+        groupedData[institute].totalExpense += parseFloat(totalExpense); // Summing the expenses
+        groupedData[institute].applications += 1;
+      }
+    }
+  }
+
+  // Step 2: Transform grouped data into desired table format
+  if (query.institute) {
+    for (const institute in groupedData) {
+      for (const department in groupedData[institute]) {
+        const departmentData = groupedData[institute][department];
+
+        tableData.push({
+          id: tableData.length + 1,
+          Stream: department,
+          Scholarship: departmentData.applications, // Assuming each application is one scholarship
+          Purpose_of_Travel: departmentData.purposeOfTravel,
+          Funds: departmentData.totalExpense.toFixed(2), // Formatting funds to 2 decimal places
+        });
+      }
+    }
+  } else {
+    for (const institute in groupedData) {
+      const instituteData = groupedData[institute];
+
+      tableData.push({
+        id: tableData.length + 1,
+        Stream: institute,
+        Scholarship: instituteData.applications, // Assuming each application is one scholarship
+        Purpose_of_Travel: instituteData.purposeOfTravel,
+        Funds: instituteData.totalExpense.toFixed(2), // Formatting funds to 2 decimal places
+      });
+    }
+  }
+
+  console.log(tableData);
   // Line Chart Data and Options
-  
+  const lineOptions = {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: "Number of Applications Over the Years ",
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "Year",
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: "Number of Applications",
+        },
+        ticks: {
+          beginAtZero: true,
+        },
+      },
+    },
+  };
 
-
+  const lineData = {
+    labels: [2020, 2021, 2022, 2023, 2024],
+    datasets: [
+      {
+        label: "Applications",
+        data: [1200, 1500, 1800, 2200, 2500], // Updated data for number of applications
+        borderColor: "rgb(75, 192, 192)",
+        fill: false,
+        tension: 0.1,
+      },
+    ],
+  };
 
   // Bar Chart Data and Options
   const barOptions = {
@@ -102,14 +210,12 @@ function Charts() {
           "rgba(255, 99, 132, 0.5)",
           "rgba(54, 162, 235, 0.5)",
           "rgba(153, 102, 255, 0.5)",
-          
         ],
         borderColor: [
           "rgb(75, 192, 192)",
           "rgb(255, 99, 132)",
           "rgb(54, 162, 235)",
           "rgb(153, 102, 255)",
-          
         ],
         borderWidth: 1,
       },
@@ -149,10 +255,6 @@ function Charts() {
       },
     ],
   };
-  
- 
-  
-  
 
   return (
     <div className="p-10">
@@ -182,9 +284,6 @@ function Charts() {
                         
             </div>
         </div>
-        <div className="Table">
-            <Table/>
-        </div>
         <div className="h">
           <div className="hhh">
           <Pie options={pie_Options} data={pie_Data} />
@@ -193,9 +292,14 @@ function Charts() {
           <div className="hh">
         <ApprovalVsRejectionTrends/>
         </div>
-        
-        </div>
-        
+      </div>
+      <div className="Table">
+        <Table tableData={tableData} />
+      </div>
+      {/* Line Chart */}
+      {/* <div className="w-full">
+        <Line options={lineOptions} data={lineData} />
+      </div> */}
     </div>
   );
 }

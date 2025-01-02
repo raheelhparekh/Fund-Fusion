@@ -61,6 +61,8 @@ model Application {
   applicationId    String      @id @default(uuid())
   applicantId      String
   applicant        Applicant   @relation(fields: [applicantId], references: [profileId], onDelete: Cascade)
+  institute        Institute
+  department       String
 
   applicantName    String
   formData         Json

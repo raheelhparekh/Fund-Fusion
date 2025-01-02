@@ -6,7 +6,17 @@ async function main() {
 
   // Applicant and Validator data
   const institutes = ["KJSCE", "KJSIM"];
-  const departments = ["COMPS", "IT", "MECH", "AIDS", "EXTC", "ETRX", "RAI"];
+  const departments = [
+    "Mechanical",
+    "Electronics",
+    "CBE",
+    "Electronics & Telecommunication",
+    "Computer",
+    "Information Technology",
+    "Science & Humanities",
+    "Admin",
+    "Library"
+  ];
 
   // Create VC (single, no department or institute)
   console.log("Seeding VC...");

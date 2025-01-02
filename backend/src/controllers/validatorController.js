@@ -28,11 +28,12 @@ const applicationAction = async (req, res) => {
 
     const applicant = await prisma.applicant.findFirst({
       where: { profileId: application.applicantId },
-      select: { designation: true, institute: true },
+      select: { designation: true, institute: true, email: true },
     });
 
     const applicantDesignation = applicant.designation;
     const applicantInstitute = applicant.institute;
+    const applicantEmail = applicant.email;
 
     const validationStatus = action.toUpperCase();
 
@@ -58,13 +59,22 @@ const applicationAction = async (req, res) => {
           hoi = await prisma.validator.findFirst({
             where: { designation: "HOI", institute: applicantInstitute },
           });
-          sendMail(
-            hoi.email,
-            `http://localhost:5173/validator/dashboard/pending/${applicationId}`,
-            false,
-            validationStatus
-          );
+
+          sendMail({
+            emailId: hoi.email,
+            link: `http://localhost:5173/validator/dashboard/pending/${applicationId}`,
+            type: "validator",
+            status: null,
+            designation: null,
+          });
         }
+        sendMail({
+          emailId: applicantEmail,
+          link: `http://localhost:5173/applicant/dashboard/${validationStatus}/${applicationId}`,
+          type: "applicant",
+          status: validationStatus,
+          designation: "HOD",
+        });
         break;
       case "HOI":
         if (application.hoiValidation != "PENDING") {
@@ -76,23 +86,38 @@ const applicationAction = async (req, res) => {
 
         if (validationStatus === "ACCEPTED") {
           if (JSON.parse(toVC)) {
-            validationData.vcValidation = "PENDING"
+            validationData.vcValidation = "PENDING";
             vc = await prisma.validator.findFirst({
               where: { designation: "VC" },
             });
+            sendMail({
+              emailId: vc.email,
+              link: `http://localhost:5173/validator/dashboard/pending/${applicationId}`,
+              type: "validator",
+              status: null,
+              designation: null,
+            });
           } else {
-            validationData.accountsValidation = "PENDING"
+            validationData.accountsValidation = "PENDING";
             accounts = await prisma.validator.findFirst({
               where: { designation: "ACCOUNTS", institute: applicantInstitute },
             });
+            sendMail({
+              emailId: accounts.email,
+              link: `http://localhost:5173/validator/dashboard/pending/${applicationId}`,
+              type: "accounts",
+              status: null,
+              designation: null,
+            });
           }
-          sendMail(
-            application.formData.applicantEmail,
-            `http://localhost:5173/applicant/dashboard/${validationStatus}/${applicationId}`,
-            false,
-            validationStatus
-          );
         }
+        sendMail({
+          emailId: applicantEmail,
+          link: `http://localhost:5173/applicant/dashboard/${validationStatus}/${applicationId}`,
+          type: "applicant",
+          status: validationStatus,
+          designation: "HOI",
+        });
         break;
       case "VC":
         if (application.vcValidation != "PENDING") {
@@ -102,17 +127,25 @@ const applicationAction = async (req, res) => {
         }
         validationData.vcValidation = validationStatus;
         if (validationStatus === "ACCEPTED") {
-          validationData.accountsValidation = "PENDING"
+          validationData.accountsValidation = "PENDING";
           accounts = await prisma.validator.findFirst({
             where: { designation: "ACCOUNTS", institute: applicantInstitute },
           });
+          sendMail({
+            emailId: accounts.email,
+            link: `http://localhost:5173/validator/dashboard/pending/${applicationId}`,
+            type: "accounts",
+            status: null,
+            designation: null,
+          });
         }
-        sendMail(
-          application.formData.applicantEmail,
-          `http://localhost:5173/applicant/dashboard/${validationStatus}/${applicationId}`,
-          false,
-          validationStatus
-        );
+        sendMail({
+          emailId: applicantEmail,
+          link: `http://localhost:5173/applicant/dashboard/${validationStatus}/${applicationId}`,
+          type: "applicant",
+          status: validationStatus,
+          designation: "VC",
+        });
         break;
       case "ACCOUNTS":
         if (application.accountsValidation != "PENDING") {
@@ -121,14 +154,14 @@ const applicationAction = async (req, res) => {
             .send("Already performed an action, can't change status again");
         }
         validationData.accountsValidation = validationStatus;
-        sendMail(
-          application.formData.applicantEmail,
-          `http://localhost:5173/applicant/dashboard/${validationStatus}/${applicationId}`,
-          false,
-          validationStatus
-        );
+        sendMail({
+          emailId: applicantEmail,
+          link: `http://localhost:5173/applicant/dashboard/${validationStatus}/${applicationId}`,
+          type: "applicant",
+          status: validationStatus,
+          designation: "ACCOUNTS",
+        });
         break;
-
       default:
         return res.status(400).send("Invalid validator designation");
     }
@@ -153,7 +186,7 @@ const applicationAction = async (req, res) => {
           connect: validators,
         },
       },
-      select: {applicationId: true}
+      select: { applicationId: true },
     });
 
     res.status(200).send(response);
@@ -186,4 +219,48 @@ const getApplicantNames = async (req, res) => {
   }
 };
 
-export { applicationAction, getApplicantNames };
+const getReportData = async (req, res) => {
+  const { institute, department, year } = req.query;
+  const {
+    id: profileId,
+    designation,
+    department: ogDepartment,
+    institute: ogInstitute,
+    role,
+  } = req.user;
+
+  try {
+    if ((ogDepartment && department !== ogDepartment) || (ogInstitute && institute !== ogInstitute)) {
+      return res.status(403).send("Forbidden");
+    }
+
+    const whereClause = {
+      institute,
+      department,
+    };
+
+    if (year) {
+      whereClause.createdAt = {
+        gte: new Date(`${year}-01-01`),
+        lt: new Date(`${year}-12-31`),
+      };
+    }
+
+    const applications = await prisma.application.findMany({
+      where: whereClause,
+      select: {
+      _count: true,
+      formData: true,
+      institute: true,
+      department: true,
+      },
+    });
+
+    res.status(200).send(applications);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error.message);
+  }
+};
+
+export { applicationAction, getApplicantNames, getReportData };

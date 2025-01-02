@@ -228,8 +228,20 @@ const getApplicationData = async (req, res) => {
             designation: true,
           },
         },
+        validators: {
+          select: {
+            profileId: true,
+          }
+        },
       },
     });
+
+    if (applicationFull.applicantId !== user.id && !applicationFull.validators.some(validator => validator.profileId === user.id)) {
+      return res.status(403).json({
+        message: "Unauthorized",
+        data: null,
+      });
+    }
 
     if (!applicationFull) {
       return res.status(404).json({
