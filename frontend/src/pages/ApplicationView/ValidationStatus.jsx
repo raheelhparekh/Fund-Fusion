@@ -5,6 +5,7 @@ function ValidationStatus({ validations, rejectionFeedback }) {
 
   console.log(validations)
   const roles = [
+    { name: "FACULTY", status: validations.facultyValidation },
     { name: "HOD", status: validations.hodValidation },
     { name: "HOI", status: validations.hoiValidation },
     { name: "VC", status: validations.vcValidation },

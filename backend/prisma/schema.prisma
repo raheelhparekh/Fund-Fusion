@@ -22,91 +22,75 @@ enum Institute {
   MSSMPA
 }
 
-
-enum ApplicantDesignation {
-  FACULTY
-  HOD
-  HOI
-}
-
 enum ApplicationStatus {
   REJECTED
   ACCEPTED
   PENDING
 }
 
-enum ValidatorDesignation {
+enum Designation {
   HOD
   HOI
   VC
   ACCOUNTS
+  FACULTY
+  STUDENT
 }
 
-model Applicant {
-  profileId   String      @id @default(uuid())
-  userName    String
-  email       String      @unique @db.Text
-  password    String
+model User {
+  profileId String @id @default(uuid())
+  userName  String
+  email     String @unique @db.Text
+  password  String
 
-  institute   Institute?  
+  institute   Institute?
   department  String?
-  designation ApplicantDesignation
+  designation Designation
 
-  applications Application[] 
+  appliedApplications    Application[] @relation("AppliedApplications")
+  toValidateApplications Application[] @relation("ToValidateApplications")
 
   @@index([email])
 }
 
 model Application {
-  applicationId    String      @id @default(uuid())
-  applicantId      String
-  applicant        Applicant   @relation(fields: [applicantId], references: [profileId], onDelete: Cascade)
+  applicationId String    @id @default(uuid())
+  applicantId   String
+  applicant     User      @relation("AppliedApplications", fields: [applicantId], references: [profileId])
+  institute     Institute
+  department    String
 
-  applicantName    String
-  formData         Json
+  applicantName String
+  applicationType String
+  formData      Json
 
-  hodValidation    ApplicationStatus?
-  hoiValidation    ApplicationStatus?
-  vcValidation     ApplicationStatus?
+  facultyValidation  ApplicationStatus?
+  hodValidation      ApplicationStatus?
+  hoiValidation      ApplicationStatus?
+  vcValidation       ApplicationStatus?
   accountsValidation ApplicationStatus?
 
-  rejectionFeedback String? 
+  rejectionFeedback String?
 
   proofOfTravel        Bytes?
-  proofOfAccommodation  Bytes?
-  proofOfAttendance     Bytes?
-  expenseProof0         Bytes?
-  expenseProof1         Bytes?
-  expenseProof2         Bytes?
-  expenseProof3         Bytes?
-  expenseProof4         Bytes?
-  expenseProof5         Bytes?
-  expenseProof6         Bytes?
-  expenseProof7         Bytes?
-  expenseProof8         Bytes?
-  expenseProof9         Bytes?
+  proofOfAccommodation Bytes?
+  proofOfAttendance    Bytes?
+  expenseProof0        Bytes?
+  expenseProof1        Bytes?
+  expenseProof2        Bytes?
+  expenseProof3        Bytes?
+  expenseProof4        Bytes?
+  expenseProof5        Bytes?
+  expenseProof6        Bytes?
+  expenseProof7        Bytes?
+  expenseProof8        Bytes?
+  expenseProof9        Bytes?
 
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt       
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  validators   Validator[]
+  validators User[] @relation("ToValidateApplications")
 
-  @@index([applicantId]) 
-  @@index([createdAt])    
+  @@index([applicantId])
+  @@index([createdAt])
 }
-
-model Validator {
-  profileId   String      @id @default(uuid())
-  userName    String
-  email       String      @unique @db.Text
-  password    String
-
-  institute   Institute? 
-  department  String? 
-  designation ValidatorDesignation
-
-  applications Application[]
-
-  @@index([email])
-}
-

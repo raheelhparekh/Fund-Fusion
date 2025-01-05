@@ -1,8 +1,42 @@
 import * as yup from "yup";
-import { institutes, instituteDepartmentMapping } from "../../components/BaseData";
+import {
+  institutes,
+  instituteDepartmentMapping,
+} from "../../components/BaseData";
 
 const facultyFormFeilds = [
   {
+    label: "Cadre Or Individual Application",
+    fields: [
+      {
+        label: "You are applying as Individual or Cadre?",
+        name: "applicationType",
+        type: "dropdown",
+        options: {
+          "": [
+            { label: "Individual", value: "Individual" },
+            { label: "Cadre", value: "Cadre" },
+          ],
+        },
+        validation: yup.string().notRequired("Application Type is notRequired"),
+      },
+      {
+        parent: { name: "applicationType", values: ["Cadre"] },
+        label: "How many members are there in your cadre?",
+        name: "cadreSize",
+        type: "number",
+        max: 10,
+        min: 2,
+        validation: yup
+          .number()
+          .notRequired("Cadre Size is notRequired")
+          .min(2, "Cadre Size must be at least 2")
+          .max(10, "Cadre Size must be at most 10"),
+      },
+    ],
+  },
+  {
+    parent: { name: "applicationType", values: ["Individual"] },
     label: "Personal and Academic Information",
     fields: [
       {
@@ -73,6 +107,81 @@ const facultyFormFeilds = [
       },
     ],
   },
+  ...Array.from({ length: 10 }, (_, i) => ({
+    parent: {
+      name: "cadreSize",
+      values: Array.from({ length: 10 }, (_, j) => Math.min(j + i + 1, 10)),
+    },
+    label: `Cadre Member ${i + 1} Personal and Academic Information`,
+    fields: [
+      {
+        label: `Enter Cadre Member ${i + 1} Full Name`,
+        name: `cadreMember${i + 1}FullName`,
+        type: "text",
+        validation: yup.string().notRequired("Full Name is notRequired"),
+      },
+      {
+        label: `Enter Cadre Member ${i + 1} Age`,
+        name: `cadreMember${i + 1}Age`,
+        type: "number",
+        validation: yup
+          .number()
+          .notRequired("Age is notRequired")
+          .min(18, "Age must be at least 18"),
+      },
+      {
+        label: `Enter Cadre Member ${i + 1} Contact Number`,
+        name: `cadreMember${i + 1}Contact`,
+        type: "tel",
+        validation: yup
+          .string()
+          .notRequired("Contact Number is notRequired")
+          .matches(/^[0-9]{10}$/, "Contact Number must be 10 digits"),
+      },
+      {
+        label: `Enter Cadre Member ${i + 1} Address`,
+        name: `cadreMember${i + 1}Address`,
+        type: "textarea",
+        validation: yup.string().notRequired("Address is notRequired"),
+      },
+      {
+        label: `Enter Cadre Member ${i + 1} Email`,
+        name: `cadreMember${i + 1}Email`,
+        type: "email",
+        validation: yup
+          .string()
+          .email("Invalid email format")
+          .notRequired("Email is notRequired"),
+      },
+      {
+        label: `Enter Cadre Member ${i + 1} Faculty ID No`,
+        name: `cadreMember${i + 1}IDNo`,
+        type: "text",
+        validation: yup.string().notRequired("Roll No is notRequired"),
+      },
+      {
+        label: `Select Cadre Member ${i + 1} Institute`,
+        name: `cadreMember${i + 1}Institute`,
+        type: "dropdown",
+        options: {
+          "": institutes,
+        },
+        validation: yup
+          .string()
+          .notRequired("Department selection is notRequired"),
+      },
+      {
+        depend: `cadreMember${i + 1}Institute`,
+        label: `Select Cadre Member ${i + 1} Department`,
+        name: `cadreMember${i + 1}Department`,
+        type: "dropdown",
+        options: instituteDepartmentMapping,
+        validation: yup
+          .string()
+          .notRequired("Department selection is notRequired"),
+      },
+    ],
+  })),
   {
     label: "Travel Information",
     fields: [
@@ -107,7 +216,7 @@ const facultyFormFeilds = [
           .notRequired("Purpose of Travel is notRequired"),
       },
       {
-        parent: "purposeOfTravel",
+        parent: { name: "purposeOfTravel", values: ["Other"] },
         label: "Enter Purpose of Travel (Other)",
         name: "purposeOfTravelOther",
         type: "text",
@@ -133,7 +242,7 @@ const facultyFormFeilds = [
         validation: yup.string().notRequired("Mode of Travel is notRequired"),
       },
       {
-        parent: "modeOfTravel",
+        parent: { name: "modeOfTravel", values: ["Other"] },
         label: "Enter Mode of Travel (Other)",
         name: "modeOfTravelOther",
         type: "text",
@@ -158,13 +267,17 @@ const facultyFormFeilds = [
         type: "date",
         validation: yup
           .date()
-          .required("Start date is required")
+          .notRequired("Start date is required")
           .test(
             "is-valid-start-date",
             "Start date cannot be later than end date",
             function (value) {
               const { travelEndDate } = this.parent;
-              if (travelEndDate && value && new Date(value) > new Date(travelEndDate)) {
+              if (
+                travelEndDate &&
+                value &&
+                new Date(value) > new Date(travelEndDate)
+              ) {
                 return false;
               }
               return true;
@@ -177,13 +290,17 @@ const facultyFormFeilds = [
         type: "date",
         validation: yup
           .date()
-          .required("End date is required")
+          .notRequired("End date is required")
           .test(
             "is-valid-end-date",
             "End date cannot be earlier than start date",
             function (value) {
               const { travelStartDate } = this.parent;
-              if (travelStartDate && value && new Date(value) < new Date(travelStartDate)) {
+              if (
+                travelStartDate &&
+                value &&
+                new Date(value) < new Date(travelStartDate)
+              ) {
                 return false;
               }
               return true;
@@ -201,7 +318,7 @@ const facultyFormFeilds = [
         type: "checkbox",
       },
       {
-        parent: "accommodationOpted",
+        parent: { name: "accommodationOpted", values: [true] },
         label: "Select Type of Accommodation",
         name: "typeOfAccommodation",
         type: "dropdown",
@@ -210,7 +327,10 @@ const facultyFormFeilds = [
             { label: "Hotel", value: "hotel" },
             { label: "Guest House", value: "guest_house" },
             { label: "Hostel", value: "hostel" },
-            { label: "Own Arrangement (e.g., relative’s home)", value: "private" },
+            {
+              label: "Own Arrangement (e.g., relative’s home)",
+              value: "private",
+            },
           ],
         },
         validation: yup.string().when("accommodationOpted", {
@@ -220,7 +340,7 @@ const facultyFormFeilds = [
         }),
       },
       {
-        parent: "accommodationOpted",
+        parent: { name: "accommodationOpted", values: [true] },
         label: "Enter Duration of Stay (In Days)",
         name: "durationOfStay",
         type: "number",
@@ -231,7 +351,7 @@ const facultyFormFeilds = [
         }),
       },
       {
-        parent: "accommodationOpted",
+        parent: { name: "accommodationOpted", values: [true] },
         label: "Enter Accommodation Address",
         name: "accommodationAddress",
         type: "textarea",
@@ -242,7 +362,7 @@ const facultyFormFeilds = [
         }),
       },
       {
-        parent: "accommodationOpted",
+        parent: { name: "accommodationOpted", values: [true] },
         label: "Upload Proof of Accommodation",
         name: "proofOfAccommodation",
         type: "file",
@@ -267,10 +387,16 @@ const facultyFormFeilds = [
         validation: yup.string().notRequired("Event Name is notRequired"),
       },
       {
-        label: "Enter Event Date",
-        name: "eventDate",
+        label: "Enter Event Start Date",
+        name: "eventStartDate",
         type: "date",
-        validation: yup.date().notRequired("Event Date is notRequired"),
+        validation: yup.date().notRequired("Event Start Date is notRequired"),
+      },
+      {
+        label: "Enter Event End Date",
+        name: "eventEndDate",
+        type: "date",
+        validation: yup.date().notRequired("Event End Date is notRequired"),
       },
       {
         label: "Enter Event Venue Address",
@@ -323,6 +449,37 @@ const facultyFormFeilds = [
 
 const studentFormFeilds = [
   {
+    label: "Team Or Individual Application",
+    fields: [
+      {
+        label: "You are applying as Individual or Team?",
+        name: "applicationType",
+        type: "dropdown",
+        options: {
+          "": [
+            { label: "Individual", value: "Individual" },
+            { label: "Team", value: "Team" },
+          ],
+        },
+        validation: yup.string().notRequired("Application Type is notRequired"),
+      },
+      {
+        parent: { name: "applicationType", values: ["Team"] },
+        label: "How many members are there in your team?",
+        name: "teamSize",
+        type: "number",
+        max: 10,
+        min: 2,
+        validation: yup
+          .number()
+          .notRequired("Team Size is notRequired")
+          .min(2, "Team Size must be at least 2")
+          .max(10, "Team Size must be at most 10"),
+      },
+    ],
+  },
+  {
+    parent: { name: "applicationType", values: ["Individual"] },
     label: "Personal and Academic Information",
     fields: [
       {
@@ -413,144 +570,253 @@ const studentFormFeilds = [
           .matches(/^\d{11}$/, "Roll No must be exactly 11 digits"),
       },
       {
-        label: "Select Department",
-        name: "applicantDepartment",
+        label: "Select Institute",
+        name: "applicantInstitute",
         type: "dropdown",
         options: {
-          "": [
-            { label: "COMPS", value: "COMPS" },
-            { label: "MECH", value: "MECH" },
-            { label: "IT", value: "IT" },
-            { label: "AI & DS", value: "AI_DS" },
-            { label: "CCE", value: "CCE" },
-            { label: "CSBS", value: "CSBS" },
-            { label: "EE (VLSI)", value: "EE_VLSI" },
-            { label: "ECE", value: "ECE" },
-            { label: "ETE", value: "ETE" },
-            { label: "RAI", value: "RAI" },
-          ],
+          "": institutes.filter((institute) => institute?.value === "KJSCE"),
         },
         validation: yup
           .string()
           .notRequired("Department selection is notRequired"),
       },
       {
-        label: "Enter Primary Supervisor Full Name",
-        name: "primarySupervisorFullName",
-        type: "text",
-        validation: yup
-          .string()
-          .notRequired("Primary Supervisor Full Name is notRequired"),
-      },
-      {
-        label: "Enter Primary Supervisor Email",
-        name: "primarySupervisorEmail",
-        type: "email",
-        validation: yup
-          .string()
-          .email("Invalid email format")
-          .notRequired("Primary Supervisor Email is notRequired"),
-      },
-      {
-        label: "Enter Primary Supervisor Contact",
-        name: "primarySupervisorContact",
-        type: "tel",
-        validation: yup
-          .string()
-          .notRequired("Primary Supervisor Contact is notRequired")
-          .matches(/^[0-9]{10}$/, "Contact Number must be 10 digits"),
-      },
-      {
-        label: "Enter Primary Supervisor Department",
-        name: "primarySupervisorDepartment",
+        depend: "applicantInstitute",
+        label: "Select Department",
+        name: "applicantDepartment",
         type: "dropdown",
-        options: {
-          "": [
-            { label: "COMPS", value: "COMPS" },
-            { label: "MECH", value: "MECH" },
-            { label: "IT", value: "IT" },
-            { label: "AI & DS", value: "AI_DS" },
-            { label: "CCE", value: "CCE" },
-            { label: "CSBS", value: "CSBS" },
-            { label: "EE (VLSI)", value: "EE_VLSI" },
-            { label: "ECE", value: "ECE" },
-            { label: "ETE", value: "ETE" },
-            { label: "RAI", value: "RAI" },
-          ],
-        },
+        options: instituteDepartmentMapping,
         validation: yup
           .string()
-          .notRequired("Primary Supervisor Department is notRequired"),
+          .notRequired("Department selection is notRequired"),
       },
       {
-        label: "Do you have another Supervisor?",
-        name: "anotherSupervisor",
+        label: "Parental Consent?",
+        name: "parentalConsent",
         type: "checkbox",
+        validation: yup.boolean().isFalse("Parent's Consent is notRequired"),
       },
       {
-        parent: "anotherSupervisor",
-        label: "Enter Another Supervisor Full Name",
-        name: "anotherSupervisorFullName",
+        parent: { name: "parentalConsent", values: [true] },
+        label: "Enter Father's Full Name",
+        name: "fatherFullName",
         type: "text",
-        validation: yup.string().when("anotherSupervisor", {
+        validation: yup.string().when("parentalConsent", {
           is: true,
           then: (schema) =>
-            schema.notRequired("Another Supervisor Full Name is notRequired"),
+            schema.notRequired("Father's Full Name is notRequired"),
         }),
       },
       {
-        parent: "anotherSupervisor",
-        label: "Enter Another Supervisor Email",
-        name: "anotherSupervisorEmail",
-        type: "email",
-        validation: yup.string().when("anotherSupervisor", {
-          is: true,
-          then: (schema) =>
-            schema
-              .notRequired("Another Supervisor Email is notRequired")
-              .email("Invalid email format"),
-        }),
-      },
-      {
-        parent: "anotherSupervisor",
-        label: "Enter Another Supervisor Contact",
-        name: "anotherSupervisorContact",
+        parent: { name: "parentalConsent", values: [true] },
+        label: "Enter Father's Contact",
+        name: "fatherContact",
         type: "tel",
-        validation: yup.string().when("anotherSupervisor", {
+        validation: yup.string().when("parentalConsent", {
           is: true,
           then: (schema) =>
             schema
-              .notRequired("Another Supervisor Contact is notRequired")
+              .notRequired("Father's Contact is notRequired")
               .matches(/^[0-9]{10}$/, "Contact Number must be 10 digits"),
         }),
       },
       {
-        parent: "anotherSupervisor",
-        label: "Enter Another Supervisor Department",
-        name: "anotherSupervisorDepartment",
-        type: "dropdown",
-        options: {
-          "": [
-            { label: "COMPS", value: "COMPS" },
-            { label: "MECH", value: "MECH" },
-            { label: "IT", value: "IT" },
-            { label: "AI & DS", value: "AI_DS" },
-            { label: "CCE", value: "CCE" },
-            { label: "CSBS", value: "CSBS" },
-            { label: "EE (VLSI)", value: "EE_VLSI" },
-            { label: "ECE", value: "ECE" },
-            { label: "ETE", value: "ETE" },
-            { label: "RAI", value: "RAI" },
-          ],
-        },
-        validation: yup.string().when("anotherSupervisor", {
+        parent: { name: "parentalConsent", values: [true] },
+        label: "Enter Mother's Full Name",
+        name: "motherFullName",
+        type: "text",
+        validation: yup.string().when("parentalConsent", {
           is: true,
           then: (schema) =>
-            schema.notRequired("Another Supervisor Department is notRequired"),
+            schema.notRequired("Mother's Full Name is notRequired"),
+        }),
+      },
+      {
+        parent: { name: "parentalConsent", values: [true] },
+        label: "Enter Mother's Contact",
+        name: "motherContact",
+        type: "tel",
+        validation: yup.string().when("parentalConsent", {
+          is: true,
+          then: (schema) =>
+            schema
+              .notRequired("Mother's Contact is notRequired")
+              .matches(/^[0-9]{10}$/, "Contact Number must be 10 digits"),
         }),
       },
     ],
   },
+  ...Array.from({ length: 10 }, (_, i) => ({
+    parent: {
+      name: "teamSize",
+      values: Array.from({ length: 10 }, (_, j) => Math.min(j + i + 1, 10)),
+    },
+    label: `Team Member ${i + 1} Personal and Academic Information`,
+    fields: [
+      {
+        label: `Enter Team Member ${i + 1} Full Name`,
+        name: `teamMember${i + 1}FullName`,
+        type: "text",
+        validation: yup.string().notRequired("Full Name is notRequired"),
+      },
+      {
+        label: `Enter Team Member ${i + 1} Age`,
+        name: `teamMember${i + 1}Age`,
+        type: "number",
+        validation: yup
+          .number()
+          .notRequired("Age is notRequired")
+          .min(0, "Age must be positive"),
+      },
+      {
+        label: `Enter Team Member ${i + 1} Contact Number`,
+        name: `teamMember${i + 1}Contact`,
+        type: "tel",
+        validation: yup
+          .string()
+          .notRequired("Contact Number is notRequired")
+          .matches(/^[0-9]{10}$/, "Contact Number must be 10 digits"),
+      },
+      {
+        label: `Enter Team Member ${i + 1} Address`,
+        name: `teamMember${i + 1}Address`,
+        type: "text",
+        validation: yup.string().notRequired("Address is notRequired"),
+      },
+      {
+        label: `Select Team Member ${i + 1} Course`,
+        name: `teamMember${i + 1}Course`,
+        type: "dropdown",
+        options: {
+          "": [
+            { label: "BTech", value: "BTech" },
+            { label: "MTech", value: "MTech" },
+            { label: "PHD", value: "PHD" },
+          ],
+        },
+        validation: yup.string().notRequired("Course selection is notRequired"),
+      },
+      {
+        depend: `teamMember${i + 1}Course`,
+        label: `Enter Team Member ${i + 1} Year of Study`,
+        name: `teamMember${i + 1}YearOfStudy`,
+        type: "dropdown",
+        options: {
+          BTech: [
+            { label: "FY", value: "FY" },
+            { label: "SY", value: "SY" },
+            { label: "TY", value: "TY" },
+            { label: "LY", value: "LY" },
+          ],
+          MTech: [
+            { label: "FY", value: "FY" },
+            { label: "SY", value: "SY" },
+          ],
+          PHD: [],
+          "": [],
+        },
+        validation: yup.string().when(`teamMember${i + 1}Course`, {
+          is: "PHD",
+          then: (schema) => schema.notnotRequired(),
+          otherwise: (schema) =>
+            schema.notRequired("Year of Study is notRequired"),
+        }),
+      },
+      {
+        label: `Enter Team Member ${i + 1} Email`,
+        name: `teamMember${i + 1}Email`,
+        type: "email",
+        validation: yup
+          .string()
+          .email("Invalid email format")
+          .notRequired("Email is notRequired"),
+      },
+      {
+        label: `Enter Team Member ${i + 1} Roll No`,
+        name: `teamMember${i + 1}RollNo`,
+        type: "text",
+        validation: yup
+          .string()
+          .notRequired("Roll No is notRequired")
+          .matches(/^\d{11}$/, "Roll No must be exactly 11 digits"),
+      },
+      {
+        label: `Select Team Member ${i + 1} Institute`,
+        name: `teamMember${i + 1}Institute`,
+        type: "dropdown",
+        options: {
+          "": institutes.filter((institute) => institute?.value === "KJSCE"),
+        },
+        validation: yup
+          .string()
+          .notRequired("Department selection is notRequired"),
+      },
+      {
+        depend: `teamMember${i + 1}Institute`,
+        label: `Select Team Member ${i + 1} Department`,
+        name: `teamMember${i + 1}Department`,
+        type: "dropdown",
+        options: instituteDepartmentMapping,
+        validation: yup
+          .string()
+          .notRequired("Department selection is notRequired"),
+      },
+      {
+        label: `Parental Consent?`,
+        name: `parentalConsent${i + 1}`,
+        type: "checkbox",
+        validation: yup.boolean().isFalse("Parent's Consent is notRequired"),
+      },
+      {
+        parent: { name: `parentalConsent${i + 1}`, values: [true] },
+        label: `Enter Team Member ${i + 1} Father's Full Name`,
+        name: `teamMember${i + 1}FatherFullName`,
+        type: "text",
+        validation: yup.string().when("parentalConsent", {
+          is: true,
+          then: (schema) =>
+            schema.notRequired("Father's Full Name is notRequired"),
+        }),
+      },
+      {
+        parent: { name: `parentalConsent${i + 1}`, values: [true] },
+        label: `Enter Team Member ${i + 1} Father's Contact`,
+        name: `teamMember${i + 1}FatherContact`,
+        type: "tel",
+        validation: yup.string().when("parentalConsent", {
+          is: true,
+          then: (schema) =>
+            schema
+              .notRequired("Father's Contact is notRequired")
+              .matches(/^[0-9]{10}$/, "Contact Number must be 10 digits"),
+        }),
+      },
+      {
+        parent: { name: `parentalConsent${i + 1}`, values: [true] },
+        label: `Enter Team Member ${i + 1} Mother's Full Name`,
+        name: `teamMember${i + 1}MotherFullName`,
+        type: "text",
+        validation: yup.string().when("parentalConsent", {
+          is: true,
+          then: (schema) =>
+            schema.notRequired("Mother's Full Name is notRequired"),
+        }),
+      },
+      {
+        parent: { name: `parentalConsent${i + 1}`, values: [true] },
+        label: `Enter Team Member ${i + 1} Mother's Contact`,
+        name: `teamMember${i + 1}MotherContact`,
+        type: "tel",
+        validation: yup.string().when("parentalConsent", {
+          is: true,
+          then: (schema) =>
+            schema
+              .notRequired("Mother's Contact is notRequired")
+              .matches(/^[0-9]{10}$/, "Contact Number must be 10 digits"),
+        }),
+      },
+    ],
+  })),
   {
     label: "Travel Information",
     fields: [
@@ -571,7 +837,7 @@ const studentFormFeilds = [
           .notRequired("Purpose of Travel is notRequired"),
       },
       {
-        parent: "purposeOfTravel",
+        parent: { name: "purposeOfTravel", values: ["Other"] },
         label: "Enter Purpose of Travel (Other)",
         name: "purposeOfTravelOther",
         type: "text",
@@ -597,7 +863,7 @@ const studentFormFeilds = [
         validation: yup.string().notRequired("Mode of Travel is notRequired"),
       },
       {
-        parent: "modeOfTravel",
+        parent: { name: "modeOfTravel", values: ["Other"] },
         label: "Enter Mode of Travel (Other)",
         name: "modeOfTravelOther",
         type: "text",
@@ -612,17 +878,65 @@ const studentFormFeilds = [
         name: "proofOfTravel",
         type: "file",
         validation: yup.mixed().notRequired("Proof of Travel is notRequired"),
-        // .test("fileType", "Only PDF files are allowed", (value) => {
-        //   return value && value.type === "application/pdf";
-        // }),
       },
+      {
+        label: "Travel Start Date",
+        name: "travelStartDate",
+        type: "date",
+        validation: yup
+          .date()
+          .notRequired("Start date is required")
+          .test(
+            "is-valid-start-date",
+            "Start date cannot be later than end date",
+            function (value) {
+              const { travelEndDate } = this.parent;
+              if (
+                travelEndDate &&
+                value &&
+                new Date(value) > new Date(travelEndDate)
+              ) {
+                return false;
+              }
+              return true;
+            }
+          ),
+      },
+      {
+        label: "Travel End Date",
+        name: "travelEndDate",
+        type: "date",
+        validation: yup
+          .date()
+          .notRequired("End date is required")
+          .test(
+            "is-valid-end-date",
+            "End date cannot be earlier than start date",
+            function (value) {
+              const { travelStartDate } = this.parent;
+              if (
+                travelStartDate &&
+                value &&
+                new Date(value) < new Date(travelStartDate)
+              ) {
+                return false;
+              }
+              return true;
+            }
+          ),
+      },
+    ],
+  },
+  {
+    label: "Accommodation Details",
+    fields: [
       {
         label: "Accommodation Opted?",
         name: "accommodationOpted",
         type: "checkbox",
       },
       {
-        parent: "accommodationOpted",
+        parent: { name: "accommodationOpted", values: [true] },
         label: "Select Type of Accommodation",
         name: "typeOfAccommodation",
         type: "dropdown",
@@ -631,6 +945,10 @@ const studentFormFeilds = [
             { label: "Hotel", value: "hotel" },
             { label: "Guest House", value: "guest_house" },
             { label: "Hostel", value: "hostel" },
+            {
+              label: "Own Arrangement (e.g., relative’s home)",
+              value: "private",
+            },
           ],
         },
         validation: yup.string().when("accommodationOpted", {
@@ -640,10 +958,10 @@ const studentFormFeilds = [
         }),
       },
       {
-        parent: "accommodationOpted",
-        label: "Enter Duration of Stay",
+        parent: { name: "accommodationOpted", values: [true] },
+        label: "Enter Duration of Stay (In Days)",
         name: "durationOfStay",
-        type: "text",
+        type: "number",
         validation: yup.string().when("accommodationOpted", {
           is: true,
           then: (schema) =>
@@ -651,10 +969,10 @@ const studentFormFeilds = [
         }),
       },
       {
-        parent: "accommodationOpted",
+        parent: { name: "accommodationOpted", values: [true] },
         label: "Enter Accommodation Address",
         name: "accommodationAddress",
-        type: "text",
+        type: "textarea",
         validation: yup.string().when("accommodationOpted", {
           is: true,
           then: (schema) =>
@@ -662,7 +980,7 @@ const studentFormFeilds = [
         }),
       },
       {
-        parent: "accommodationOpted",
+        parent: { name: "accommodationOpted", values: [true] },
         label: "Upload Proof of Accommodation",
         name: "proofOfAccommodation",
         type: "file",
@@ -687,15 +1005,21 @@ const studentFormFeilds = [
         validation: yup.string().notRequired("Event Name is notRequired"),
       },
       {
-        label: "Enter Event Date",
-        name: "eventDate",
+        label: "Enter Event Start Date",
+        name: "eventStartDate",
         type: "date",
-        validation: yup.date().notRequired("Event Date is notRequired"),
+        validation: yup.date().notRequired("Event Start Date is notRequired"),
       },
       {
-        label: "Enter Event Venue",
+        label: "Enter Event End Date",
+        name: "eventEndDate",
+        type: "date",
+        validation: yup.date().notRequired("Event End Date is notRequired"),
+      },
+      {
+        label: "Enter Event Venue Address",
         name: "eventVenue",
-        type: "text",
+        type: "textarea",
         validation: yup.string().notRequired("Event Venue is notRequired"),
       },
       {
@@ -714,65 +1038,6 @@ const studentFormFeilds = [
         // .test("fileType", "Only PDF files are allowed", (value) => {
         //   return value && value.type === "application/pdf";
         // }),
-      },
-    ],
-  },
-  {
-    label: "Parental Consent",
-    fields: [
-      {
-        label: "Parental Consent?",
-        name: "parentalConsent",
-        type: "checkbox",
-        validation: yup.boolean().isFalse("Parent's Consent is notRequired"),
-      },
-      {
-        parent: "parentalConsent",
-        label: "Enter Father's Full Name",
-        name: "fatherFullName",
-        type: "text",
-        validation: yup.string().when("parentalConsent", {
-          is: true,
-          then: (schema) =>
-            schema.notRequired("Father's Full Name is notRequired"),
-        }),
-      },
-      {
-        parent: "parentalConsent",
-        label: "Enter Father's Contact",
-        name: "fatherContact",
-        type: "tel",
-        validation: yup.string().when("parentalConsent", {
-          is: true,
-          then: (schema) =>
-            schema
-              .notRequired("Father's Contact is notRequired")
-              .matches(/^[0-9]{10}$/, "Contact Number must be 10 digits"),
-        }),
-      },
-      {
-        parent: "parentalConsent",
-        label: "Enter Mother's Full Name",
-        name: "motherFullName",
-        type: "text",
-        validation: yup.string().when("parentalConsent", {
-          is: true,
-          then: (schema) =>
-            schema.notRequired("Mother's Full Name is notRequired"),
-        }),
-      },
-      {
-        parent: "parentalConsent",
-        label: "Enter Mother's Contact",
-        name: "motherContact",
-        type: "tel",
-        validation: yup.string().when("parentalConsent", {
-          is: true,
-          then: (schema) =>
-            schema
-              .notRequired("Mother's Contact is notRequired")
-              .matches(/^[0-9]{10}$/, "Contact Number must be 10 digits"),
-        }),
       },
     ],
   },

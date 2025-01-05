@@ -122,6 +122,7 @@ function ApplicationView() {
 
       <ValidationStatus
         validations={{
+          facultyValidation: applicationDisplay?.facultyValidation,
           hodValidation: applicationDisplay?.hodValidation,
           hoiValidation: applicationDisplay?.hoiValidation,
           vcValidation: applicationDisplay?.vcValidation,
@@ -155,6 +156,7 @@ function ApplicationView() {
             handleSubmit(applicationDisplay?.applicationId, "accepted", "", toVC)
           }
           designation={user.designation}
+          applicantDesignation={applicationDisplay?.applicant?.designation}
         />
       )}
 

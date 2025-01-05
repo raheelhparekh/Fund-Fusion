@@ -6,7 +6,7 @@ const applicantLogin = async (req, res) => {
     const { email, password } = req.body;
 
     // Check if the applicant profile exists
-    let validProfile = await prisma.applicant.findFirst({
+    const validProfile = await prisma.user.findUnique({
       where: {
         email
       },
@@ -60,7 +60,7 @@ const validatorLogin = async (req, res) => {
     const { email, password } = req.body;
 
     // Check if the validator profile exists
-    let validProfile = await prisma.validator.findFirst({
+    let validProfile = await prisma.user.findUnique({
       where: {
         email
       },

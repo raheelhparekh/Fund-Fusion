@@ -3,6 +3,7 @@ import React from 'react';
 function Pagination({ numOfItems, itemsPerPage = 10, currentPage, onPageChange }) {
   const totalPages = Math.ceil(numOfItems / itemsPerPage);
   const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
+  const maxPageButtons = 5; // Maximum number of page buttons to display
 
   const handlePrevious = () => {
     if (currentPage > 1) onPageChange(currentPage - 1);
@@ -10,6 +11,24 @@ function Pagination({ numOfItems, itemsPerPage = 10, currentPage, onPageChange }
 
   const handleNext = () => {
     if (currentPage < totalPages) onPageChange(currentPage + 1);
+  };
+
+  const getPageButtons = () => {
+    if (totalPages <= maxPageButtons) {
+      return pages;
+    }
+
+    const half = Math.floor(maxPageButtons / 2);
+    let start = Math.max(1, currentPage - half);
+    let end = Math.min(totalPages, currentPage + half);
+
+    if (currentPage <= half) {
+      end = maxPageButtons;
+    } else if (currentPage + half >= totalPages) {
+      start = totalPages - maxPageButtons + 1;
+    }
+
+    return Array.from({ length: end - start + 1 }, (_, index) => start + index);
   };
 
   return (
@@ -53,7 +72,7 @@ function Pagination({ numOfItems, itemsPerPage = 10, currentPage, onPageChange }
               </svg>
             </button>
 
-            {pages.map(page => (
+            {getPageButtons().map(page => (
               <button
                 type='button'
                 key={page}

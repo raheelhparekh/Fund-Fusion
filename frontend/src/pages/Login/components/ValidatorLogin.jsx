@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './LoginAnimation.css';
 
 function ValidatorLogin({ changeRole }) {
-  const [credentials, setCredentials] = useState({ email: 'hod.comps.kjsce@example.com', password: 'securePassword123' });
+  const [credentials, setCredentials] = useState({ email: 'hod.computer.kjsce@example.com', password: 'securePassword123' });
   const [animate, setAnimate] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false); // Loading state

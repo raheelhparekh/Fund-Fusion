@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './LoginAnimation.css';
 
 function ApplicantLogin({ changeRole }) {
-  const [credentials, setCredentials] = useState({ email: 'faculty.comps.kjsce@example.com', password: 'securePassword123' });
+  const [credentials, setCredentials] = useState({ email: 'faculty.computer.kjsce@example.com', password: 'securePassword123' });
   const [animate, setAnimate] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false); // Loading state

@@ -1,16 +1,36 @@
-import prisma from '../src/config/prismaConfig.js';
+import prisma from "../src/config/prismaConfig.js";
 
 async function main() {
   // Common password for all users
   const commonPassword = "securePassword123";
 
   // Applicant and Validator data
-  const institutes = ["KJSCE", "KJSIM"];
-  const departments = ["COMPS", "IT", "MECH", "AIDS", "EXTC", "ETRX", "RAI"];
+  const institutes = [
+    "KJSIDS",
+    "SKSC",
+    "KJSCE",
+    "SIRC",
+    "KJSIM",
+    "SSA",
+    "KJSCEd",
+    "DLIS",
+    "MSSMPA",
+  ];
+  const departments = [
+    "Mechanical",
+    "Electronics",
+    "CBE",
+    "Electronics & Telecommunication",
+    "Computer",
+    "Information Technology",
+    "Science & Humanities",
+    "Admin",
+    "Library",
+  ];
 
   // Create VC (single, no department or institute)
   console.log("Seeding VC...");
-  await prisma.validator.create({
+  await prisma.user.create({
     data: {
       userName: "Validator_VC",
       email: "vc@example.com",
@@ -24,7 +44,7 @@ async function main() {
     console.log(`Seeding HOI for ${institute}...`);
     const hoiEmail = `hoi.${institute.toLowerCase()}@example.com`;
 
-    await prisma.applicant.create({
+    await prisma.user.create({
       data: {
         userName: `HOI_${institute}`,
         email: hoiEmail,
@@ -34,19 +54,9 @@ async function main() {
       },
     });
 
-    await prisma.validator.create({
-      data: {
-        userName: `Validator_HOI_${institute}`,
-        email: hoiEmail, // Shared email with Applicant
-        password: commonPassword,
-        institute,
-        designation: "HOI",
-      },
-    });
-
     // Create Accounts for each institute
     console.log(`Seeding Accounts for ${institute}...`);
-    await prisma.validator.create({
+    await prisma.user.create({
       data: {
         userName: `Validator_Accounts_${institute}`,
         email: `accounts.${institute.toLowerCase()}@example.com`,
@@ -61,21 +71,10 @@ async function main() {
       console.log(`Seeding HOD for ${department} in ${institute}...`);
       const hodEmail = `hod.${department.toLowerCase()}.${institute.toLowerCase()}@example.com`;
 
-      await prisma.applicant.create({
+      await prisma.user.create({
         data: {
           userName: `HOD_${department}_${institute}`,
           email: hodEmail,
-          password: commonPassword,
-          institute,
-          department,
-          designation: "HOD",
-        },
-      });
-
-      await prisma.validator.create({
-        data: {
-          userName: `Validator_HOD_${department}_${institute}`,
-          email: hodEmail, // Shared email with Applicant
           password: commonPassword,
           institute,
           department,
@@ -87,7 +86,7 @@ async function main() {
       console.log(`Seeding Faculty for ${department} in ${institute}...`);
       const facultyEmail = `faculty.${department.toLowerCase()}.${institute.toLowerCase()}@example.com`;
 
-      await prisma.applicant.create({
+      await prisma.user.create({
         data: {
           userName: `Faculty_${department}_${institute}`,
           email: facultyEmail,
@@ -97,17 +96,28 @@ async function main() {
           designation: "FACULTY",
         },
       });
-    }
-  }
+      // Create Student for each department of each institute
+      console.log(`Seeding Student for ${department} in ${institute}...`);
+      const studentEmail = `student.${department.toLowerCase()}.${institute.toLowerCase()}@example.com`;
 
-  console.log("Seeding completed!");
+      await prisma.user.create({
+        data: {
+          userName: `Student_${department}_${institute}`,
+          email: studentEmail,
+          password: commonPassword,
+          institute,
+          department,
+          designation: "STUDENT",
+        },
+      });
+    }
+    console.log("Seeding completed!");
+  }
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+}).finally(async () => {
+  await prisma.$disconnect();
+});
