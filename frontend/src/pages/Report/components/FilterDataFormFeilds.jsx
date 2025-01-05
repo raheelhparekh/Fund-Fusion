@@ -16,7 +16,7 @@ const filterDataFormFeilds = [
     fields: [
       {
         label: "Select Institute",
-        name: "applicantInstitute",
+        name: "institute",
         type: "dropdown",
         options: {
           "": institutes,
@@ -26,11 +26,25 @@ const filterDataFormFeilds = [
           .notRequired("Department selection is notRequired"),
       },
       {
-        depend: "applicantInstitute",
+        depend: "institute",
         label: "Select Department",
-        name: "applicantDepartment",
+        name: "department",
         type: "dropdown",
         options: instituteDepartmentMapping,
+        validation: yup
+          .string()
+          .notRequired("Department selection is notRequired"),
+      },
+      {
+        label: "Select Application Type",
+        name: "applicationType",
+        type: "dropdown",
+        options: {
+          "": [
+            { label: "Student Applications", value: "STUDENT" },
+            { label: "Faculty Applications", value: "FACULTY" },
+          ],
+        },
         validation: yup
           .string()
           .notRequired("Department selection is notRequired"),

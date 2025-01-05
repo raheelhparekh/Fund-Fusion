@@ -30,7 +30,46 @@ ChartJS.register(
 
 function AllChartsPage() {
   // Line Chart Data and Options
-  
+  const lineOptions = {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: "Number of Applications Over the Years (Line Chart)",
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "Year",
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: "Number of Applications",
+        },
+        ticks: {
+          beginAtZero: true,
+        },
+      },
+    },
+  };
+
+  const lineData = {
+    labels: [2020, 2021, 2022, 2023, 2024],
+    datasets: [
+      {
+        label: "Applications",
+        data: [1200, 1500, 1800, 2200, 2500], // Updated data for number of applications
+        borderColor: "rgb(75, 192, 192)",
+        fill: false,
+        tension: 0.1,
+      },
+    ],
+  };
+
   // Bar Chart Data and Options
   const barOptions = {
     responsive: true,

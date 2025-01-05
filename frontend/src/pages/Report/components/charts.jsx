@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import ChartWithDropdown from "./approved";
-import Cards from "./cards"
-import ApprovalVsRejectionTrends from "./map"
-import './cards.css'
+import Cards from "./cards";
+import "./cards.css";
 import BasicTable from "./Table";
 import { Line } from "react-chartjs-2";
 import { Bar } from "react-chartjs-2";
@@ -20,6 +19,8 @@ import {
   Legend,
 } from "chart.js";
 import Table from "./Table";
+import ReportPDF from "./reportPDF";
+import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 
 // Register chart components for all three types (Line, Bar, Pie)
 ChartJS.register(
@@ -34,11 +35,126 @@ ChartJS.register(
   Legend
 );
 
-function Charts() {
+function Charts({ reportData }) {
+  const { data, query } = reportData;
+
+  if (data.length === 0) {
+    return (
+      <div className="text-center text-xl text-red-700 py-10">
+        No Data Found
+      </div>
+    );
+  }
+
+  const tableData = [];
+  const groupedData = {};
+  if (data) {
+    for (const item of data) {
+      const { institute, department, formData } = item;
+      const { totalExpense, purposeOfTravel } = formData;
+
+      if (!groupedData[institute]) {
+        groupedData[institute] = {};
+      }
+
+      if (query.institute) {
+        if (!groupedData[institute][department]) {
+          groupedData[institute][department] = {
+            totalExpense: 0,
+            purposeOfTravel: purposeOfTravel || "Not Provided",
+            applications: 0,
+          };
+        }
+
+        // Aggregate the data
+        groupedData[institute][department].totalExpense +=
+          parseFloat(totalExpense); // Summing the expenses
+        groupedData[institute][department].applications += 1;
+      } else {
+        if (!groupedData[institute].applications) {
+          groupedData[institute] = {
+            totalExpense: 0,
+            purposeOfTravel: purposeOfTravel || "Not Provided",
+            applications: 0,
+          };
+        }
+
+        // Aggregate the data
+        groupedData[institute].totalExpense += parseFloat(totalExpense); // Summing the expenses
+        groupedData[institute].applications += 1;
+      }
+    }
+  }
+
+  // Step 2: Transform grouped data into desired table format
+  if (query.institute) {
+    for (const institute in groupedData) {
+      for (const department in groupedData[institute]) {
+        const departmentData = groupedData[institute][department];
+
+        tableData.push({
+          id: tableData.length + 1,
+          Stream: department,
+          Scholarship: departmentData.applications, // Assuming each application is one scholarship
+          Purpose_of_Travel: departmentData.purposeOfTravel,
+          Funds: departmentData.totalExpense.toFixed(2), // Formatting funds to 2 decimal places
+        });
+      }
+    }
+  } else {
+    for (const institute in groupedData) {
+      const instituteData = groupedData[institute];
+
+      tableData.push({
+        id: tableData.length + 1,
+        Stream: institute,
+        Scholarship: instituteData.applications, // Assuming each application is one scholarship
+        Purpose_of_Travel: instituteData.purposeOfTravel,
+        Funds: instituteData.totalExpense.toFixed(2), // Formatting funds to 2 decimal places
+      });
+    }
+  }
+
   // Line Chart Data and Options
-  
+  const lineOptions = {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: "Number of Applications Over the Years ",
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "Year",
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: "Number of Applications",
+        },
+        ticks: {
+          beginAtZero: true,
+        },
+      },
+    },
+  };
 
-
+  const lineData = {
+    labels: [2020, 2021, 2022, 2023, 2024],
+    datasets: [
+      {
+        label: "Applications",
+        data: [1200, 1500, 1800, 2200, 2500], // Updated data for number of applications
+        borderColor: "rgb(75, 192, 192)",
+        fill: false,
+        tension: 0.1,
+      },
+    ],
+  };
 
   // Bar Chart Data and Options
   const barOptions = {
@@ -69,11 +185,25 @@ function Charts() {
   };
 
   const barData = {
-    labels: ["Jan", "Feb", "Mar", "April", "May","June","July","Aug","Sep","Nov","Dec"],
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "April",
+      "May",
+      "June",
+      "July",
+      "Aug",
+      "Sep",
+      "Nov",
+      "Dec",
+    ],
     datasets: [
       {
         label: "Applications",
-        data: [1200, 1500, 1800, 2200, 200,800,1235,604,2345,2523,3453,6453], // Updated data for number of applications
+        data: [
+          1200, 1500, 1800, 2200, 200, 800, 1235, 604, 2345, 2523, 3453, 6453,
+        ], // Updated data for number of applications
         backgroundColor: "rgba(75, 192, 192, 0.5)",
         borderColor: "rgb(75, 192, 192)",
         borderWidth: 1,
@@ -102,14 +232,12 @@ function Charts() {
           "rgba(255, 99, 132, 0.5)",
           "rgba(54, 162, 235, 0.5)",
           "rgba(153, 102, 255, 0.5)",
-          
         ],
         borderColor: [
           "rgb(75, 192, 192)",
           "rgb(255, 99, 132)",
           "rgb(54, 162, 235)",
           "rgb(153, 102, 255)",
-          
         ],
         borderWidth: 1,
       },
@@ -135,24 +263,16 @@ function Charts() {
           "rgba(79, 246, 96, 0.5)",
           "rgba(255, 99, 132, 0.5)",
           "rgba(54, 162, 235, 0.5)",
-       
-          
         ],
         borderColor: [
           "rgb(79, 246, 96)",
           "rgb(255, 99, 132)",
           "rgb(54, 162, 235)",
-          
-          
         ],
         borderWidth: 1,
       },
     ],
   };
-  
- 
-  
-  
 
   return (
     <div className="p-10">
@@ -170,32 +290,58 @@ function Charts() {
           <Pie options={pieOptions} data={pieData} />
         </div>
       </div>
-        <div className="cards">
-            <Cards/>
-            
-            <div className="generalInfo">
-                <div className="card2">
-                    <ChartWithDropdown/>
-                   
-                   
-                </div>
-                        
-            </div>
-        </div>
-        <div className="Table">
-            <Table/>
-        </div>
-        <div className="h">
-          <div className="hhh">
-          <Pie options={pie_Options} data={pie_Data} />
+      <div className="cards">
+        <Cards />
+
+        <div className="generalInfo">
+          <div className="card2">
+            <ChartWithDropdown />
           </div>
-          
-          <div className="hh">
-        <ApprovalVsRejectionTrends/>
         </div>
-        
+      </div>
+      <div className="h">
+        <div className="hhh">
+          <Pie options={pie_Options} data={pie_Data} />
         </div>
-        
+
+        <div className="hh">
+          <ApprovalVsRejectionTrends />
+        </div>
+
+        <div className="Table">
+          <Table tableData={tableData} />
+        </div>
+        {/* Line Chart */}
+        {/* <div className="w-full">
+        <Line options={lineOptions} data={lineData} />
+      </div> */}
+        <PDFDownloadLink
+          document={<ReportPDF tableData={tableData} />}
+          fileName={`report_${query.institute || "allInstitutes"}_${
+            query.department || "allDepartments"
+          }_${query.year || "allYears"}_${
+            query.applicationType || "allApplications"
+          }.pdf`}
+        >
+          {({ blob, url, loading, error }) =>
+            loading ? (
+              "Getting Your PDF Report Ready..."
+            ) : (
+              <button
+                disabled={loading}
+                className="w-full flex items-center justify-center bg-gradient-to-r from-red-600 to-red-800 hover:from-red-800 hover:to-red-600 text-white font-semibold py-2 px-4 rounded-lg shadow-lg transform transition duration-300 ease-in-out disabled:bg-gray-400"
+                type="button"
+              >
+                Download PDF
+              </button>
+            )
+          }
+        </PDFDownloadLink>
+
+        <PDFViewer style={{ width: "70vw", height: "100vh" }}>
+          <ReportPDF tableData={tableData} />
+        </PDFViewer>
+      </div>
     </div>
   );
 }
