@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import ChartWithDropdown from "./approved";
 import Cards from "./cards";
 import "./cards.css";
-import BasicTable from "./Table";
-import { Line } from "react-chartjs-2";
 import { Bar } from "react-chartjs-2";
 import { Pie } from "react-chartjs-2";
 import {
@@ -21,6 +19,7 @@ import {
 import Table from "./Table";
 import ReportPDF from "./reportPDF";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
+import ApprovalVsRejectionTrends from "./map";
 
 // Register chart components for all three types (Line, Bar, Pie)
 ChartJS.register(
