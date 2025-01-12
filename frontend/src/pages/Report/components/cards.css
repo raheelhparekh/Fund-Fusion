@@ -53,3 +53,30 @@
 .motionCard{
 gap: 20px;
 }
+.h{
+    
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+    gap: 10px;
+
+}
+.Travel{
+    width: 400px;
+    height: 500px;
+    padding: 10px;
+    padding-left: 30px;
+    border-radius: 5px;
+    box-shadow: black;
+    align-items: stretch;
+}
+.Table
+{
+    width: 700px;
+}
+Table{
+    
+    
+    width: 700px;
+
+}
