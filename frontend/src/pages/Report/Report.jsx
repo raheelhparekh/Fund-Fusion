@@ -11,7 +11,7 @@ function Report() {
   const [loading, setLoading] = useState(false);
   return (
     <main className="flex flex-col p-6">
-      <div className="min-w-min bg-white shadow rounded-lg p-6">
+      <div className="bg-white shadow rounded-lg p-6 w-full">
         <FilterDataForm setReportData={setReportData} setLoading={setLoading} />
         {loading ? <Loading /> : <Charts reportData={reportData} />}
       </div>

@@ -53,8 +53,8 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     borderWidth: 1,
     borderColor: "#bfbfbf",
-    borderRightWidth: 0,
     borderBottomWidth: 0,
+    borderRightWidth: 0,
   },
   tableRow: {
     flexDirection: "row",
@@ -62,8 +62,9 @@ const styles = StyleSheet.create({
   tableColHeader: {
     width: "20%",
     borderStyle: "solid",
-    borderWidth: 1,
     borderColor: "#bfbfbf",
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
     backgroundColor: "#f2f2f2",
     padding: 5,
     textAlign: "center",
@@ -71,8 +72,9 @@ const styles = StyleSheet.create({
   tableCol: {
     width: "20%",
     borderStyle: "solid",
-    borderWidth: 1,
     borderColor: "#bfbfbf",
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
     padding: 5,
     textAlign: "center",
   },
@@ -85,35 +87,16 @@ const styles = StyleSheet.create({
     margin: 5,
     fontSize: 10,
   },
+  image: {
+    width: 400,
+    height: 300,
+  },
 });
-
-// Chart Component
-const ChartComponent = ({ chartRef }) => {
-  const data = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May"],
-    datasets: [
-      {
-        label: "Sample Data",
-        data: [65, 59, 80, 81, 56],
-        fill: false,
-        borderColor: "rgba(75,192,192,1)",
-        tension: 0.1,
-      },
-    ],
-  };
-
-  return (
-    <div ref={chartRef}>
-      <Line data={data} />
-    </div>
-  );
-};
 
 // Create Document Component
 const ReportPDF = ({ tableData, chartImages }) => {
   return (
     <Document>
-      {/* Title */}
       <Page size="A4" style={styles.page}>
         {/* Title */}
         <Text style={styles.sectionTitle}>Travel Policy Report</Text>
@@ -129,7 +112,8 @@ const ReportPDF = ({ tableData, chartImages }) => {
             <Text>90%</Text>
           </View>
         </View>
-        
+
+        {/* Table */}
         <View style={styles.table}>
           <View style={styles.tableRow}>
             <View style={styles.tableColHeader}>
@@ -168,11 +152,17 @@ const ReportPDF = ({ tableData, chartImages }) => {
             </View>
           ))}
         </View>
+
+        {/* Charts */}
         {chartImages?.barChart && (
           <Image src={chartImages.barChart} style={styles.image} />
         )}
-        {chartImages?.pieChart && (
-          <Image src={chartImages.pieChart} style={styles.image} />
+        {chartImages?.pieChart1 && (
+          <Image src={chartImages.pieChart1} style={styles.image} />
+        )}
+
+        {chartImages?.pieChart2 && (
+          <Image src={chartImages.pieChart2} style={styles.image} />
         )}
       </Page>
     </Document>

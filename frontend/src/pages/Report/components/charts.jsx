@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ChartWithDropdown from "./approved";
 import Cards from "./cards";
 import "./cards.css";
-import { Bar } from "react-chartjs-2";
-import { Pie } from "react-chartjs-2";
+import { Bar, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -17,9 +16,9 @@ import {
   Legend,
 } from "chart.js";
 import Table from "./Table";
-import ReportPDF from "./ReportPDF";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import ApprovalVsRejectionTrends from "./map";
+import ReportPDF from "./reportPDF";
 
 // Register chart components for all three types (Line, Bar, Pie)
 ChartJS.register(
@@ -115,9 +114,10 @@ function Charts({ reportData }) {
   }
 
   const [chartImages, setChartImages] = useState({
-    // lineChart: "",
     barChart: null,
-    pieChart: null,
+    pieChart1: null,
+    pieChart2: null,
+    isLoading: false,
   });
 
   // Line Chart Data and Options
@@ -279,23 +279,75 @@ function Charts({ reportData }) {
     ],
   };
 
-  const lineChartRef = useRef();
   const barChartRef = useRef();
-  const pieChartRef = useRef();
+  const pieChartRef1 = useRef();
+  const pieChartRef2 = useRef();
+
+  const loadChartsInPdf = () => {
+    const barChartInstance = barChartRef.current;
+    const pieChartInstance1 = pieChartRef1.current;
+    const pieChartInstance2 = pieChartRef2.current;
+
+    if (barChartInstance) {
+      const barBase64Image = barChartInstance.toBase64Image();
+      setChartImages((prevImages) => ({
+        ...prevImages,
+        barChart: barBase64Image,
+      }));
+    }
+
+    if (pieChartInstance1) {
+      const pieBase64Image = pieChartInstance1.toBase64Image();
+      setChartImages((prevImages) => ({
+        ...prevImages,
+        pieChart1: pieBase64Image,
+      }));
+    }
+
+    if (pieChartInstance2) {
+      const pieBase64Image = pieChartInstance2.toBase64Image();
+      setChartImages((prevImages) => ({
+        ...prevImages,
+        pieChart2: pieBase64Image,
+      }));
+    }
+  };
 
   useEffect(() => {
+    setChartImages((prevImages) => ({ ...prevImages, isLoading: true }));
+
+    const handleRender = () => {
+      loadChartsInPdf();
+      setChartImages((prevImages) => ({ ...prevImages, isLoading: false }));
+    };
+
     const barChartInstance = barChartRef.current;
-    const pieChartInstance = pieChartRef.current;
+    const pieChartInstance1 = pieChartRef1.current;
+    const pieChartInstance2 = pieChartRef2.current;
 
-    if (barChartInstance && pieChartInstance) {
-      const barBase64Image = barChartInstance.toBase64Image();
-      const pieBase64Image = pieChartInstance.toBase64Image();
-
-      setChartImages({
-        barChart: barBase64Image,
-        pieChart: pieBase64Image,
-      });
+    if (barChartInstance) {
+      barChartInstance.options.animation.onComplete = handleRender;
     }
+
+    if (pieChartInstance1) {
+      pieChartInstance1.options.animation.onComplete = handleRender;
+    }
+
+    if (pieChartInstance2) {
+      pieChartInstance2.options.animation.onComplete = handleRender;
+    }
+
+    return () => {
+      if (barChartInstance) {
+        barChartInstance.options.animation.onComplete = null;
+      }
+      if (pieChartInstance1) {
+        pieChartInstance1.options.animation.onComplete = null;
+      }
+      if (pieChartInstance2) {
+        pieChartInstance2.options.animation.onComplete = null;
+      }
+    };
   }, []);
 
   return (
@@ -306,12 +358,12 @@ function Charts({ reportData }) {
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-[2fr,1fr] gap-6">
         {/* Bar Chart */}
         <div className="w-full">
-          <Bar options={barOptions} data={barData} ref={barChartRef}/>
+          <Bar options={barOptions} data={barData} ref={barChartRef} />
         </div>
 
         {/* Pie Chart */}
         <div className="w-full">
-          <Pie options={pieOptions} data={pieData} ref={pieChartRef}/>
+          <Pie options={pieOptions} data={pieData} ref={pieChartRef1} />
         </div>
       </div>
       <div className="cards">
@@ -324,11 +376,11 @@ function Charts({ reportData }) {
         </div>
       </div>
       <div className="h">
-          <div className="Travel">
-            <Pie options={pie_Options} data={pie_Data} />
-          </div>
+        <div className="Travel">
+          <Pie options={pie_Options} data={pie_Data} ref={pieChartRef2} />
+        </div>
 
-            {/* <div className="hh">
+        {/* <div className="hh">
               <ApprovalVsRejectionTrends />
             </div> */}
 
@@ -338,35 +390,45 @@ function Charts({ reportData }) {
         {/* Line Chart */}
         {/* <div className="w-full">
         <Line options={lineOptions} data={lineData} />*/}
-      </div> 
-      <div className="pdfreport">
-        <PDFDownloadLink
-          document={<ReportPDF tableData={tableData} />}
-          fileName={`report_${query.institute || "allInstitutes"}_${
-            query.department || "allDepartments"
-          }_${query.year || "allYears"}_${
-            query.applicationType || "allApplications"
-          }.pdf`}
-        >
-          {({ blob, url, loading, error }) =>
-            loading ? (
-              "Getting Your PDF Report Ready..."
-            ) : (
-              <button
-                disabled={loading}
-                className="w-full flex items-center justify-center bg-gradient-to-r from-red-600 to-red-800 hover:from-red-800 hover:to-red-600 text-white font-semibold py-2 px-4 rounded-lg shadow-lg transform transition duration-300 ease-in-out disabled:bg-gray-400"
-                type="button"
-              >
-                Download PDF
-              </button>
-            )
-          }
-        </PDFDownloadLink>
-
-        <PDFViewer style={{ width: "70vw", height: "100vh" }}>
-          <ReportPDF tableData={tableData} chartImages={chartImages} />
-        </PDFViewer>
       </div>
+      {chartImages.isLoading ? (
+        <div className="text-center text-xl text-red-700 py-10">
+          Generating PDF Report...
+        </div>
+      ) : (
+        <div className="pdfreport">
+          <PDFDownloadLink
+            document={
+              <ReportPDF tableData={tableData} chartImages={chartImages} />
+            }
+            fileName={`report_${query.institute || "allInstitutes"}_${
+              query.department || "allDepartments"
+            }_${query.year || "allYears"}_${
+              query.applicationType || "allApplications"
+            }.pdf`}
+          >
+            {({ blob, url, loading, error }) =>
+              loading ? (
+                <div className="text-center text-xl text-red-700 py-10">
+                  Getting Your PDF Report Ready...
+                </div>
+              ) : (
+                <button
+                  disabled={loading}
+                  className="w-full flex items-center justify-center bg-gradient-to-r from-red-600 to-red-800 hover:from-red-800 hover:to-red-600 text-white font-semibold py-2 px-4 rounded-lg shadow-lg transform transition duration-300 ease-in-out disabled:bg-gray-400"
+                  type="button"
+                >
+                  Download PDF
+                </button>
+              )
+            }
+          </PDFDownloadLink>
+
+          <PDFViewer style={{ width: "70vw", height: "100vh" }}>
+            <ReportPDF tableData={tableData} chartImages={chartImages} />
+          </PDFViewer>
+        </div>
+      )}
     </div>
   );
 }
