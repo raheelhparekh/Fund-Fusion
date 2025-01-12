@@ -87,12 +87,35 @@ const styles = StyleSheet.create({
   },
 });
 
+// Chart Component
+const ChartComponent = ({ chartRef }) => {
+  const data = {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+    datasets: [
+      {
+        label: "Sample Data",
+        data: [65, 59, 80, 81, 56],
+        fill: false,
+        borderColor: "rgba(75,192,192,1)",
+        tension: 0.1,
+      },
+    ],
+  };
+
+  return (
+    <div ref={chartRef}>
+      <Line data={data} />
+    </div>
+  );
+};
+
 // Create Document Component
 const ReportPDF = ({ tableData, chartImages }) => {
   return (
     <Document>
       {/* Title */}
       <Page size="A4" style={styles.page}>
+        {/* Title */}
         <Text style={styles.sectionTitle}>Travel Policy Report</Text>
 
         {/* Summary Cards */}

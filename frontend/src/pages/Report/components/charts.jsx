@@ -17,7 +17,7 @@ import {
   Legend,
 } from "chart.js";
 import Table from "./Table";
-import ReportPDF from "./reportPDF";
+import ReportPDF from "./ReportPDF";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import ApprovalVsRejectionTrends from "./map";
 
@@ -324,21 +324,22 @@ function Charts({ reportData }) {
         </div>
       </div>
       <div className="h">
-        <div className="hhh">
-          <Pie options={pie_Options} data={pie_Data} />
-        </div>
+          <div className="Travel">
+            <Pie options={pie_Options} data={pie_Data} />
+          </div>
 
-        <div className="hh">
-          <ApprovalVsRejectionTrends />
-        </div>
+            {/* <div className="hh">
+              <ApprovalVsRejectionTrends />
+            </div> */}
 
         <div className="Table">
           <Table tableData={tableData} />
         </div>
         {/* Line Chart */}
         {/* <div className="w-full">
-        <Line options={lineOptions} data={lineData} />
-      </div> */}
+        <Line options={lineOptions} data={lineData} />*/}
+      </div> 
+      <div className="pdfreport">
         <PDFDownloadLink
           document={<ReportPDF tableData={tableData} />}
           fileName={`report_${query.institute || "allInstitutes"}_${
