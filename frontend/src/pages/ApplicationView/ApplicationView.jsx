@@ -67,9 +67,9 @@ function ApplicationView() {
       formData.append("rejectionFeedback", rejectionFeedback);
       formData.append("toVC", toVC);
 
-      formData.forEach((value, key) => {
-        console.log(key, value);
-      });
+      // formData.forEach((value, key) => {
+      //   console.log(key, value);
+      // });
 
       submit(formData, {
         method: "PUT",

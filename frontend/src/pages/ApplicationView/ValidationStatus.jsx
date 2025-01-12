@@ -3,7 +3,6 @@ import { MdWarning } from "react-icons/md";
 
 function ValidationStatus({ validations, rejectionFeedback }) {
 
-  console.log(validations)
   const roles = [
     { name: "FACULTY", status: validations.facultyValidation },
     { name: "HOD", status: validations.hodValidation },

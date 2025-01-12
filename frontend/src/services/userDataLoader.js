@@ -27,7 +27,6 @@ async function userDataLoader({ params, request }) {
       return redirect("/");
     }
 
-    console.log(res.data)
     return { data: res.data };
 
   } catch (error) {

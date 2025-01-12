@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ChartWithDropdown from "./approved";
 import Cards from "./cards";
 import "./cards.css";
@@ -113,6 +113,12 @@ function Charts({ reportData }) {
       });
     }
   }
+
+  const [chartImages, setChartImages] = useState({
+    // lineChart: "",
+    barChart: null,
+    pieChart: null,
+  });
 
   // Line Chart Data and Options
   const lineOptions = {
@@ -273,6 +279,25 @@ function Charts({ reportData }) {
     ],
   };
 
+  const lineChartRef = useRef();
+  const barChartRef = useRef();
+  const pieChartRef = useRef();
+
+  useEffect(() => {
+    const barChartInstance = barChartRef.current;
+    const pieChartInstance = pieChartRef.current;
+
+    if (barChartInstance && pieChartInstance) {
+      const barBase64Image = barChartInstance.toBase64Image();
+      const pieBase64Image = pieChartInstance.toBase64Image();
+
+      setChartImages({
+        barChart: barBase64Image,
+        pieChart: pieBase64Image,
+      });
+    }
+  }, []);
+
   return (
     <div className="p-10">
       <h1 className="text-3xl mb-6">Travel Policy Report</h1>
@@ -281,12 +306,12 @@ function Charts({ reportData }) {
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-[2fr,1fr] gap-6">
         {/* Bar Chart */}
         <div className="w-full">
-          <Bar options={barOptions} data={barData} />
+          <Bar options={barOptions} data={barData} ref={barChartRef}/>
         </div>
 
         {/* Pie Chart */}
         <div className="w-full">
-          <Pie options={pieOptions} data={pieData} />
+          <Pie options={pieOptions} data={pieData} ref={pieChartRef}/>
         </div>
       </div>
       <div className="cards">
@@ -338,7 +363,7 @@ function Charts({ reportData }) {
         </PDFDownloadLink>
 
         <PDFViewer style={{ width: "70vw", height: "100vh" }}>
-          <ReportPDF tableData={tableData} />
+          <ReportPDF tableData={tableData} chartImages={chartImages} />
         </PDFViewer>
       </div>
     </div>

@@ -101,7 +101,6 @@ const ExpenseForm = ({ onClose, setExpenses }) => {
 
     // If no errors, proceed with submission
     if (Object.keys(validationErrors).length === 0) {
-      console.log("Submitted values:", values);
       setExpenses({
         expenseCategory: values.expenseCategory,
         expenseName: values.expenseName,

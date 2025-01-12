@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import { Bar } from "react-chartjs-2";
 import { Pie } from "react-chartjs-2";
@@ -99,7 +99,7 @@ function AllChartsPage() {
   };
 
   const barData = {
-    labels: [Jan, 4000, 2022, 2023, 2024],
+    labels: ["Jan", "Feb", "Mar", "Apr", "May"],
     datasets: [
       {
         label: "Applications",

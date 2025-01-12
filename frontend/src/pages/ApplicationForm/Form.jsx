@@ -14,7 +14,6 @@ function Form({ prefilledData, applicantDesignation }) {
   let designation;
 
   const applicant = useRouteLoaderData("Applicant-Root");
-  console.log(applicant);
 
   if (applicantDesignation) {
     designation = applicantDesignation;
