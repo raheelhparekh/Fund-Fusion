@@ -15,6 +15,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import Table from "./Table";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import ApprovalVsRejectionTrends from "./map";
@@ -30,7 +31,8 @@ ChartJS.register(
   ArcElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  ChartDataLabels
 );
 
 function Charts({ reportData }) {
