@@ -126,11 +126,25 @@ const createApplication = async (req, res) => {
       }
     }
 
+    const expenses = JSON.parse(formData.expenses);
+
+    const totalExpense = parseFloat(
+      expenses.reduce(
+        (total, { expenseAmount }) => total + +expenseAmount,
+        0
+      ).toFixed(2)
+    );
+
+    console.log("Total Expense:", totalExpense);
+
+    formData["totalExpense"] = totalExpense;
+
     // Construct the application data object
     const applicationData = {
       applicantName,
       department,
       institute,
+      totalExpense,
       formData: JSON.parse(JSON.stringify(formData)),
       proofOfTravel: proofOfTravelBuffer,
       proofOfAccommodation: proofOfAccommodationBuffer,

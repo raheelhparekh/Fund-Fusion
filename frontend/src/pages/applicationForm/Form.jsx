@@ -95,15 +95,6 @@ function Form({ prefilledData, applicantDesignation }) {
         // Serialize the expenses array as a JSON string and append
         const expenses = JSON.stringify(values[key]);
         formDataToSend.append("expenses", expenses);
-        formDataToSend.append(
-          "totalExpense",
-          values[key]
-            ?.reduce(
-              (total, rec) => total + parseFloat(rec.expenseAmount || 0),
-              0
-            )
-            .toFixed(2)
-        );
 
         // Append expenseProof files separately (as file objects)
         values[key].forEach((expense, index) => {

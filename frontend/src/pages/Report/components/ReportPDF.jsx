@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   tableColHeader: {
-    width: "20%",
+    width: "25%",
     borderStyle: "solid",
     borderColor: "#bfbfbf",
     borderRightWidth: 1,
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   tableCol: {
-    width: "20%",
+    width: "25%",
     borderStyle: "solid",
     borderColor: "#bfbfbf",
     borderRightWidth: 1,
@@ -102,7 +102,7 @@ const ReportPDF = ({ tableData, chartImages }) => {
         <Text style={styles.sectionTitle}>Travel Policy Report</Text>
 
         {/* Summary Cards */}
-        <View style={styles.cardContainer}>
+        {/* <View style={styles.cardContainer}>
           <View style={styles.card}>
             <Text>Total Funds Deployed</Text>
             <Text>12,23,234</Text>
@@ -111,7 +111,7 @@ const ReportPDF = ({ tableData, chartImages }) => {
             <Text>Enrollment Rate</Text>
             <Text>90%</Text>
           </View>
-        </View>
+        </View> */}
 
         {/* Table */}
         <View style={styles.table}>
@@ -124,9 +124,6 @@ const ReportPDF = ({ tableData, chartImages }) => {
             </View>
             <View style={styles.tableColHeader}>
               <Text style={styles.tableCellHeader}>Scholarship</Text>
-            </View>
-            <View style={styles.tableColHeader}>
-              <Text style={styles.tableCellHeader}>Purpose of Travel</Text>
             </View>
             <View style={styles.tableColHeader}>
               <Text style={styles.tableCellHeader}>Funds</Text>
@@ -142,9 +139,6 @@ const ReportPDF = ({ tableData, chartImages }) => {
               </View>
               <View style={styles.tableCol}>
                 <Text style={styles.tableCell}>{row.Scholarship}</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>{row.Purpose_of_Travel}</Text>
               </View>
               <View style={styles.tableCol}>
                 <Text style={styles.tableCell}>{row.Funds}</Text>

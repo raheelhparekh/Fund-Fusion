@@ -38,7 +38,7 @@ ChartJS.register(
 function Charts({ reportData }) {
   const { data, query } = reportData;
 
-  if (data.length === 0) {
+  if (!data) {
     return (
       <div className="text-center text-xl text-red-700 py-10">
         No Data Found
@@ -46,12 +46,14 @@ function Charts({ reportData }) {
     );
   }
 
+  const { acceptedApplications, rejectedApplications, pendingApplications } = data;
+
   const tableData = [];
   const groupedData = {};
-  if (data) {
-    for (const item of data) {
+  if (acceptedApplications) {
+    for (const item of acceptedApplications) {
       const { institute, department, formData } = item;
-      const { totalExpense, purposeOfTravel } = formData;
+      const { totalExpense } = formData;
 
       if (!groupedData[institute]) {
         groupedData[institute] = {};
@@ -61,7 +63,6 @@ function Charts({ reportData }) {
         if (!groupedData[institute][department]) {
           groupedData[institute][department] = {
             totalExpense: 0,
-            purposeOfTravel: purposeOfTravel || "Not Provided",
             applications: 0,
           };
         }
@@ -74,7 +75,6 @@ function Charts({ reportData }) {
         if (!groupedData[institute].applications) {
           groupedData[institute] = {
             totalExpense: 0,
-            purposeOfTravel: purposeOfTravel || "Not Provided",
             applications: 0,
           };
         }
@@ -357,18 +357,17 @@ function Charts({ reportData }) {
       <h1 className="text-3xl mb-6">Travel Policy Report</h1>
 
       {/* Container for all three charts */}
-      <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-[2fr,1fr] gap-6">
-        {/* Bar Chart */}
+      {/* <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-[2fr,1fr] gap-6">
         <div className="w-full">
           <Bar options={barOptions} data={barData} ref={barChartRef} />
         </div>
 
-        {/* Pie Chart */}
         <div className="w-full">
           <Pie options={pieOptions} data={pieData} ref={pieChartRef1} />
         </div>
-      </div>
-      <div className="cards">
+      </div> */}
+
+      {/* <div className="cards">
         <Cards />
 
         <div className="generalInfo">
@@ -376,23 +375,26 @@ function Charts({ reportData }) {
             <ChartWithDropdown />
           </div>
         </div>
-      </div>
-      <div className="h">
-        <div className="Travel">
-          <Pie options={pie_Options} data={pie_Data} ref={pieChartRef2} />
-        </div>
+      </div> */}
 
-        {/* <div className="hh">
-              <ApprovalVsRejectionTrends />
-            </div> */}
+      {/* <div className="hh">
+            <ApprovalVsRejectionTrends />
+          </div> */}
 
-        <div className="Table">
+      {/* Line Chart */}
+      {/* <div className="w-full">
+      <Line options={lineOptions} data={lineData} />*/}
+
+      <div className="flex flex-col gap-10 items-center justify-center my-10">
+        <div className="w-full">
           <Table tableData={tableData} />
         </div>
-        {/* Line Chart */}
-        {/* <div className="w-full">
-        <Line options={lineOptions} data={lineData} />*/}
+
+        <div>
+          <Pie options={pie_Options} data={pie_Data} ref={pieChartRef2} />
+        </div>
       </div>
+
       {chartImages.isLoading ? (
         <div className="text-center text-xl text-red-700 py-10">
           Generating PDF Report...

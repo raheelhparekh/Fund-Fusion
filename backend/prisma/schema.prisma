@@ -60,9 +60,9 @@ model Application {
   institute     Institute
   department    String
 
-  applicantName String
+  applicantName   String
   applicationType String
-  formData      Json
+  formData        Json
 
   facultyValidation  ApplicationStatus?
   hodValidation      ApplicationStatus?
@@ -71,6 +71,8 @@ model Application {
   accountsValidation ApplicationStatus?
 
   rejectionFeedback String?
+
+  totalExpense Float @default(0)
 
   proofOfTravel        Bytes?
   proofOfAccommodation Bytes?

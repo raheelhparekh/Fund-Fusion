@@ -21,7 +21,7 @@ const applicationAction = async (req, res) => {
             validators: {
               select: { profileId: true, designation: true },
             },
-          }
+          },
         },
       },
     });
@@ -68,7 +68,11 @@ const applicationAction = async (req, res) => {
         if (validationStatus === "ACCEPTED") {
           validationData.hodValidation = "PENDING";
           hod = await prisma.user.findFirst({
-            where: { designation: "HOD", department: applicantDepartment, institute: applicantInstitute },
+            where: {
+              designation: "HOD",
+              department: applicantDepartment,
+              institute: applicantInstitute,
+            },
           });
           sendMail({
             emailId: hod.email,
@@ -128,9 +132,10 @@ const applicationAction = async (req, res) => {
             if (applicantDesignation !== "STUDENT") {
               return {
                 status: 400,
-                message: "Students Applications cannot be forwared for VC validation",
-              }
-            };
+                message:
+                  "Students Applications cannot be forwared for VC validation",
+              };
+            }
             validationData.vcValidation = "PENDING";
             vc = await prisma.user.findFirst({
               where: { designation: "VC" },
@@ -211,7 +216,6 @@ const applicationAction = async (req, res) => {
         return res.status(400).send("Invalid validator designation");
     }
 
-    console.log(hod)
 
     const validators = [
       hod && { profileId: hod?.profileId },
@@ -307,15 +311,42 @@ const getReportData = async (req, res) => {
 
     const applications = await prisma.application.findMany({
       where: whereClause,
-      select: {
-        _count: true,
-        formData: true,
-        institute: true,
-        department: true,
-      },
     });
 
-    res.status(200).send(applications);
+    const reportData = {
+      totalApplications: applications.length,
+      acceptedApplications: applications.filter(
+        (application) =>
+          (application.facultyValidation === "ACCEPTED" ||
+            application.facultyValidation === null) &&
+          (application.hodValidation === "ACCEPTED" ||
+            application.hodValidation === null) &&
+          (application.hoiValidation === "ACCEPTED" ||
+            application.hoiValidation === null) &&
+          (application.vcValidation === "ACCEPTED" ||
+            application.vcValidation === null) &&
+          (application.accountsValidation === "ACCEPTED" ||
+            application.accountsValidation === null)
+      ),
+      rejectedApplications: applications.filter(
+        (application) =>
+          application.facultyValidation === "REJECTED" ||
+          application.hodValidation === "REJECTED" ||
+          application.hoiValidation === "REJECTED" ||
+          application.vcValidation === "REJECTED" ||
+          application.accountsValidation === "REJECTED"
+      ),
+      pendingApplications: applications.filter(
+        (application) =>
+          application.facultyValidation === "PENDING" ||
+          application.hodValidation === "PENDING" ||
+          application.hoiValidation === "PENDING" ||
+          application.vcValidation === "PENDING" ||
+          application.accountsValidation === "PENDING"
+      ),
+    };
+
+    res.status(200).send(reportData);
   } catch (error) {
     console.error(error);
     res.status(500).send(error.message);

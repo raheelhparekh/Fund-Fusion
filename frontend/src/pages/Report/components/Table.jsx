@@ -3,7 +3,7 @@ import React from "react";
 const Table = ({ tableData }) => {
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+    <div className="table-responsive">
       <table
         style={{
           width: "100%",
@@ -16,7 +16,6 @@ const Table = ({ tableData }) => {
             <th style={{ padding: "10px", border: "1px solid #ddd" }}>ID</th>
             <th style={{ padding: "10px", border: "1px solid #ddd" }}>Stream</th>
             <th style={{ padding: "10px", border: "1px solid #ddd" }}>Scholarship</th>
-            <th style={{ padding: "10px", border: "1px solid #ddd" }}>Purpose of Travel</th>
             <th style={{ padding: "10px", border: "1px solid #ddd" }}>Funds</th>
           </tr>
         </thead>
@@ -26,7 +25,6 @@ const Table = ({ tableData }) => {
               <td style={{ padding: "10px", border: "1px solid #ddd" }}>{row.id}</td>
               <td style={{ padding: "10px", border: "1px solid #ddd" }}>{row.Stream}</td>
               <td style={{ padding: "10px", border: "1px solid #ddd" }}>{row.Scholarship}</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>{row.Purpose_of_Travel}</td>
               <td style={{ padding: "10px", border: "1px solid #ddd" }}>{row.Funds}</td>
             </tr>
           ))}
