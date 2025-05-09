@@ -18,6 +18,7 @@ function Input({
   const applicationId = useParams().applicationId;
 
   const [showMiniFrom, setShowMiniForm] = useState(false);
+  const [expensesEditValues, setExpensesEditValues] = useState(null);
   const [pdfIsVisible, setPdfIsVisible] = useState(false);
   const [fileUrl, setFileUrl] = useState(null);
 
@@ -243,7 +244,7 @@ function Input({
                             0
                           )
                           .toFixed(2)}`}
-                        {values[formFeild.name]
+                        {/* {values[formFeild.name]
                           ?.reduce(
                             (total, rec) =>
                               total + parseFloat(rec.expenseAmount || 0),
@@ -251,7 +252,7 @@ function Input({
                           )
                           .toFixed(2) > 10000 && (
                           <p className="text-red-600">Warning: Limit Exceded</p>
-                        )}
+                        )} */}
                       </label>
 
                       {!formFeild?.disabled &&
@@ -260,7 +261,7 @@ function Input({
                             <button
                               className="bg-red-700 text-white font-semibold py-3 px-8 rounded-lg shadow-md transform transition duration-300 hover:bg-red-800 hover:scale-105 active:scale-95"
                               type="button"
-                              onClick={() => setShowMiniForm(true)}
+                              onClick={() => {setShowMiniForm(true); setExpensesEditValues(null)}}
                             >
                               Add Expense
                             </button>
@@ -282,6 +283,17 @@ function Input({
                             newExpenses,
                           ])
                         }
+                        editExpense={(editedExpense) => {
+                          setFieldValue(
+                            formFeild.name,
+                            values[formFeild.name].map((expense) =>
+                              expense === expensesEditValues
+                                ? editedExpense
+                                : expense
+                            )
+                          );
+                        }}
+                        expenses={expensesEditValues}
                       />
                     )}
 
@@ -307,6 +319,17 @@ function Input({
                               )
                             )
                           }
+                          editStatus={(expense, status) =>{
+                            setFieldValue(
+                              formFeild.name,
+                              values[formFeild.name]?.map((toEdit) =>
+                                toEdit === expense
+                                  ? { ...toEdit, proofStatus: status }
+                                  : toEdit
+                              )
+                            )}
+                          }
+                          editExpense={(expenseValues) => {setShowMiniForm(true); setExpensesEditValues(expenseValues)}}
                           disabled={formFeild?.disabled}
                         />
                       </div>

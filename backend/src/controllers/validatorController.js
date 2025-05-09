@@ -6,7 +6,14 @@ const applicationAction = async (req, res) => {
   const { id: profileId, designation, department, institute, role } = req.user;
 
   try {
-    const { applicationId, action, rejectionFeedback, toVC } = req.body; // actions = 'accepted' or 'rejected'
+    const {
+      applicationId,
+      action,
+      rejectionFeedback,
+      toVC,
+      resubmission,
+      expenses,
+    } = req.body; // actions = 'accepted' or 'rejected'
 
     if (role !== "validator") {
       return res.status(403).send("Forbidden, Sign in as a validator");
@@ -46,6 +53,7 @@ const applicationAction = async (req, res) => {
     const applicantEmail = applicant.email;
 
     const validationStatus = action.toUpperCase();
+    let resubmissionStatus = JSON.parse(resubmission) || false;
 
     if (validationStatus !== "ACCEPTED" && validationStatus !== "REJECTED") {
       return res.status(400).send("Invalid status");
@@ -129,7 +137,7 @@ const applicationAction = async (req, res) => {
 
         if (validationStatus === "ACCEPTED") {
           if (JSON.parse(toVC)) {
-            if (applicantDesignation !== "STUDENT") {
+            if (applicantDesignation === "STUDENT") {
               return {
                 status: 400,
                 message:
@@ -138,7 +146,9 @@ const applicationAction = async (req, res) => {
             }
             validationData.vcValidation = "PENDING";
             vc = await prisma.user.findFirst({
-              where: { designation: "VC" },
+              where: {
+                designation: "VC",
+              },
             });
             sendMail({
               emailId: vc.email,
@@ -216,7 +226,6 @@ const applicationAction = async (req, res) => {
         return res.status(400).send("Invalid validator designation");
     }
 
-
     const validators = [
       hod && { profileId: hod?.profileId },
       hoi && { profileId: hoi?.profileId },
@@ -228,20 +237,92 @@ const applicationAction = async (req, res) => {
       validationData.rejectionFeedback = rejectionFeedback;
     }
 
+    if (action === "ACCEPTED") {
+      validationData.rejectionFeedback = null;
+    }
+
+    const newFormData = application.formData;
+
+    if (expenses) {
+      newFormData.expenses = expenses;
+    }
+
     const response = await prisma.application.update({
       where: {
         applicationId: applicationId,
       },
       data: {
         ...validationData,
+        resubmission: resubmissionStatus,
         validators: {
           connect: validators,
         },
+        formData: newFormData,
       },
       select: { applicationId: true },
     });
 
     res.status(200).send(response);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+const expenseAction = async (req, res) => {
+  const { id: profileId, designation, department, institute, role } = req.user;
+
+  try {
+    const { applicationId, expense, action } = req.body;
+
+    if (role !== "validator") {
+      return res.status(403).send("Forbidden, Sign in as a validator");
+    }
+
+    const validator = await prisma.user.findFirst({
+      where: { profileId },
+      include: {
+        toValidateApplications: {
+          where: { applicationId },
+          include: {
+            validators: {
+              select: { profileId: true, designation: true },
+            },
+          },
+        },
+      },
+    });
+
+    if (!validator) {
+      return res.status(404).send("Validator doesn't exist");
+    }
+
+    const application = validator.toValidateApplications[0];
+
+    if (!application) {
+      return res.status(404).send("Application not available");
+    }
+
+    const updatedFormData = {
+      ...application.formData,
+      expenses: JSON.stringify(
+        JSON.parse(application.formData.expenses).map((singleExpense) =>
+          singleExpense.expenseId === expense.expenseId
+            ? { ...singleExpense, proofStatus: action }
+            : singleExpense
+        )
+      ),
+    };
+
+    const updatedApplication = await prisma.application.update({
+      where: {
+        applicationId,
+      },
+      data: {
+        formData: updatedFormData,
+      },
+    });
+
+    res.status(200).send(updatedApplication);
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -353,4 +434,4 @@ const getReportData = async (req, res) => {
   }
 };
 
-export { applicationAction, getApplicantNames, getReportData };
+export { applicationAction, expenseAction, getApplicantNames, getReportData };

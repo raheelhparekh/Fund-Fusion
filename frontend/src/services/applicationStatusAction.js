@@ -5,6 +5,19 @@ export async function applicationStatusAction({ request, params }) {
   const action = formData.get("action")
 
   try {
+    if (action === "accepted") {
+      const expenses = JSON.parse(formData.get("expenses"));
+      const hasUnverifiedExpense = expenses.some(item => item?.proofStatus !== "verified");
+      
+      if (hasUnverifiedExpense) {
+        alert("Please verify all the proofs before approving");
+        return json(
+          { message: "Please verify all the proofs before approving" },
+          { status: 400 }
+        );
+      }
+    }
+
     const res = await fetch(
       `${
         import.meta.env.VITE_APP_API_URL

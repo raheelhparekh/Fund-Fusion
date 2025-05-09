@@ -16,7 +16,7 @@ const ContactUs = React.lazy(() => import("./pages/ContactUs/ContactUs"));
 const ApplicationView = React.lazy(() => import("./pages/ApplicationView/ApplicationView"));
 
 import userDataLoader from "./services/userDataLoader";
-import { createApplicationAction } from "./services/createApplicationAction";
+import { upsertApplicationAction } from "./services/upsertApplicationAction";
 import { applicationStatusAction } from "./services/applicationStatusAction";
 import Loading from "./components/Loading";
 
@@ -39,8 +39,8 @@ const router = createBrowserRouter([
     children: [
       { path: "dashboard", element: <Dashboard /> },
       { path: "dashboard/:status", element: <Applications /> },
-      { path: "dashboard/:status/:applicationId", element: <ApplicationView /> },
-      { path: "form", element: <Form />, action: createApplicationAction },
+      { path: "dashboard/:status/:applicationId", element: <ApplicationView />, action: upsertApplicationAction },
+      { path: "form", element: <Form />, action: upsertApplicationAction },
       { path: "contact-us", element: <ContactUs /> },
       { path: "policy", element: <Policy /> },
     ],

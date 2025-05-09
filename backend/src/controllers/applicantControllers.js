@@ -1,3 +1,4 @@
+import { application } from "express";
 import prisma from "../config/prismaConfig.js";
 import sendMail from "../services/sendMail.js";
 
@@ -26,6 +27,69 @@ const createApplication = async (req, res) => {
 
     if (!applicant) {
       return res.status(404).send({ message: "User not Found" });
+    }
+
+    // check for the formName
+    // if form name is "Travel Intimation Form", then do nothing
+    // if form name is "Post Travel Form" then get the "intimationApplicationID" from the form and check if an application with that id exists if not then return an error
+    // then check if that form dosent have any validation pending or rejected
+    // if it has then return an error
+    // if not then create the application
+
+    const formName = formData.formName;
+    if (!formName){
+      return res.status(400).send({ message: "Form Name is required" });
+    }
+
+    if (formName === "Post Travel Form") {
+      const intimationApplicationID = formData.intimationApplicationID;
+      if (intimationApplicationID === null) {
+        return res.status(400).send({ message: "Intimation Application ID is required" });
+      }
+
+      const intimationApplication = await prisma.application.findUnique({
+        where: { 
+          applicationId: intimationApplicationID,
+          applicantId: applicantId,
+         },
+      });
+
+      if (!intimationApplication) {
+        return res.status(404).send({ message: "Intimation Application not found" });
+      }
+
+      if ( intimationApplication["formName"] !== "Travel Intimation Form") {
+        return res.status(400).send({ message: "Intimation Application ID is not of a Travel Intimation Form" });
+      }
+
+      const validationFields = [
+        "facultyValidation",
+        "hodValidation",
+        "hoiValidation",
+        "vcValidation",
+        "accountsValidation",
+      ];
+
+      const hasRejectedValidations = validationFields.some(
+        (field) => intimationApplication[field] === "REJECTED"
+      );
+
+      if (hasRejectedValidations) {
+        return res
+          .status(400)
+          .send({ message: "Intimation Application has rejected validations" });
+      }
+
+      const hasPendingValidations = validationFields.some(
+        (field) => intimationApplication[field] === "PENDING"
+      );
+
+      if (hasPendingValidations) {
+        return res
+          .status(400)
+          .send({ message: "Intimation Application has pending validations" });
+      }
+
     }
 
     const applicantName = applicant.userName;
@@ -135,8 +199,6 @@ const createApplication = async (req, res) => {
       ).toFixed(2)
     );
 
-    console.log("Total Expense:", totalExpense);
-
     formData["totalExpense"] = totalExpense;
 
     // Construct the application data object
@@ -145,7 +207,7 @@ const createApplication = async (req, res) => {
       department,
       institute,
       totalExpense,
-      formData: JSON.parse(JSON.stringify(formData)),
+      formData,
       proofOfTravel: proofOfTravelBuffer,
       proofOfAccommodation: proofOfAccommodationBuffer,
       proofOfAttendance: proofOfAttendanceBuffer,
@@ -175,6 +237,7 @@ const createApplication = async (req, res) => {
         validators: {
           connect: validators,
         },
+        formName: formData.formName,
       },
     });
 
@@ -199,4 +262,115 @@ const createApplication = async (req, res) => {
   }
 };
 
-export { createApplication };
+const updateApplication = async (req, res) => {
+  const {
+    id: applicantId,
+    email,
+    designation: applicantDesignation,
+    department,
+    institute,
+    role,
+  } = req.user;
+
+  const formData = req.body;
+  const applicationId = formData.applicationId;
+  delete formData.applicationId;
+
+  try {
+    if (role !== "applicant") {
+      return res
+        .status(403)
+        .send({ message: "Forbidden, Sign In as Applicant" });
+    }
+
+    const applicant = await prisma.user.findUnique({
+      where: { profileId: applicantId },
+    });
+
+    if (!applicant) {
+      return res.status(404).send({ message: "User not Found" });
+    }
+
+    const {
+      proofOfTravel,
+      proofOfAccommodation,
+      proofOfAttendance,
+      ...otherFiles
+    } = req.files;
+
+    // Prepare file buffers for fixed fields
+    const proofOfTravelBuffer = proofOfTravel?.[0]?.buffer || null;
+    const proofOfAccommodationBuffer =
+      proofOfAccommodation?.[0]?.buffer || null;
+    const proofOfAttendanceBuffer = proofOfAttendance?.[0]?.buffer || null;
+
+    // Prepare an object to hold the expense proof buffers dynamically
+    const expenseProofs = {};
+
+    for (let i = 0; i < 10; i++) {
+      const expenseProofField = `expenses[${i}].expenseProof`;
+      if (otherFiles[expenseProofField]) {
+        expenseProofs[`expenseProof${i}`] =
+          otherFiles[expenseProofField][0].buffer;
+      }
+    }
+
+    const expenses = JSON.parse(formData.expenses);
+
+    const totalExpense = parseFloat(
+      expenses.reduce(
+        (total, { expenseAmount }) => total + +expenseAmount,
+        0
+      ).toFixed(2)
+    );
+
+    formData["totalExpense"] = totalExpense;
+
+    const application = await prisma.application.findUnique({
+      where: { applicationId },
+    });
+
+    const validationFields = [
+      "facultyValidation",
+      "hodValidation",
+      "hoiValidation",
+      "vcValidation",
+      "accountsValidation",
+    ];
+
+    console.log(expenseProofs)
+
+    const updatedData = {
+      totalExpense,
+      formData,
+      proofOfTravel: proofOfTravelBuffer,
+      proofOfAccommodation: proofOfAccommodationBuffer,
+      proofOfAttendance: proofOfAttendanceBuffer,
+      resubmission: false,
+      ...expenseProofs,
+    };
+
+    for (const field of validationFields) {
+      if (application[field] === "REJECTED") {
+        updatedData[field] = "PENDING";
+      }
+    }
+
+    const updatedApplication = await prisma.application.update({
+      where: { applicationId },
+      data: updatedData,
+    });
+
+    res.status(200).send({
+      message: "Application updated successfully",
+      data: updatedApplication.applicantName,
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: "Error updating application",
+      error: error.message,
+    });
+  }
+}
+
+export { createApplication, updateApplication };

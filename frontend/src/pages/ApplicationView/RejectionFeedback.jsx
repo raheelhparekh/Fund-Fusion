@@ -9,9 +9,9 @@ function RejectionFeedback({ onClose, onSubmit }) {
     setReason(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e, resubmission = false) => {
     e.preventDefault();
-    onSubmit(reason)
+    onSubmit(reason, resubmission);
     onClose();
   };
 
@@ -35,18 +35,18 @@ function RejectionFeedback({ onClose, onSubmit }) {
 
           <div className="flex justify-end space-x-4">
             <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 focus:outline-none"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSubmit}
+              onClick={(e) => handleSubmit(e, false)}
               type="button"
               className="px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 focus:outline-none"
             >
               Reject
+            </button>
+            <button
+              onClick={(e) => handleSubmit(e, true)}
+              type="button"
+              className="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 focus:outline-none"
+            >
+              Allow Resubmission
             </button>
           </div>
         </form>

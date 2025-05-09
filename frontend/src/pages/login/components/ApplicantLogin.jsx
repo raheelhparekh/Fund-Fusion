@@ -111,6 +111,7 @@ function ApplicantLogin({ changeRole }) {
             type="password" 
             placeholder="Password" 
             className="w-full mb-3 p-2 border border-gray-300 rounded-lg text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-red-500"
+            autoComplete='on'
             value={credentials.password} 
             onChange={(event) => setCredentials(prev => ({ ...prev, password: event.target.value }))} 
           />

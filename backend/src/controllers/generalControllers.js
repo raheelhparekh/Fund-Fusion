@@ -220,6 +220,7 @@ const getApplicationData = async (req, res) => {
         applicationId: true,
         applicantId: true,
         applicantName: true,
+        resubmission: true,
         formData: true,
         facultyValidation: true,
         hodValidation: true,

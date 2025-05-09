@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Modal from "../../../components/Modal/Modal"; // Ensure your Modal is correctly imported
 
 // Validation function (manually written)
@@ -6,13 +6,13 @@ const validateForm = (values) => {
   const errors = {};
 
   // Validate Expense Category
-  if (!values.expenseCategory) {
-    errors.expenseCategory = "Expense Category is required";
+  if (!values.expenseName) {
+    errors.expenseName = "Expense Category is required";
   }
 
   // Validate Expense Name
-  if (!values.expenseName) {
-    errors.expenseName = "Expense Name is required";
+  if (!values.expenseDetails) {
+    errors.expenseDetails = "Expense Name is required";
   }
 
   // Validate Expense Amount
@@ -41,20 +41,35 @@ const validateForm = (values) => {
   return errors;
 };
 
-const ExpenseForm = ({ onClose, setExpenses }) => {
+const ExpenseForm = ({ onClose, setExpenses, editExpense, expenses = null }) => {
+  const fileInputRef = useRef(null);
+
   const [values, setValues] = useState({
-    expenseCategory: "",
     expenseName: "",
+    expenseDetails: "",
     expenseAmount: "",
     expenseProof: null,
   });
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({
-    expenseCategory: false,
     expenseName: false,
+    expenseDetails: false,
     expenseAmount: false,
     expenseProof: false,
   });
+
+  useEffect(() => {
+    if (expenses) {
+      // If the expenses object contains a File, set it to the input
+      if (expenses.expenseProof && expenses.expenseProof instanceof File) {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(expenses.expenseProof); // Add the file from expenses to DataTransfer
+        fileInputRef.current.files = dataTransfer.files; // Set files to the input
+      }
+
+      setValues(expenses); // Set the rest of the form data
+    }
+  }, [expenses]);
 
   // Handle form input changes with error checking on each keystroke
   const handleChange = (e) => {
@@ -101,28 +116,39 @@ const ExpenseForm = ({ onClose, setExpenses }) => {
 
     // If no errors, proceed with submission
     if (Object.keys(validationErrors).length === 0) {
-      setExpenses({
-        expenseCategory: values.expenseCategory,
-        expenseName: values.expenseName,
-        expenseAmount: values.expenseAmount,
-        expenseProof: values.expenseProof,
-      });
+      if (expenses) {
+        editExpense({
+          expenseId: expenses.expenseId,
+          expenseName: values.expenseName,
+          expenseDetails: values.expenseDetails,
+          expenseAmount: values.expenseAmount,
+          expenseProof: values.expenseProof,
+        })
+      } else {
+        setExpenses({
+          expenseId: crypto.randomUUID(),
+          expenseName: values.expenseName,
+          expenseDetails: values.expenseDetails,
+          expenseAmount: values.expenseAmount,
+          expenseProof: values.expenseProof,
+        });
+      }
       onClose(); // Close the modal after submission
     }
   };
 
   return (
-    <Modal onClose={onClose} >
+    <Modal onClose={onClose}>
       <div className="space-y-4">
         {/* Expense Category */}
         <div className="space-y-1 bg-slate-50 p-3 rounded-md">
-          <label htmlFor="expenseCategory" className="block font-medium">
-            Expense Category
+          <label htmlFor="expenseName" className="block font-medium">
+            Expense Name
           </label>
           <select
-            name="expenseCategory"
-            id="expenseCategory"
-            value={values.expenseCategory}
+            name="expenseName"
+            id="expenseName"
+            value={values.expenseName}
             onChange={handleChange}
             onBlur={handleBlur}
             className="w-full px-3 py-2 border border-gray-300 rounded-md"
@@ -132,29 +158,31 @@ const ExpenseForm = ({ onClose, setExpenses }) => {
             <option value="LODGING">Lodging</option>
             <option value="BOARDING">Boarding</option>
             <option value="LOCAL_CONVEYANCE">Local Conveyance</option>
+            <option value="TRANSPORTATION">Transportation</option>
+            <option value="REGISTRATION">Registration</option>
             <option value="MISCELLANEOUS">Miscellaneous</option>
           </select>
-          {errors.expenseCategory && (
-            <p className="text-red-500 text-sm">{errors.expenseCategory}</p>
+          {errors.expenseName && (
+            <p className="text-red-500 text-sm">{errors.expenseName}</p>
           )}
         </div>
 
         {/* Expense Name */}
         <div className="space-y-1 bg-slate-50 p-3 rounded-md">
-          <label htmlFor="expenseName" className="block font-medium">
-            Expense Name
+          <label htmlFor="expenseDetails" className="block font-medium">
+            Expense Details
           </label>
           <input
             type="text"
-            name="expenseName"
-            id="expenseName"
-            value={values.expenseName}
+            name="expenseDetails"
+            id="expenseDetails"
+            value={values.expenseDetails}
             onChange={handleChange}
             onBlur={handleBlur}
             className="w-full px-3 py-2 border border-gray-300 rounded-md"
           />
-          {errors.expenseName && (
-            <p className="text-red-500 text-sm">{errors.expenseName}</p>
+          {errors.expenseDetails && (
+            <p className="text-red-500 text-sm">{errors.expenseDetails}</p>
           )}
         </div>
 
@@ -184,9 +212,10 @@ const ExpenseForm = ({ onClose, setExpenses }) => {
           </label>
           <input
             type="file"
+            ref={fileInputRef}
             name="expenseProof"
             id="expenseProof"
-            accept="image/jpeg, image/png, application/pdf"
+            accept="application/pdf"
             onChange={handleFileChange}
             onBlur={handleBlur}
             className="w-full px-3 py-2 border border-gray-300 rounded-md"
@@ -203,7 +232,7 @@ const ExpenseForm = ({ onClose, setExpenses }) => {
             onClick={handleSubmit} // Call handleSubmit manually
             className="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700"
           >
-            Add Expense
+            {expenses ? "Update" : "Add"} Expense
           </button>
         </div>
       </div>

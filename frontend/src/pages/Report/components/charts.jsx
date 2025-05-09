@@ -281,76 +281,76 @@ function Charts({ reportData }) {
     ],
   };
 
-  const barChartRef = useRef();
-  const pieChartRef1 = useRef();
-  const pieChartRef2 = useRef();
+  // const barChartRef = useRef();
+  // const pieChartRef1 = useRef();
+  // const pieChartRef2 = useRef();
 
-  const loadChartsInPdf = () => {
-    const barChartInstance = barChartRef.current;
-    const pieChartInstance1 = pieChartRef1.current;
-    const pieChartInstance2 = pieChartRef2.current;
+  // const loadChartsInPdf = () => {
+  //   const barChartInstance = barChartRef.current;
+  //   const pieChartInstance1 = pieChartRef1.current;
+  //   const pieChartInstance2 = pieChartRef2.current;
 
-    if (barChartInstance) {
-      const barBase64Image = barChartInstance.toBase64Image();
-      setChartImages((prevImages) => ({
-        ...prevImages,
-        barChart: barBase64Image,
-      }));
-    }
+  //   if (barChartInstance) {
+  //     const barBase64Image = barChartInstance.toBase64Image();
+  //     setChartImages((prevImages) => ({
+  //       ...prevImages,
+  //       barChart: barBase64Image,
+  //     }));
+  //   }
 
-    if (pieChartInstance1) {
-      const pieBase64Image = pieChartInstance1.toBase64Image();
-      setChartImages((prevImages) => ({
-        ...prevImages,
-        pieChart1: pieBase64Image,
-      }));
-    }
+  //   if (pieChartInstance1) {
+  //     const pieBase64Image = pieChartInstance1.toBase64Image();
+  //     setChartImages((prevImages) => ({
+  //       ...prevImages,
+  //       pieChart1: pieBase64Image,
+  //     }));
+  //   }
 
-    if (pieChartInstance2) {
-      const pieBase64Image = pieChartInstance2.toBase64Image();
-      setChartImages((prevImages) => ({
-        ...prevImages,
-        pieChart2: pieBase64Image,
-      }));
-    }
-  };
+  //   if (pieChartInstance2) {
+  //     const pieBase64Image = pieChartInstance2.toBase64Image();
+  //     setChartImages((prevImages) => ({
+  //       ...prevImages,
+  //       pieChart2: pieBase64Image,
+  //     }));
+  //   }
+  // };
 
-  useEffect(() => {
-    setChartImages((prevImages) => ({ ...prevImages, isLoading: true }));
+  // useEffect(() => {
+  //   setChartImages((prevImages) => ({ ...prevImages, isLoading: true }));
 
-    const handleRender = () => {
-      loadChartsInPdf();
-      setChartImages((prevImages) => ({ ...prevImages, isLoading: false }));
-    };
+  //   const handleRender = () => {
+  //     loadChartsInPdf();
+  //     setChartImages((prevImages) => ({ ...prevImages, isLoading: false }));
+  //   };
 
-    const barChartInstance = barChartRef.current;
-    const pieChartInstance1 = pieChartRef1.current;
-    const pieChartInstance2 = pieChartRef2.current;
+  //   const barChartInstance = barChartRef.current;
+  //   const pieChartInstance1 = pieChartRef1.current;
+  //   const pieChartInstance2 = pieChartRef2.current;
 
-    if (barChartInstance) {
-      barChartInstance.options.animation.onComplete = handleRender;
-    }
+  //   if (barChartInstance) {
+  //     barChartInstance.options.animation.onComplete = handleRender;
+  //   }
 
-    if (pieChartInstance1) {
-      pieChartInstance1.options.animation.onComplete = handleRender;
-    }
+  //   if (pieChartInstance1) {
+  //     pieChartInstance1.options.animation.onComplete = handleRender;
+  //   }
 
-    if (pieChartInstance2) {
-      pieChartInstance2.options.animation.onComplete = handleRender;
-    }
+  //   if (pieChartInstance2) {
+  //     pieChartInstance2.options.animation.onComplete = handleRender;
+  //   }
 
-    return () => {
-      if (barChartInstance) {
-        barChartInstance.options.animation.onComplete = null;
-      }
-      if (pieChartInstance1) {
-        pieChartInstance1.options.animation.onComplete = null;
-      }
-      if (pieChartInstance2) {
-        pieChartInstance2.options.animation.onComplete = null;
-      }
-    };
-  }, []);
+  //   return () => {
+  //     if (barChartInstance) {
+  //       barChartInstance.options.animation.onComplete = null;
+  //     }
+  //     if (pieChartInstance1) {
+  //       pieChartInstance1.options.animation.onComplete = null;
+  //     }
+  //     if (pieChartInstance2) {
+  //       pieChartInstance2.options.animation.onComplete = null;
+  //     }
+  //   };
+  // }, []);
 
   return (
     <div className="p-10">
@@ -389,10 +389,10 @@ function Charts({ reportData }) {
         <div className="w-full">
           <Table tableData={tableData} />
         </div>
-
+{/* 
         <div>
           <Pie options={pie_Options} data={pie_Data} ref={pieChartRef2} />
-        </div>
+        </div> */}
       </div>
 
       {chartImages.isLoading ? (

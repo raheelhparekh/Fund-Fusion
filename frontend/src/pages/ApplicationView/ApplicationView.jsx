@@ -23,6 +23,8 @@ function ApplicationView() {
   const [rejectionFeedbackPopUp, setRejectionFeedbackPopUp] = useState(false);
   const [acceptChoicePopUp, setAcceptChoicePopUp] = useState(false);
 
+  const [formValues, setFormValues] = useState({});
+
   const applicationId = useParams().applicationId;
   const statusParam = useParams().status;
 
@@ -57,7 +59,8 @@ function ApplicationView() {
     applicationId,
     action,
     rejectionFeedback = "",
-    toVC = false
+    toVC = false,
+    resubmission = false
   ) => {
     try {
       setLoading(true);
@@ -66,11 +69,16 @@ function ApplicationView() {
       formData.append("action", action);
       formData.append("rejectionFeedback", rejectionFeedback);
       formData.append("toVC", toVC);
+      formData.append("resubmission", resubmission);
 
       // formData.forEach((value, key) => {
       //   console.log(key, value);
       // });
 
+      if (formValues && formValues?.expenses) {
+        formData.append("expenses", JSON.stringify(formValues.expenses));
+      }
+    
       submit(formData, {
         method: "PUT",
         encType: "multipart/form-data", // Specify the encoding type
@@ -133,17 +141,20 @@ function ApplicationView() {
       <Form
         prefilledData={applicationDisplay?.formData}
         applicantDesignation={applicationDisplay?.applicant?.designation}
+        resubmission={applicationDisplay?.resubmission || false}
+        onValuesChange={(values) => setFormValues(values)}
       />
 
       {rejectionFeedbackPopUp && (
         <RejectionFeedback
           onClose={() => setRejectionFeedbackPopUp(false)}
-          onSubmit={(rejectionFeedback) =>
+          onSubmit={(rejectionFeedback, resubmission) =>
             handleSubmit(
               applicationDisplay?.applicationId,
               "rejected",
               rejectionFeedback,
-              false
+              false,
+              resubmission
             )
           }
         />
@@ -153,7 +164,7 @@ function ApplicationView() {
         <AcceptChoice
           onClose={() => setAcceptChoicePopUp(false)}
           onSubmit={(toVC) =>
-            handleSubmit(applicationDisplay?.applicationId, "accepted", "", toVC)
+            handleSubmit(applicationDisplay?.applicationId, "accepted", "", toVC, false)
           }
           designation={user.designation}
           applicantDesignation={applicationDisplay?.applicant?.designation}

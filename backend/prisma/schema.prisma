@@ -64,6 +64,9 @@ model Application {
   applicationType String
   formData        Json
 
+  formName        String
+  resubmission    Boolean @default(false)
+  
   facultyValidation  ApplicationStatus?
   hodValidation      ApplicationStatus?
   hoiValidation      ApplicationStatus?
