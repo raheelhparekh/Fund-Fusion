@@ -10,6 +10,7 @@ import Form from "../ApplicationForm/Form";
 import RejectionFeedback from "./RejectionFeedback";
 import { TbLoader3 } from "react-icons/tb";
 import AcceptChoice from "./AcceptChoice";
+import { FaCopy } from "react-icons/fa";
 
 function ApplicationView() {
   const { role, user } =
@@ -22,6 +23,7 @@ function ApplicationView() {
   const [applicationDisplay, setApplicationDisplay] = useState(null);
   const [rejectionFeedbackPopUp, setRejectionFeedbackPopUp] = useState(false);
   const [acceptChoicePopUp, setAcceptChoicePopUp] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
 
   const [formValues, setFormValues] = useState({});
 
@@ -71,10 +73,6 @@ function ApplicationView() {
       formData.append("toVC", toVC);
       formData.append("resubmission", resubmission);
 
-      // formData.forEach((value, key) => {
-      //   console.log(key, value);
-      // });
-
       if (formValues && formValues?.expenses) {
         formData.append("expenses", JSON.stringify(formValues.expenses));
       }
@@ -122,11 +120,49 @@ function ApplicationView() {
 
   let title = applicationDisplay?.formData?.eventName;
 
-  if (!applicationDisplay) return null;
+  if (!applicationDisplay) return null;  
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(applicationId)
+      .then(() => {
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2000);
+      })
+      .catch(err => {
+        console.error("Failed to copy application ID: ", err);
+        alert("Failed to copy application ID. Please try again.");
+      });
+  };
+
+  // Check if this is a Travel Intimation Form
+  const isTravelIntimationForm = applicationDisplay?.formData?.formName === "Travel Intimation Form";
 
   return (
     <div className="min-w-min bg-white shadow rounded-lg p-2 sm:p-4 md:p-6 m-4">
-      <h1 className="text-3xl font-extrabold text-gray-800 mb-6">{title}</h1>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-6 gap-3">
+        <div>
+          <h1 className="text-3xl font-extrabold text-gray-800">{title}</h1>
+        </div>
+        {isTravelIntimationForm && (
+          <button
+            onClick={copyToClipboard}
+            className={`flex items-center ${copySuccess ? 'bg-green-600' : 'bg-red-700 hover:bg-red-800'} text-white font-medium py-2 px-4 rounded-lg shadow-md transition duration-300 transform ${copySuccess ? '' : 'hover:scale-110'} self-start sm:self-auto`}
+            title="Copy Application ID"
+          >
+            {copySuccess ? (
+              <>
+                <span className="mr-2">✓</span>
+                <span className="hidden sm:inline">Copied!</span>
+              </>
+            ) : (
+              <>
+                <FaCopy className="mr-2" />
+                <span className="hidden sm:inline">Copy ID</span>
+              </>
+            )}
+          </button>
+        )}
+      </div>
 
       <ValidationStatus
         validations={{
@@ -138,6 +174,7 @@ function ApplicationView() {
         }}
         rejectionFeedback={applicationDisplay?.rejectionFeedback}
       />
+      
       <Form
         prefilledData={applicationDisplay?.formData}
         applicantDesignation={applicationDisplay?.applicant?.designation}
