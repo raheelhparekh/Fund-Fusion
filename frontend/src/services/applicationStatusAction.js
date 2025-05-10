@@ -1,4 +1,5 @@
 import { json } from "react-router-dom";
+import { toastSuccess, toastError, toastWarning } from "../utils/toast";
 
 export async function applicationStatusAction({ request, params }) {
   const formData = await request.formData();
@@ -10,7 +11,7 @@ export async function applicationStatusAction({ request, params }) {
       const hasUnverifiedExpense = expenses.some(item => item?.proofStatus !== "verified");
       
       if (hasUnverifiedExpense) {
-        alert("Please verify all the proofs before approving");
+        toastWarning("Please verify all the proofs before approving");
         return json(
           { message: "Please verify all the proofs before approving" },
           { status: 400 }
@@ -34,10 +35,11 @@ export async function applicationStatusAction({ request, params }) {
     }
 
     if (!res.ok) {
+      toastError(res.statusText);
       return json({ message: res.statusText }, { status: res.status });
     }
 
-    alert(`Application ${action.slice(0, 1).toUpperCase() + action.slice(1).toLowerCase()} Successfully`);
+    toastSuccess(`Application ${action.slice(0, 1).toUpperCase() + action.slice(1).toLowerCase()} Successfully`);
 
     window.location.reload()
 

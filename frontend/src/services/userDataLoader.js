@@ -1,5 +1,6 @@
 import axios from "axios";
 import { json, redirect } from "react-router-dom";
+import { toastError } from "../utils/toast";
 
 async function userDataLoader({ params, request }) {
   try {
@@ -8,7 +9,7 @@ async function userDataLoader({ params, request }) {
     });
 
     if (res.status === 401 || res.status === 403) {
-      alert("Unauthorized Access. Please Login.");
+      toastError("Unauthorized Access. Please Login.");
       return redirect("/"); // Redirect to login page
     }
 
@@ -18,12 +19,12 @@ async function userDataLoader({ params, request }) {
 
     // Role-based route protection
     if (userRoleInURL === "applicant" && userRole !== "Applicant") {
-      alert("Access Denied: Applicant Role Required.");
+      toastError("Access Denied: Applicant Role Required.");
       return redirect("/");
     }
 
     if (userRoleInURL === "validator" && userRole !== "Validator") {
-      alert("Access Denied: Validator Role Required.");
+      toastError("Access Denied: Validator Role Required.");
       return redirect("/");
     }
 
@@ -32,7 +33,7 @@ async function userDataLoader({ params, request }) {
   } catch (error) {
     // Handle errors during the request
     if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-      alert(error.response?.data?.message || "Unauthorized Access.");
+      toastError(error.response?.data?.message || "Unauthorized Access.");
       
       // Log out the user if unauthorized or forbidden
       await fetch(`${import.meta.env.VITE_APP_API_URL}/logout`, {

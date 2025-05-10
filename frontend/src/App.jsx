@@ -1,6 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import React, { Suspense } from "react";
 import "./App.css";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Lazy loading the pages and components
 const Login = React.lazy(() => import("./pages/Login/Login"));
@@ -62,9 +64,12 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <Suspense fallback={<Loading/>}>
-      <RouterProvider router={router} />
-    </Suspense>
+    <>
+      <ToastContainer position="top-center" />
+      <Suspense fallback={<Loading/>}>
+        <RouterProvider router={router} />
+      </Suspense>
+    </>
   );
 }
 
