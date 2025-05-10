@@ -237,7 +237,7 @@ const applicationAction = async (req, res) => {
       validationData.rejectionFeedback = rejectionFeedback;
     }
 
-    if (action === "ACCEPTED") {
+    if (validationStatus === "ACCEPTED") {
       validationData.rejectionFeedback = null;
     }
 

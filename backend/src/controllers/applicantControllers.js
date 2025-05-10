@@ -157,6 +157,14 @@ const createApplication = async (req, res) => {
         break;
     }
 
+    // Security check: Make sure the proper relationships exist between the applicant and application data
+    if (applicant.designation === "STUDENT") {
+      // Validate that primary supervisor email is provided for student applications
+      if (!formData.primarySupervisorEmail) {
+        return res.status(400).send({ message: "Primary supervisor email is required for student applications" });
+      }
+    }
+
     // Compile the validators list with available supervisors, FDC coordinator, HOD, and HOI
     const validators = [
       primarySupervisor && { profileId: primarySupervisor?.profileId },
@@ -241,6 +249,10 @@ const createApplication = async (req, res) => {
       },
     });
 
+    // Store this original state to compare on future modifications
+    // We don't need to actually create a new record, the application itself
+    // will serve this purpose
+
     // sendMail({
     //   emailId: hod.email,
     //   link: `http://localhost:5173/validator/dashboard/pending/${newApplication.applicationId}`,
@@ -291,6 +303,52 @@ const updateApplication = async (req, res) => {
       return res.status(404).send({ message: "User not Found" });
     }
 
+    // Fetch the original application to compare fields
+    const originalApplication = await prisma.application.findUnique({
+      where: { applicationId },
+    });
+
+    if (!originalApplication) {
+      return res.status(404).send({ message: "Application not found" });
+    }
+
+    const originalFormData = originalApplication.formData;
+
+    // Verify that disabled fields haven't been changed
+    // Only expenses can be edited, everything else should remain the same regardless of resubmission status
+    
+    // Create a clone of the original form data for comparison
+    const safeOriginalData = JSON.parse(JSON.stringify(originalFormData));
+    
+    // Create a safe copy of submitted form data for validation
+    const safeSubmittedData = { ...formData };
+    
+    // Exclude expenses-related fields from comparison as they're allowed to change
+    delete safeOriginalData.expenses;
+    delete safeSubmittedData.expenses;
+    delete safeSubmittedData.resubmission;
+    delete safeOriginalData.totalExpense;
+    delete safeSubmittedData.totalExpense;
+    
+    // We need to check if any non-expenses fields have been modified
+    for (const key in safeSubmittedData) {
+      // Don't check expense fields pattern (expenses[0].expenseProof, etc.)
+      if (key.startsWith('expenses[')) {
+        continue;
+      }
+      
+      // Check if the field has been modified
+      if (safeSubmittedData[key] !== safeOriginalData[key]) {
+        console.log(`Tampering detected: Field '${key}' was modified`);
+        console.log(`Original: ${safeOriginalData[key]}`);
+        console.log(`Submitted: ${safeSubmittedData[key]}`);
+        
+        return res.status(403).send({
+          message: `Forbidden: Field '${key}' cannot be modified. Only expense information can be changed. Tampering detected.`,
+        });
+      }
+    }
+
     const {
       proofOfTravel,
       proofOfAccommodation,
@@ -326,10 +384,6 @@ const updateApplication = async (req, res) => {
 
     formData["totalExpense"] = totalExpense;
 
-    const application = await prisma.application.findUnique({
-      where: { applicationId },
-    });
-
     const validationFields = [
       "facultyValidation",
       "hodValidation",
@@ -351,7 +405,7 @@ const updateApplication = async (req, res) => {
     };
 
     for (const field of validationFields) {
-      if (application[field] === "REJECTED") {
+      if (originalApplication[field] === "REJECTED") {
         updatedData[field] = "PENDING";
       }
     }
