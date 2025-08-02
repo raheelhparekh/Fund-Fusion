@@ -6,6 +6,8 @@ import * as yup from "yup";
 import Input from "../../ApplicationForm/Input";
 import axios from "axios";
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 function FilterDataForm({ setReportData, setLoading }) {
   const { role, user } = useRouteLoaderData("Validator-Root")?.data;
 
@@ -83,13 +85,13 @@ function FilterDataForm({ setReportData, setLoading }) {
       if (applicationType) queryParams.append("applicationType", applicationType);
 
       const res = await axios.get(
-      `http://localhost:3000/validator/getReportData?${queryParams.toString()}`,
-      {
-        headers: {
-        "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      }
+        `${BASE_URL}/validator/getReportData?${queryParams.toString()}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
       );
       setReportData({data: res.data, query: values});
     } catch (error) {

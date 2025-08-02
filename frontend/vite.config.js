@@ -13,6 +13,6 @@ export default defineConfig({
       '/submit': process.env.VITE_APP_API_URL,
     },
     host: true,
-    port: 5173,
+    port: process.env.VITE_APP_PORT,
   },
 })

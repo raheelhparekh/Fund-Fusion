@@ -19,7 +19,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import Table from "./Table";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import ApprovalVsRejectionTrends from "./map";
-import ReportPDF from "./reportPDF";
+import ReportPDF from "./ReportPDF";
 
 // Register chart components for all three types (Line, Bar, Pie)
 ChartJS.register(

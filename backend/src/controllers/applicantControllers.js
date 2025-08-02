@@ -329,11 +329,15 @@ const updateApplication = async (req, res) => {
     delete safeSubmittedData.resubmission;
     delete safeOriginalData.totalExpense;
     delete safeSubmittedData.totalExpense;
+
+    delete safeOriginalData?.proofOfTravel;
+    delete safeOriginalData?.proofOfAccommodation;
+    delete safeSubmittedData?.proofOfAttendance;
     
     // We need to check if any non-expenses fields have been modified
     for (const key in safeSubmittedData) {
       // Don't check expense fields pattern (expenses[0].expenseProof, etc.)
-      if (key.startsWith('expenses[')) {
+      if (key.startsWith('expenses[') || key === 'proofOfTravel' || key === 'proofOfAccommodation' || key === 'proofOfAttendance') {
         continue;
       }
       
